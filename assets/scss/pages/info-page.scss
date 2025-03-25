@@ -1,0 +1,53 @@
+.block-info {
+
+	&__content {
+		display: grid;
+		grid-template-columns: 50rem 1fr;
+		grid-gap: 13.6rem;
+	}
+
+	&__block {
+		position: relative;
+	}
+
+	&__block-body {
+		position: sticky;
+		top: 20rem;
+	}
+
+	&__block:last-child {
+		padding-top: 7.2rem;
+	}
+
+	&__img img {
+		width: 100%;
+		border-radius: 3.2rem;
+	}
+
+	&__title{
+		margin-top: 0;
+	}
+
+	&__text {}
+
+	@media screen and (orientation: portrait) {
+		&__content {
+			grid-template-columns: 1fr;
+			grid-gap: 4rem;
+		}
+
+		&__block:last-child {
+			padding-top: 0;
+		}
+
+
+		&__block-body {
+			position: unset;
+			top: unset;
+		}
+
+		&__img img {
+			border-radius: 2rem;
+		}
+	}
+}

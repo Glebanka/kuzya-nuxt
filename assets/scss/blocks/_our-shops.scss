@@ -1,0 +1,314 @@
+.our-shops {
+
+    &__container {}
+
+    &__content {
+        padding-top: 6rem;
+        padding-bottom: 6rem;
+        margin: 0 -10rem;
+    }
+
+    &__box {
+        background-color: var(--white);
+        display: grid;
+        grid-template-columns: 62.2rem 1fr;
+        border-radius: 3.2rem;
+        overflow: hidden;
+        border: 0.5px solid rgba(87, 87, 87, 0.4);
+        height: 69.4rem;
+    }
+
+    &__box:not(:last-child) {
+        margin-bottom: 6rem;
+    }
+
+    &__block {}
+
+    &__head {
+        padding: 4rem 5rem 4rem 4rem;
+    }
+
+    .select-box__head {
+        background-color: var(--blue);
+        height: 4.8rem;
+    }
+
+    .select-box__head::after {
+        background-image: url(/public/storage/svg/select-arrow-white.svg);
+    }
+
+    .select-box__label {
+        color: var(--white);
+    }
+
+    &__list {
+        overflow-y: auto;
+        height: 56.4rem;
+        margin-right: 2rem;
+    }
+
+    &__list::-webkit-scrollbar {
+        width: 1.4rem;
+        background-color: transparent;
+    }
+
+    &__list::-webkit-scrollbar-thumb {
+        background-color: var(--blue);
+        border-radius: .8rem;
+    }
+
+    &__tabs {
+        display: none;
+    }
+
+    &__map {
+        width: 100%;
+        height: 100%;
+        border-left: 0.5px solid rgba(87, 87, 87, 0.4)
+    }
+
+    @media screen and (orientation: portrait) {
+        &__content {
+            margin: 0 -1.6rem;
+            border-radius: 3rem;
+            padding: 4rem 1.6rem;
+        }
+
+        &__box {
+            grid-template-columns: 1fr;
+            height: unset;
+        }
+
+        &__box:not(:last-child) {
+            margin-bottom: 4rem;
+        }
+
+        &__head {
+            padding: 4rem 2rem;
+        }
+
+        &__select {
+            margin-bottom: 4rem;
+        }
+
+        &__tabs {
+            display: block;
+        }
+
+        &__list {
+            margin-right: 0;
+            padding-right: 0;
+            overflow-y: unset;
+            height: unset;
+        }
+
+        &__list::-webkit-scrollbar {
+            width: 0;
+        }
+
+        &__tab-head {
+            justify-content: center;
+        }
+
+        &__tab-item {
+            padding: 1.2rem 1.6rem;
+        }
+
+        &__tab-item svg {
+            width: 2.4rem;
+            height: 2.4rem;
+        }
+
+        &__tab-block {
+            display: none;
+        }
+
+        &__tab-block._active {
+            display: block;
+        }
+
+        &__map {
+            border-radius: 3.2rem;
+            border: 0.5px solid rgba(87, 87, 87, 0.4);
+            overflow: hidden;
+            height: 69.4rem;
+        }
+    }
+}
+
+.our-shops-item {
+    max-width: 57.1rem;
+    border-radius: 0;
+    box-shadow: unset;
+    cursor: pointer;
+    transition: background-color 0.3s ease-out;
+    margin-left: -1px;
+    margin-bottom: -1px;
+
+    @media (hover: hover) and (pointer: fine) {
+        &:not(._active):hover {
+            background-color: var(--grey);
+        }
+    }
+
+    &._active {
+        cursor: default;
+    }
+
+    &__body {
+        grid-template-columns: 1fr;
+        grid-gap: 0;
+        padding: 2rem 4rem .4rem;
+        position: relative;
+        transition: padding 0.3s ease-out;
+    }
+
+    &._active &__body {
+        padding: 6.4rem 4rem 4rem;
+    }
+
+    .our-shops__list &__block:last-child {
+        height: 0;
+        overflow: hidden;
+        transition: height 0.3s ease-out;
+    }
+
+    &__arrow {
+        position: absolute;
+        top: 2.4rem;
+        left: 4rem;
+        opacity: 0;
+        visibility: hidden;
+        cursor: pointer;
+        transform: translateX(2rem);
+        transition: all 0.3s ease-out;
+    }
+
+    &._active &__arrow {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        transition-delay: 0.15s;
+    }
+
+    &__arrow svg {
+        width: 2.6rem;
+        height: 2rem;
+    }
+
+    &__contacts {}
+
+    &__btns {
+        margin-bottom: 4rem;
+    }
+
+    @media screen and (orientation: portrait) {
+        margin-left: 0;
+        margin-bottom: -1px;
+        border-left: 0;
+        border-right: 0;
+
+        &__body {
+            padding: 2rem 2.4rem .4rem 2rem;
+        }
+
+        &._active &__body {
+            padding: 2.4rem 2rem 3rem;
+        }
+
+        &__label {
+            margin-bottom: .6rem;
+        }
+
+        &__arrow {
+            display: none;
+        }
+    }
+}
+
+.more-info-shop {
+    display: none;
+    border: 0;
+
+    &._active {
+        display: block;
+    }
+
+    .our-shops-item__block {
+        height: unset;
+    }
+
+    .our-shops-item__block:last-child {
+        grid-row: unset;
+    }
+}
+
+.our-shops-contacts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 3rem;
+
+    @media screen and (orientation: portrait) {
+        grid-template-columns: 1fr;
+        grid-gap: 1.6rem;
+        grid-auto-rows: 1fr;
+    }
+}
+
+.our-shops-contact {
+    background-color: var(--white);
+    box-shadow: .4rem .4rem .4rem 0 #0000000F;
+    padding: 4rem 6rem;
+    border-radius: 10rem;
+
+    &__items {}
+
+    &__item:not(:last-child) {
+        margin-bottom: 2rem;
+    }
+
+    &__label {
+        font-size: 1.2rem;
+        line-height: 100%;
+        color: var(--text-grey);
+        margin-bottom: .8rem;
+    }
+
+    &__value {
+        display: flex;
+        gap: 2rem;
+    }
+
+    &__value,
+    &__value a {
+        font-size: 1.8rem;
+        line-height: 100%;
+        font-weight: 600;
+    }
+
+    &__value a:has(svg) {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    &__value a svg {
+        width: 1.8rem;
+        height: 1.8rem;
+    }
+
+    @media screen and (orientation: portrait) {
+        padding: 2.2rem 4rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        &__label {
+            margin-bottom: .6rem;
+        }
+    }
+}
+
+.select-shop-region-item{
+    border: 1px solid rgba(29, 29, 29, 0.1);
+}

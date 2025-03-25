@@ -1,0 +1,54 @@
+.info-pay {
+
+	&__cards {
+		display: flex;
+		gap: 3rem;
+		border-bottom: 0.5px solid rgba(87, 87, 87, 0.4);
+		padding-bottom: 2.4rem;
+		margin-bottom: 4rem;
+	}
+
+	&__card svg {
+		width: 4.2rem;
+		height: 4.2rem;
+	}
+}
+
+.info-pay-banks {
+	margin-top: 4rem;
+	padding-top: 4rem;
+	border-top: 0.5px solid rgba(87, 87, 87, 0.4);
+
+	&__list {
+		display: flex;
+		gap: 1.6rem;
+		margin-bottom: 4rem;
+	}
+
+	&__item {
+		background-color: var(--grey);
+		border-radius: 2rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: .5px solid transparent;
+		cursor: pointer;
+		transition: border 0.3s ease-out;
+		overflow: hidden;
+	}
+
+	&__item._active {
+		border: .5px solid rgba(87, 87, 87, 0.4);
+	}
+
+	@media (hover: hover) and (pointer: fine) {
+		&__item:hover {
+			border: .5px solid rgba(87, 87, 87, 0.4);
+		}
+	}
+
+	&__item img {
+		height: 4.2rem;
+		max-width: 100%;
+	}
+}

@@ -1,0 +1,264 @@
+.personal-data-form {
+    display: flex;
+    flex-flow: column;
+    gap: 4rem;
+
+    .form-input,
+    .select-box__head {
+        background-color: var(--grey);
+    }
+
+    .form-item {
+        margin-bottom: 0;
+    }
+
+    .birth-calendar {
+        z-index: 7;
+    }
+
+    .form-radiobtns.custom label::before,
+    .form-radiobtns.custom label::after {
+        top: 0.4rem;
+        left: 0;
+
+        width: 2.4rem;
+        height: 2.4rem;
+    }
+
+    .form-radiobtns.custom label::after {
+        width: 4.8rem;
+        height: 4.8rem;
+        top: -1.25rem;
+        left: -1.25rem;
+    }
+
+    .form-radiobtns.custom label {
+        font-size: 2rem;
+        height: 2.4rem;
+        padding-left: 3.4rem;
+    }
+
+    .form-radiobtns.custom label::after {
+        background-color: var(--white);
+    }
+
+    .select-box__head {
+        height: 4.8rem;
+    }
+}
+
+
+.main-data-wrapper {
+    display: flex;
+    gap: 13.5rem;
+}
+
+.inputs-container {
+    display: flex;
+    flex-flow: column;
+    gap: 2.4rem;
+    width: 60.7rem;
+}
+
+.inputs-container__item {
+    position: relative;
+}
+
+.avatar-container {
+    position: relative;
+    height: fit-content;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 16.4rem;
+    height: 16.4rem;
+}
+
+.avatar-icon {
+    position: absolute;
+    width: 16.4rem;
+    height: 16.4rem;
+}
+
+.avatar-icon-img {
+    width: 100%;
+    height: 16.4rem;
+    object-fit: cover;
+    object-position: center;
+
+    position: absolute;
+    border-radius: 9rem;
+    display: none;
+}
+
+.avatar__edit-badge {
+    position: absolute;
+    bottom: .2rem;
+    right: 1rem;
+
+    width: 4.6rem;
+    height: 4.6rem;
+    z-index: 1;
+}
+
+.avatar-text {
+    z-index: 1;
+    margin: 0;
+    text-align: center;
+
+    font-size: 1.6rem;
+    line-height: 1;
+}
+
+.genderRadioContainer {
+    display: flex;
+    gap: 2.4rem;
+    align-items: center;
+
+    input {
+        width: 2.4rem;
+        height: 2.4rem;
+    }
+}
+
+.radioContainer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: fit-content;
+}
+
+.genderRadio__text {
+    margin-bottom: 0;
+    font-size: 1.2rem;
+    line-height: 1;
+    font-weight: 500;
+}
+
+.input-title {
+    font-weight: 500;
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+.input-text {
+    font-size: 1.2rem;
+    line-height: 1;
+    color: var(--color-text);
+}
+
+
+// .inputs-wrapper{
+//     display: flex;
+//     gap: 1.6rem;
+// }
+.selectInput {
+    padding: 1.6rem 2rem;
+    color: var(--color-text);
+    background-color: var(--grey);
+    border: 0;
+    border-radius: 99rem;
+
+    width: 14.8rem;
+
+    font-size: 1.6rem;
+
+    appearance: none;
+    position: relative;
+    cursor: pointer;
+
+    option {
+        color: var(--black);
+    }
+}
+
+.selectInputContainer {
+    position: relative;
+    width: fit-content;
+}
+
+.selectIcon {
+    width: 4rem;
+    height: 4rem;
+}
+
+.selectLabel {
+    position: absolute;
+    right: 0.1rem;
+    top: 0.4rem;
+    width: 4rem;
+    height: 4rem;
+
+    background-image: url(../../../public/storage/chevron-right.svg);
+    background-size: 4rem 4rem;
+}
+
+.input-text,
+.input-title {
+    margin-bottom: 0;
+}
+
+.input-wrapper {
+    display: flex;
+    flex-flow: column;
+    gap: 1.6rem;
+}
+
+.select-box__small {
+    width: 14.8rem;
+}
+
+.calendar{
+    .select-box__small {
+        width: 16.8rem;
+    }
+}
+.select-box__label-black-text{
+    color: var(--black);
+}
+
+.changePass{
+   border: 0;
+   border-radius: 2rem;
+   padding-top: 7rem;
+   position: fixed;
+}
+.changePass .form-input{
+    background-color: var(--grey);
+}
+.closeSVG{
+    position: absolute;
+    right: 1rem;
+    top: 2rem;
+    cursor: pointer;
+    color: rgb(82, 82, 82);
+}
+@media screen and (orientation: portrait) {
+    .main-data-wrapper {
+        gap: 4rem;
+        flex-flow: column-reverse;
+        align-items: center;
+    }
+
+    .inputs-container {
+        width: 100%;
+    }
+}
+
+.mb-60 {
+    margin-bottom: 6rem;
+}
+
+.mt-142 {
+    margin-top: 14.2rem;
+}
+.btn-border-240{
+    width: 24rem;
+}
+.changePassForm{
+    .form-input{
+        background-color: var(--grey);
+    }
+}

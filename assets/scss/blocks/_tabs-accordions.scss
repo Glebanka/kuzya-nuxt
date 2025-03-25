@@ -1,0 +1,122 @@
+.tab-head {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1.6rem;
+}
+
+.tab-item {
+	border: 1px solid transparent;
+	transition: all 0.3s ease-out;
+	-webkit-transition: all 0.3s ease-out;
+	-moz-transition: all 0.3s ease-out;
+	-ms-transition: all 0.3s ease-out;
+	-o-transition: all 0.3s ease-out;
+	gap: 1.2rem;
+}
+
+.tab-item._active {
+	background-color: var(--blue);
+	color: var(--white);
+}
+
+.tab-item:not(._active) {
+	background-color: transparent;
+	border: 1px solid var(--black);
+	color: var(--black);
+}
+
+.default-tab-item {
+	cursor: pointer;
+}
+
+.default-tab-item,
+.default-tab-item._active {
+	background-color: transparent;
+	border: 0;
+	font-size: 2.4rem;
+	line-height: 100%;
+	font-weight: 500;
+}
+
+.default-tab-item._active {
+	color: var(--black);
+	border: 0;
+}
+
+.default-tab-item.tab-item:not(._active) {
+	border: 0;
+	color: var(--text-grey);
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.tab-item:not(._active):hover {
+		color: var(--white);
+		border: 1px solid transparent;
+	}
+
+	.default-tab-item.tab-item:hover {
+		color: var(--black);
+		border: 0;
+	}
+}
+
+.tab-item svg {
+	width: 2.4rem;
+	height: 2.4rem;
+}
+
+.tab-item svg path {
+	stroke: var(--black);
+}
+
+.tab-item._active svg path {
+	stroke: var(--white);
+}
+
+.tab-body {
+	position: relative;
+}
+
+.tab-item-block {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	transition: all 0.3s ease-out;
+	-webkit-transition: all 0.3s ease-out;
+	-moz-transition: all 0.3s ease-out;
+	-ms-transition: all 0.3s ease-out;
+	-o-transition: all 0.3s ease-out;
+	transform: translateY(3rem);
+	-webkit-transform: translateY(3rem);
+	-moz-transform: translateY(3rem);
+	-ms-transform: translateY(3rem);
+	-o-transform: translateY(3rem);
+	opacity: 0;
+	visibility: hidden;
+
+	&._active {
+		position: relative;
+		opacity: 1;
+		visibility: visible;
+		transform: translateY(0);
+		-webkit-transform: translateY(0);
+		-moz-transform: translateY(0);
+		-ms-transform: translateY(0);
+		-o-transform: translateY(0);
+		transition-delay: 0.3s;
+	}
+
+}
+
+@media screen and (orientation: portrait) {
+	.tab-head {
+		gap: 1.4rem;
+	}
+
+	.default-tab-item,
+	.default-tab-item._active {
+		font-size: 2rem;
+		line-height: 100%;
+	}
+}

@@ -1,0 +1,160 @@
+.month-catalog {
+
+	&__container {}
+
+	&__head {
+		max-width: 98.4rem;
+		margin-bottom: 4rem;
+	}
+
+	&__title {
+		margin-bottom: 2.4rem;
+	}
+
+	&__slider {
+		max-width: 98.8rem;
+		width: 100%;
+		margin: 0 auto;
+	}
+
+	&__slider-body {
+		max-width: 73.2rem;
+		margin: 0 auto 2.4rem;
+		overflow: hidden;
+	}
+
+	&__arrow {
+		background-color: var(--white);
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		-webkit-transform: translateY(-50%);
+		-moz-transform: translateY(-50%);
+		-ms-transform: translateY(-50%);
+		-o-transform: translateY(-50%);
+	}
+
+	&__arrow.left {
+		left: 0;
+	}
+
+	&__arrow.right {
+		right: 0;
+	}
+
+	&__row {
+		display: flex;
+		justify-content: end;
+		max-width: 98.4rem;
+	}
+
+	&__icons {
+		display: flex;
+		gap: 2.4rem;
+	}
+
+	&__icons svg {
+		width: 2.4rem;
+		height: 2.4rem;
+	}
+
+	&__icon {
+		cursor: pointer;
+	}
+
+	&__icon svg path {
+		transition: stroke 0.3s ease-out;
+		-webkit-transition: stroke 0.3s ease-out;
+		-moz-transition: stroke 0.3s ease-out;
+		-ms-transition: stroke 0.3s ease-out;
+		-o-transition: stroke 0.3s ease-out;
+	}
+
+	@media (hover: hover) and (pointer: fine) {
+		&__icon:hover svg path {
+			stroke: var(--black);
+		}
+	}
+
+	@media screen and (orientation: portrait) {
+		&__head {
+			margin-bottom: 1.6rem;
+		}
+	}
+}
+
+.month-catalog-tab {
+
+	&__head {
+		margin-bottom: 2.4rem;
+	}
+
+	&__container {
+		margin: 0 -10rem;
+	}
+
+	@media screen and (orientation: portrait) {
+		&__container {
+			margin: 0 -1.6rem;
+		}
+	}
+}
+
+.month-catalog-slide {
+	height: unset;
+}
+
+.month-catalog-slide:not(:last-child) {
+	margin-right: 1.6rem;
+}
+
+.month-catalog-slide a {
+	display: block;
+	height: 100%;
+}
+
+.month-catalog-slide img {
+	width: 100%;
+	border-radius: 2rem;
+	-webkit-border-radius: 2rem;
+	-moz-border-radius: 2rem;
+	-ms-border-radius: 2rem;
+	-o-border-radius: 2rem;
+}
+
+.month-catalog-counter {
+	display: flex;
+	align-items: center;
+	gap: .4rem;
+    margin-left: 4rem;
+
+	&__arrow {
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+	}
+
+	&__arrow svg path {
+		transition: stroke 0.3s ease-out;
+		-webkit-transition: stroke 0.3s ease-out;
+		-moz-transition: stroke 0.3s ease-out;
+		-ms-transition: stroke 0.3s ease-out;
+		-o-transition: stroke 0.3s ease-out;
+	}
+
+	&__arrow.swiper-button-disabled svg path {
+		stroke: var(--text-grey);
+	}
+
+	&__arrow svg {
+		width: 1.6rem;
+		height: 1.6rem;
+	}
+
+	&__num {
+		min-width: 3.5rem;
+		text-align: center;
+		font-size: 1.8rem;
+		line-height: 100%;
+	}
+}

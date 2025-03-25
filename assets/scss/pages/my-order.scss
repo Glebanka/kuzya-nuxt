@@ -1,0 +1,91 @@
+.my-order{
+    .go-back-btn{
+        gap: 1.6rem;
+        &__text{
+            font-size: 1.6rem;
+            line-height: 1;
+
+            margin-bottom: 0;
+        }
+        &__icon{
+            width: 1.6rem;
+            height: 1.6rem;
+        }
+    }
+}
+
+.my-order-info{
+    margin-top: 4rem;
+
+    display: flex;
+    gap: 3rem;
+}
+.order-product-info{
+    width: 60.6rem;
+    height: fit-content;
+
+    padding: 4rem;
+
+    display: flex;
+    flex-flow: column;
+    gap: 2.4rem;
+
+    border-radius: 3.2rem;
+    background-color: var(--grey);
+
+    &__title{
+        font-size: 2.4rem;
+        line-height: 1.2;
+        font-weight: 600;
+    }
+
+    &__info-container{
+        display: flex;
+        flex-flow: column;
+        gap: 1.2rem;
+    }
+    &__text{
+        font-size: 1.6rem;
+        line-height: 1;
+        font-weight: 600;
+        
+        margin-left: 3.2rem;
+    }
+    &__text-container{
+        display: flex;
+        flex-flow: column;
+        gap: 1.6rem;
+    }
+}
+.text-with-icon{
+    display: flex;
+    gap: .8rem;
+    align-items: center;
+
+    &__text{
+
+    }
+    &__icon{
+        width: 2.4rem;
+        height: 2.4rem;
+    }
+}
+.order-products{
+    display: flex;
+    flex-flow: column;
+    gap: 4rem;
+}
+
+@media screen and (orientation: portrait){
+    .my-order-info{
+        flex-flow: column;
+        gap: 6rem;
+    }
+    .order-product-info{
+        width: 38.2rem;
+        padding: 3rem 2.4rem;
+    }
+    .order-products{
+        gap: 6rem;
+    }
+}

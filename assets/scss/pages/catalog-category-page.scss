@@ -1,0 +1,174 @@
+@use '../blocks/filters';
+
+
+.catalog-categories {
+	margin-bottom: 4rem;
+    &__btn-select {
+        z-index: 6;
+    }
+
+    &__btn-select .btn-border{
+        justify-content: start;
+    }
+
+	@media screen and (orientation: portrait) {
+		margin-bottom: 2.4rem;
+	}
+}
+
+
+.list-products {
+
+	&__container {}
+
+	&__items {
+		grid-gap: 8rem 3rem;
+		margin-bottom: 12rem;
+	}
+
+	&__btns {
+		display: flex;
+		justify-content: center;
+	}
+
+	&__btn {
+		padding: 1.2rem 2rem;
+		gap: .8rem;
+	}
+
+	&__btn svg {
+		width: 2.4rem;
+		height: 2.4rem;
+	}
+
+	&__btn svg path {
+		stroke: unset;
+		fill: var(--black);
+	}
+
+	&__btn::after {
+		background-color: #F0F0F0;
+	}
+
+	@media (hover: hover) and (pointer: fine) {
+		&__btn:hover {
+			color: var(--black);
+		}
+
+		&__btn._hover svg path {
+			stroke: unset;
+		}
+	}
+
+	@media screen and (orientation: portrait) {
+		&__items.g-2 {
+			grid-template-columns: 1fr;
+			grid-gap: 8rem 3rem;
+		}
+
+		&__items.g-4 {
+			grid-template-columns: 1fr 1fr;
+			grid-gap: 8rem 1.6rem;
+		}
+	}
+}
+
+.categories-characteristics {
+
+	&__slider-body {
+		overflow: hidden;
+	}
+
+	&__wrapper {}
+
+	&__arrow {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		transition: all 0.3s ease-out;
+	}
+
+	&__arrow.left {
+		left: -2.4rem;
+	}
+
+	&__arrow.right {
+		right: -2.4rem;
+	}
+
+	&__arrow.swiper-button-disabled {
+		opacity: 0;
+		visibility: hidden;
+	}
+
+	@media screen and (orientation: portrait) {
+		margin-bottom: 4rem;
+
+		&__slider-body {
+			overflow: unset;
+		}
+	}
+}
+
+.categories-characteristics-item {
+	max-width: calc((100% - 3rem * 5) / 6);
+	width: 100%;
+	height: unset;
+
+	&:not(:last-child) {
+		margin-right: 3rem;
+	}
+
+	&__body {
+		display: block;
+		height: 100%;
+		border-radius: 2rem;
+		overflow: hidden;
+
+	}
+
+	&__img{
+		border-radius: 2rem;
+		overflow: hidden;
+	}
+
+	&__img img {
+		width: 100%;
+		transition: all 0.3s ease-out;
+		transform: scale(1.01);
+		transform-origin: center;
+
+	}
+
+	@media (hover: hover) and (pointer: fine) {
+		&__body:hover &__img img {
+			transform: scale(1.05);
+		}
+
+	}
+
+
+	&__info {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+	}
+
+	&__name {
+		margin: 0 1.6rem 1.6rem;
+		text-align: center;
+		font-size: 1.4rem;
+		line-height: 100%;
+		font-weight: 600;
+		color: var(--white);
+	}
+
+	@media screen and (orientation: portrait) {
+		max-width: 18.2rem;
+
+		&:not(:last-child) {
+			margin-right: .6rem;
+		}
+	}
+}

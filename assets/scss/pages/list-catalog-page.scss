@@ -1,0 +1,54 @@
+.list-catalog {
+
+	&__container {}
+
+	&__title {}
+
+	&__categories {
+		grid-gap: 7.2rem 3rem;
+	}
+
+	@media screen and (orientation: portrait) {
+		&__categories {
+			grid-template-columns: 1fr;
+			grid-gap: 6rem;
+		}
+	
+	}
+}
+
+.list-catalog-category {
+	
+	&__img {
+		margin-bottom: 2.4rem;
+	}
+
+	&__img svg {
+		width: 6.4rem;
+		height: 6.4rem;
+	}
+
+	&__name {
+		font-size: 1.8rem;
+		line-height: 100%;
+		font-weight: 700;
+		margin-bottom: 2.4rem;
+	}
+	
+	&__list li {
+		margin-bottom: 2.4rem;
+	}
+
+	&__list li a {
+		font-size: 1.6rem;
+		line-height: 100%;
+		font-weight: 500;
+		transition: color 0.3s ease-out;
+	}
+
+	@media (hover: hover) and (pointer: fine) {
+		&__list li a:hover {
+			color: var(--blue);
+		}
+	}
+}

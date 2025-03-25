@@ -1,0 +1,70 @@
+/* ---------------------  bonus-card  --------------------- */
+
+.bonus-card {
+
+	&__container {
+		display: grid;
+		grid-template-columns: 58.2rem 1fr;
+	}
+
+	&__block.block-1 {
+		border-radius: 3.2rem;
+		-webkit-border-radius: 3.2rem;
+		-moz-border-radius: 3.2rem;
+		-ms-border-radius: 3.2rem;
+		-o-border-radius: 3.2rem;
+		background-color: var(--grey);
+		padding: 6rem 4rem;
+	}
+
+	&__title {
+		margin-bottom: 2.4rem;
+	}
+
+	&__text {
+		margin-bottom: 4rem;
+	}
+
+	&__btn {
+		padding: 1.4rem 4.75rem;
+		font-size: 1.6rem;
+		line-height: 100%;
+	}
+
+	&__img img {
+		width: 100%;
+		border-radius: 6rem;
+		-webkit-border-radius: 6rem;
+		-moz-border-radius: 6rem;
+		-ms-border-radius: 6rem;
+		-o-border-radius: 6rem;
+	}
+
+	@media screen and (orientation: portrait) {
+		&__container {
+			grid-template-columns: 1fr;
+		}
+
+		&__block.block-1 {
+			padding: 4rem 2rem;
+		}
+
+		&__title {
+			margin-bottom: 2rem;
+		}
+
+		&__text {
+			margin-bottom: 2.4rem;
+		}
+
+		&__img img {
+			border-radius: 3.2rem;
+			-webkit-border-radius: 3.2rem;
+			-moz-border-radius: 3.2rem;
+			-ms-border-radius: 3.2rem;
+			-o-border-radius: 3.2rem;
+		}
+	}
+}
+
+/* ---------------------  bonus-card  --------------------- */

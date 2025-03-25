@@ -1,0 +1,49 @@
+@use '../blocks/slider-actions';
+
+.all-actions {
+
+	&__container {
+	}
+
+	&__btn-select {
+		margin-bottom: 4rem;
+	}
+
+	&__btn-select .btn-select__content{
+		gap: 1.6rem;
+	}
+
+	&__btn-select .btn-select__item {
+		display: block;
+		gap: 0;
+		transition: all 0.3s ease-out;
+		line-height: 100%;
+	}
+
+	&__btn-select .btn-select__item._active {
+		background-color: var(--blue);
+		color: var(--white);
+	}
+
+	&__btn-select .btn-select__item sup {
+		line-height: 100%;
+		font-size: 1.2rem;
+	}
+
+	.all-actions-item {
+		max-width: 100%;
+	}
+
+	@media screen and (orientation: portrait) {
+		&__list {
+			grid-template-columns: 1fr;
+		}
+
+		&__btn-select .btn-select__item._active {
+			background-color: unset;
+			color: var(--black);
+		}
+
+	}
+}
+

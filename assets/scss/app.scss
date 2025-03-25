@@ -1,0 +1,43 @@
+// libs
+@use 'modules';
+
+// Fonts
+@use 'fonts';
+
+//styles blocks
+@use './blocks/grid';
+@use './blocks/null';
+@use './blocks/animation';
+@use './blocks/header';
+@use './blocks/btns';
+@use './blocks/form';
+@use './blocks/default-slider';
+@use './blocks/card-products';
+@use './blocks/tabs-accordions';
+@use './blocks/ask-question';
+@use './blocks/get-info-actions';
+@use './blocks/footer';
+@use './blocks/select-shop';
+@use './blocks/breadcrumbs';
+@use './blocks/popup';
+
+// styles pages
+// @use './pages/404';
+@use './pages/action-page';
+@use './pages/actions-page';
+@use './pages/basket-page';
+@use './pages/brands-page';
+@use './pages/catalog-category-page';
+@use './pages/contacts-page';
+@use './pages/home-page';
+@use './pages/info-page';
+@use './pages/list-catalog-page';
+@use './pages/order-page';
+@use './pages/pay-page';
+@use './pages/product-page';
+@use './pages/shops-page';
+@use './pages/personal-data';
+@use './pages/my-delivery-addresses';
+@use './pages/orders';
+@use './pages/my-order';
+@use './pages/my-shop';
