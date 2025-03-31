@@ -10,7 +10,6 @@ export default {
                     link: '/catalog/'
                 },
             ],
-            menuBodyAdditionalNav: [],
             selectedShop: '',
             isActive: false,
             menuType: 'default',
@@ -71,17 +70,6 @@ export default {
                 this.closeMenu();
             }
         },
-        async getMainMenu() {
-            const config = useRuntimeConfig();
-            const { data, error, execute } = useFetch(`${config.public.apiBaseURL}/api/main-menu`)
-            await execute()
-            if (error.value) {
-                console.error('Ошибка при загрузке меню:', error.value);
-                return;
-            }
-
-            this.menuBodyAdditionalNav = data.value.data;
-        },
         syncSelectedShop(event) {
             if (event.key === 'selectedShop') {
                 this.getSelectedShop()
@@ -105,42 +93,6 @@ export default {
                     }, 100);
                 }
                 recursionSetTimeout();
-            }
-        },
-        // getUserData() {
-        //     this.token = localStorage.getItem('token');
-        //     axios.get('/api/user-data', {
-        //         headers: {
-        //             'Authorization': `Bearer ${this.token}`
-        //         }
-        //     })
-        //         .then(res => {
-        //             if (res.data.success === true) {
-        //                 this.avatarImage = res.data.user.image;
-        //             }
-        //         })
-        //         .catch(err => {
-        //             // Проверяем, если это не стандартная ошибка "Unauthenticated.",
-        //             // то выводим сообщение об ошибке в консоль
-        //             if (err.response.data.message !== "Unauthenticated.") {
-        //                 console.log(err);
-        //             }
-        //         })
-        // },
-        async getUserData() {
-            if (this.isAuthenticated) {
-                const config = useRuntimeConfig();
-                const { data, error, execute } = useFetch(`${config.public.apiBaseURL}/user-data`, {
-                    headers: {
-                        'Authorization': `Bearer ${this.token}`
-                    },
-                })
-                await execute()
-                if (error.value.data.message !== "Unauthenticated.") {
-                    console.error('Ошибка при загрузке данных пользователя:', error.value);
-                    return;
-                }
-                this.avatarImage = data.value.data.user.image;
             }
         },
         menuBody() {
@@ -194,14 +146,22 @@ export default {
     },
     inject: [
         'configs',
+        'userAvatar',
     ],
-    async mounted() {
-        await this.getMainMenu();
+    mounted() {
         this.getSelectedShop();
         this.popUpMenuInit();
-        this.getUserData();
     },
 }
+</script>
+<script setup>
+const menuBodyAdditionalNav = ref([]);
+
+const { data } = await useAPI(`/main-menu`)
+
+menuBodyAdditionalNav.value = data.value.data;
+
+defineExpose()
 </script>
 <template>
     <div class="menu-body" :class="{ '_active': isActive }">
@@ -224,7 +184,7 @@ export default {
                         </div>
                     </div>
                     <nav class="menu-body-nav">
-                        <ul v-if="menuBodyNav.length" class="list-style-none menu-body-nav__list">
+                        <ul class="list-style-none menu-body-nav__list">
                             <template v-for="(item, indx) in menuBodyNav" :key="'menyBodyItem'+indx">
                                 <li class="menu-body-nav-item">
                                     <router-link :to="item.link" class="menu-body-nav-item__link menu-body-link__js"
@@ -234,7 +194,7 @@ export default {
                             </template>
                         </ul>
                     </nav>
-                    <div class="menu-body-additional-nav" v-if="menuBodyAdditionalNav.length">
+                    <div class="menu-body-additional-nav">
                         <template v-for="menuCategory in menuBodyAdditionalNav">
                             <div class="menu-body-additional-nav-category__item" @click="toggleMenuBodyItem($event)">
                                 <div class="menu-body-additional-nav-category__head menu-body-nav-head__js">
@@ -267,10 +227,9 @@ export default {
                 </div>
                 <div class="menu-body-person" v-if="menuType == 'person'">
                     <div class="menu-body-img-container">
-                        <img class="menu-body-img" :src="`/storage/uploads/users/${this.avatarImage}`"
-                            v-if="this.avatarImage !== ''" alt="avatar">
-
-                        <svg class="menu-body-avatar" v-if="this.avatarImage == ''" width="60" height="60"
+                        <img class="menu-body-img" :src="`/storage/uploads/users/${userAvatar}`"
+                            v-if="userAvatar !== ''" alt="avatar">
+                        <svg class="menu-body-avatar" v-else width="60" height="60"
                             viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"
                             xmlns:xlink="http://www.w3.org/1999/xlink">
                             <rect width="60" height="60" rx="30" fill="#F0F4FC" />
@@ -296,7 +255,7 @@ export default {
                         </svg>
                     </div>
                     <nav class="menu-body-nav">
-                        <ul v-if="menuBodyNav.length" class="list-style-none menu-body-nav__list">
+                        <ul class="list-style-none menu-body-nav__list">
                             <template v-for="(item, indx) in menuBodyNav" :key="'menyBodyItem'+indx">
                                 <li class="menu-body-nav-item">
                                     <router-link :to="item.link" class="menu-body-nav-item__link menu-body-link__js"

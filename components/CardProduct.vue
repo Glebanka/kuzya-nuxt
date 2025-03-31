@@ -1,9 +1,6 @@
 <script>
-// import store from '@/store/store';
-// import { mapActions, mapGetters } from 'vuex';
-
+import { mapActions, mapState } from 'pinia';
 export default {
-	name: 'CardProduct',
 	props: {
 		product: Object,
 	},
@@ -17,11 +14,11 @@ export default {
 		}
 	},
 	methods: {
-		// ...mapActions('cart', [
-		// 	'addToCart',
-		// 	'removeFromCart',
-		// 	'decreaseQuantity',
-		// ]),
+		...mapActions(useCartStore, [
+			'addToCart',
+			'removeFromCart',
+			'decreaseQuantity',
+		]),
 		getParsePrice(price) {
 			return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 		},
@@ -55,8 +52,7 @@ export default {
 			const parseProducts = () => {
 				this.parseProduct = { id: this.product.id, title: this.product.title ? this.product.title : this.product.name, price: this.product.price, url_page: this.product.url_page, json_imgs: this.product.json_imgs && this.product.json_imgs.length ? this.product.json_imgs[0] : null, unit: this.product.unit ? this.product.unit : null };
 
-				// let productInCart = this.findInCart(this.parseProduct.id)
-				let productInCart = false
+				let productInCart = this.findInCart(this.parseProduct.id)
 				if (productInCart) {
 					this.inCart = true;
 					this.product.quantity = productInCart.quantity;
@@ -85,23 +81,20 @@ export default {
 		}
 	},
 	computed: {
-		// cartItems() {
-		// 	return store.state.cart.items;
-		// },
-		// ...mapGetters('cart', {
-		// 	findInCart: 'getItemById',
-		// }),
-		// itemQuantity(){
-		// 	const item = this.findInCart(this.product.id);
-		// 	if(item) {
-		// 		return item.quantity
-		// 	} else {
-		// 		return null
-		// 	}
-		// },
-		// isItemInCart(){
-		// 	return this.findInCart(this.product.id);
-		// }
+		...mapState(useCartStore, {
+			findInCart: 'getItemById',
+		}),
+		itemQuantity(){
+			const item = this.findInCart(this.product.id);
+			if(item) {
+				return item.quantity
+			} else {
+				return null
+			}
+		},
+		isItemInCart(){
+			return this.findInCart(this.product.id);
+		}
 	},
 	components: {}
 }

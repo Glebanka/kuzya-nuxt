@@ -1,6 +1,6 @@
 <script>
-import { mapState } from 'pinia';
-import { useAuthStore } from './stores/authStore';
+import { mapState } from 'pinia'
+
 export default {
   data() {
     return {
@@ -21,23 +21,14 @@ export default {
     closeAuthPopUp() {
       this.$refs.authPopUp.close()
     },
-    getUserAvatar() {
+    async getUserAvatar() {
       if (this.isAuthenticated) {
-        axios.get('/api/user-data', {
-          headers: {
-            'Authorization': `Bearer ${this.token}`
-          }
-        }).then(res => {
-          if (res.data.success === true) {
-            this.userAvatar = res.data.user.image;
-          }
-        }).catch(err => {
-          // Проверяем, если это не стандартная ошибка "Unauthenticated.", 
-          // то выводим сообщение об ошибке в консоль
-          if (err.response.data.message !== "Unauthenticated.") {
-            console.log(err);
-          }
+        const response = await useNuxtApp().$apiFetch(`/user-data`, {
+            headers: {
+                'Authorization': `Bearer ${this.token}`
+            },
         })
+        this.userAvatar = response.data.user.image;
       }
     },
     openPopUpMenu(menuType) {
@@ -64,6 +55,9 @@ export default {
   computed: {
     ...mapState(useAuthStore, ['token', 'isAuthenticated']),
   },
+  mounted() {
+    this.getUserAvatar()
+  }
 }
 </script>
 

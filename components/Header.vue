@@ -6,7 +6,6 @@ export default {
     return {
       selectedShop: '',
       inputSearch: '',
-      activeToken: false,
     }
   },
   inject: [
@@ -93,31 +92,10 @@ export default {
         }
       }
     },
-    checkToken() {
-      const token = localStorage.getItem('token');
-
-      if (token || !this.isTokenExpired(token)) {
-        this.activeToken = true;
-      }
-    },
-    isTokenExpired(token) {
-      if (!token) return true;
-
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const exp = payload.exp;
-
-      return Date.now() >= exp * 1000;
-    },
   },
   mounted() {
     this.getSelectedShop();
     this.getSearchQueryFromURL();
-    this.checkToken();
-  },
-  computed: {
-    // cartQuantity() {
-    //     return store.state.cart.items.length
-    // }
   },
   watch: {
     $route: {
@@ -136,13 +114,12 @@ const { isDesktop } = useVars();
 
 const topNav = ref([]);
 
-const config = useRuntimeConfig();
-const { data, error } = await useFetch(`${config.public.apiBaseURL}/header-menu`)
-if (error.value) {
-  console.error('Ошибка при загрузке меню:', error.value);
-}
-console.log('data:', data.value.data);
+const cartStore = useCartStore();
+const cartQuantity = computed(() => {
+  return cartStore.items.length;
+})
 
+const { data } = await useAPI(`/header-menu`)
 topNav.value = data.value.data
 </script>
 
@@ -162,7 +139,7 @@ topNav.value = data.value.data
             <!-- Тут получается если пользователь авторизован, то ссылка на стр. Магазины, иначе div открывается popup -->
           </div>
           <div class="top-header__nav">
-            <ul v-if="topNav.length" class="list-style-none top-header__list">
+            <ul class="list-style-none top-header__list">
               <li v-for="(item, indx) in topNav" :key="'topMenu' + indx" class="top-header-item">
                 <router-link :to="'/' + item.url_page + '/'" class="top-header-item__link text-anim">
                   <span>{{ item.name_menu }}</span>

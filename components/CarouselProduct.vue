@@ -1,98 +1,66 @@
-<script>
+<script setup>
 import Swiper from 'swiper';
 import { Navigation, Pagination, Scrollbar } from 'swiper/modules';
 
-export default {
-  name: 'CarouselProduct',
-  props: {
-    carouselId: Number
-  },
-  data() {
-    return {
-      products: [],
-      titleCategory: '',
-      urlCategory: '',
-    }
-  },
-  methods: {
-    async getProducts() {
-      const config = useRuntimeConfig();
-      const { data, error, execute } = useFetch(`${config.public.apiBaseURL}/carousel-product`, {
-        method: 'POST',
-        body: { id_category: this.carouselId },
+
+const products = ref([]);
+const titleCategory = ref('');
+const urlCategory = ref('');
+
+const { carouselId } = defineProps({
+  carouselId: Number
+})
+
+const { data, error } = await useAsyncData(`carousel-product${carouselId}`,
+  () => useNuxtApp().$apiFetch(`/carousel-product`, {
+    method: 'POST',
+    body: { id_category: carouselId },
+  }));
+if (error.value) {
+  console.error('Ошибка при загрузке CarouselProduct:', error.value);
+}
+
+if (data.value.data) {
+  if (data.value.data.product) {
+    products.value = data.value.data.product;
+  }
+  if (data.value.data.name_carousel) {
+    titleCategory.value = data.value.data.name_carousel;
+  }
+  if (data.value.data.url_category) {
+    urlCategory.value = data.value.data.url_category;
+  }
+}
+
+onMounted(() => {
+  nextTick(() => {
+    initSlider();
+  })
+});
+
+function initSlider() {
+  const sliderProducts = selectElements('.slider-products__slider');
+  if (sliderProducts.length) {
+    sliderProducts.forEach(($slider, indx) => {
+      const swiper = new Swiper($slider, {
+        modules: [Navigation, Pagination, Scrollbar],
+        slidesPerView: 'auto',
+        spaceBetween: 0,
+        navigation: {
+          nextEl: $slider.closest('section').querySelector('.slider-arrow__js.right'),
+          prevEl: $slider.closest('section').querySelector('.slider-arrow__js.left'),
+        },
+        scrollbar: {
+          el: $slider.closest('section').querySelector('.slider-scrollbar__js'),
+          draggable: true,
+        },
       });
-      await execute()
-      if (error.value) {
-        console.error('Ошибка при загрузки CarouselProduct:', error.value);
-        return;
-      }
-      if (data.value.data) {
-        if (data.value.data.product) {
-          this.products = data.value.data.product;
-        }
-        if (data.value.data.name_carousel) {
-          this.titleCategory = data.value.data.name_carousel;
-        }
-        if (data.value.data.url_category) {
-          this.urlCategory = data.value.data.url_category;
-        }
-        this.$nextTick(() => {
-          this.initSlider();
-        })
-      }
-
-
-      // axios.post('/api/carousel-product', { id_category: this.carouselId })
-      //   .then(res => {
-      //     let data = res.data.data;
-      //     if (data) {
-      //       if (data.product) {
-      //         this.products = data.product;
-      //       }
-      //       if (data.name_carousel) {
-      //         this.titleCategory = data.name_carousel;
-      //       }
-      //       if (data.url_category) {
-      //         this.urlCategory = data.url_category;
-      //       }
-      //       this.$nextTick(() => {
-      //         this.initSlider();
-      //       })
-      //     }
-      //   })
-      //   .catch(err => {
-      //     // console.log(err.response.data)
-      //   })
-    },
-    initSlider() {
-      const sliderProducts = selectElements('.slider-products__slider');
-      if (sliderProducts.length) {
-        sliderProducts.forEach(($slider, indx) => {
-          const swiper = new Swiper($slider, {
-            modules: [Navigation, Pagination, Scrollbar],
-            slidesPerView: 'auto',
-            spaceBetween: 0,
-            navigation: {
-              nextEl: $slider.closest('section').querySelector('.slider-arrow__js.right'),
-              prevEl: $slider.closest('section').querySelector('.slider-arrow__js.left'),
-            },
-            scrollbar: {
-              el: $slider.closest('section').querySelector('.slider-scrollbar__js'),
-              draggable: true,
-            },
-          });
-        });
-      }
-    }
-  },
-  computed: {},
-  async mounted() {
-    await this.getProducts();
+    });
   }
 }
 </script>
 <template>
-  <section v-if="products.length" class="slider-products block-products">
+  <section class="slider-products block-products" :class="{ 'hidden': products.length < 1 }">
     <div class="slider-products__container container">
       <div class="slider-products__row anim-item" v-anim-scroll>
         <h2 class="slider-products__title m-0">

@@ -1,5 +1,8 @@
 import { ref } from "vue";
 
+
+// КОД ПАРАШИ НЕ ИСПОЛЬЗОВАТЬ
+
 export const $page = ref(null);
 export const $footer = ref(null);
 export const $selectShopPopup = ref(null);
@@ -96,9 +99,6 @@ export function maxHeightBlock($items) {
 }
 export function numberWithSpaces(x) {
 	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-}
-export function getIndex(_this, items) {
-	return Array.from(items).indexOf(_this);
 }
 /*
 let telPattern = /^\+7\([0-9]{3}\)[0-9]{3}\-[0-9]{2}\-[0-9]{2}$/;
@@ -240,15 +240,6 @@ export function ftransitionDelay($items, _start, _step, _delay, _col) {
 		$items.forEach(function ($item, indx) {
 			$item.style.transitionDelay = _delay + 'ms';
 		});
-	}
-}
-export function ftransitionDelayItem($item, indx, _start, _step, _col) {
-	if ($item) {
-		if (_col) {
-			$item.style.transitionDelay = _start + ((indx % _col) * _step) + 'ms';
-		} else {
-			$item.style.transitionDelay = _start + (indx * _step) + 'ms';
-		}
 	}
 }
 export class Accordions {
@@ -554,30 +545,6 @@ export function setCookie(name, value, options = {}) {
 	document.cookie = updatedCookie;
 }
 
-export function getNormalTrigger(item, trigger) {
-	let positions = trigger.split(',');
-	let el = positions[0];
-	let doc = trigger.split(',').length == 2 ? positions[1] : undefined;
-
-	function parseNormalTriggers(_trig, el) {
-		if (_trig.match(/%/)) {
-			let _res = parseFloat(_trig);
-			_trig = pxToPercent((el) ? documentHeight : item.offsetHeight, _res);
-		} else if (_startTrigger.match(/px/)) {
-			let _res = parseFloat(_trig);
-			_trig = _res;
-		}
-		return _trig;
-	}
-
-	if (doc) {
-		return [parseNormalTriggers(el), parseNormalTriggers(doc, $body)]
-	} else {
-		return [parseNormalTriggers(el)]
-	}
-
-}
-
 export function setMetaTags(siteData, data, meta) {
 	let updatedSiteData = { ...siteData };
 	updatedSiteData.keywords = data.meta_key ? data.meta_key : null;
@@ -645,13 +612,4 @@ export let CalendarDOMTemplate = {
 				</div>
 			</div>
 		`,
-}
-
-export function getUserIdFromToken(token) {
-	if (!token) {
-		return null;
-	}
-	const payload = token.split('.')[1];
-	const decodedPayload = JSON.parse(atob(payload));
-	return decodedPayload.sub || null;
 }

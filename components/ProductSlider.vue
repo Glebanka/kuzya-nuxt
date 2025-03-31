@@ -4,18 +4,19 @@ import Swiper from "swiper";
 
 const slides = ref([]);
 
-const config = useRuntimeConfig();
-const { data, error } = await useFetch(`${config.public.apiBaseURL}/product-slider`)
-if (error.value) {
-  console.error('Ошибка при загрузке данных в product-slider:', error.value);
-}
-  slides.value = data.value.data;
+const { isDesktop } = useVars();
+
+const { data } = await useAPI(`/product-slider`)
+slides.value = data.value.data;
+
+onMounted(() => {
+  nextTick(() => {
+    initSwiper();
+  })
+})
 
 function initSwiper() {
   const $slider = selectElement('.first-screen__slider');
-
-  const { isDesktop } = useVars();
-
   if ($slider) {
     const swiper = new Swiper('.first-screen__slider', {
       modules: [Navigation, Pagination, Scrollbar],
@@ -38,17 +39,8 @@ function initSwiper() {
   }
 }
 
-onMounted(() => {
-  nextTick(() => {
-    if (import.meta.client) {
-      initSwiper();
-    }
-  })
-})
-
 function getImagePath(image) {
-  const config = useRuntimeConfig();
-  return `${config.public.apiBaseURL.replace('/api', '')}/storage/${image}`;
+  return `${useRuntimeConfig().public.imgBaseURL}/storage/${image}`;
 }
 
 
@@ -59,8 +51,7 @@ function getImagePath(image) {
     <div class="first-screen__container container anim-item" v-anim-scroll>
       <div class="first-screen__slider _swiper">
         <div class="first-screen__wrapper swiper-wrapper">
-          <div v-for="slide in slides" :key="'productSlider' + slide.id"
-            class="swiper-slide first-screen-slide bg-red">
+          <div v-for="slide in slides" :key="'productSlider' + slide.id" class="swiper-slide first-screen-slide bg-red">
             <a :href="slide.link" class="first-screen-slide__body">
               <div class="first-screen-slide__block">
                 <div class="first-screen-slide__name">
@@ -79,187 +70,6 @@ function getImagePath(image) {
               </div>
             </a>
           </div>
-          <!--                    <div class="swiper-slide first-screen-slide bg-red">-->
-          <!--                        <a href="#" class="first-screen-slide__body">-->
-          <!--                            <div class="first-screen-slide__block">-->
-          <!--                                <div class="first-screen-slide__name">-->
-          <!--                                    Емкость 1,2л Маки (соль)-->
-          <!--                                    с&nbsp;ложкой М4828-->
-          <!--                                </div>-->
-          <!--                                <div class="first-screen-slide__btns">-->
-          <!--                                    <div class="first-screen-slide__btn btn default-anim bg-yellow">-->
-          <!--                                        Подробнее-->
-          <!--                                    </div>-->
-          <!--                                </div>-->
-          <!--                            </div>-->
-          <!--                            <div class="first-screen-slide__block">-->
-          <!--                                <div class="first-screen-slide__img">-->
-          <!--                                    <picture>-->
-          <!--                                        <img src="@img/fs-1.jpg" alt="icn">-->
-          <!--                                    </picture>-->
-          <!--                                    <div class="first-screen-slide__icon">-->
-          <!--                                       <img src="@img/svg/fs-icon.svg" alt="icn">-->
-          <!--                                    </div>-->
-          <!--                                </div>-->
-          <!--                            </div>-->
-          <!--                            <div class="first-screen-slide__bg">-->
-          <!--                                <picture>-->
-          <!--                                    <img src="@img/fs-bg-red.jpg" alt="">-->
-          <!--                                </picture>-->
-          <!--                            </div>-->
-          <!--                        </a>-->
-          <!--                    </div>-->
-          <!--                    <div class="swiper-slide first-screen-slide bg-yellow">-->
-          <!--                        <a href="#" class="first-screen-slide__body">-->
-          <!--                            <div class="first-screen-slide__block">-->
-          <!--                                <div class="first-screen-slide__name">-->
-          <!--                                    Емкость 1,2л Маки (соль)-->
-          <!--                                    с&nbsp;ложкой М4828-->
-          <!--                                </div>-->
-          <!--                                <div class="first-screen-slide__btns">-->
-          <!--                                    <div class="first-screen-slide__btn btn default-anim bg-normal">-->
-          <!--                                        Подробнее-->
-          <!--                                    </div>-->
-          <!--                                </div>-->
-          <!--                            </div>-->
-          <!--                            <div class="first-screen-slide__block">-->
-          <!--                                <div class="first-screen-slide__img">-->
-          <!--                                    <picture>-->
-          <!--                                        <img src="@img/fs-2.jpg" alt="icn">-->
-          <!--                                    </picture>-->
-          <!--                                    <div class="first-screen-slide__icon">-->
-          <!--                                        <img src="@img/svg/fs-icon.svg" alt="icn">-->
-          <!--                                    </div>-->
-          <!--                                </div>-->
-          <!--                            </div>-->
-          <!--                            <div class="first-screen-slide__bg">-->
-          <!--                                <picture>-->
-          <!--                                    <img src="@img/fs-bg-yellow.jpg" alt="">-->
-          <!--                                </picture>-->
-          <!--                            </div>-->
-          <!--                        </a>-->
-          <!--                    </div>-->
-          <!--                    <div class="swiper-slide first-screen-slide bg-blue">-->
-          <!--                        <a href="#" class="first-screen-slide__body">-->
-          <!--                            <div class="first-screen-slide__block">-->
-          <!--                                <div class="first-screen-slide__name">-->
-          <!--                                    Емкость 1,2л Маки (соль)-->
-          <!--                                    с&nbsp;ложкой М4828-->
-          <!--                                </div>-->
-          <!--                                <div class="first-screen-slide__btns">-->
-          <!--                                    <div class="first-screen-slide__btn btn default-anim bg-yellow">-->
-          <!--                                        Подробнее-->
-          <!--                                    </div>-->
-          <!--                                </div>-->
-          <!--                            </div>-->
-          <!--                            <div class="first-screen-slide__block">-->
-          <!--                                <div class="first-screen-slide__img">-->
-          <!--                                    <picture>-->
-          <!--                                        <img src="@img/fs-3.jpg" alt="icn">-->
-          <!--                                    </picture>-->
-          <!--                                    <div class="first-screen-slide__icon">-->
-          <!--                                        <img src="@img/svg/fs-icon.svg" alt="icn">-->
-          <!--                                    </div>-->
-          <!--                                </div>-->
-          <!--                            </div>-->
-          <!--                            <div class="first-screen-slide__bg">-->
-          <!--                                <picture>-->
-          <!--                                    <img src="@img/fs-bg-blue.jpg" alt="">-->
-          <!--                                </picture>-->
-          <!--                            </div>-->
-          <!--                        </a>-->
-          <!--                    </div>-->
-          <!--                    <div class="swiper-slide first-screen-slide bg-red">-->
-          <!--                        <a href="#" class="first-screen-slide__body">-->
-          <!--                            <div class="first-screen-slide__block">-->
-          <!--                                <div class="first-screen-slide__name">-->
-          <!--                                    Емкость 1,2л Маки (соль)-->
-          <!--                                    с&nbsp;ложкой М4828-->
-          <!--                                </div>-->
-          <!--                                <div class="first-screen-slide__btns">-->
-          <!--                                    <div class="first-screen-slide__btn btn default-anim bg-yellow">-->
-          <!--                                        Подробнее-->
-          <!--                                    </div>-->
-          <!--                                </div>-->
-          <!--                            </div>-->
-          <!--                            <div class="first-screen-slide__block">-->
-          <!--                                <div class="first-screen-slide__img">-->
-          <!--                                    <picture>-->
-          <!--                                        <img src="@img/fs-1.jpg" alt="">-->
-          <!--                                    </picture>-->
-          <!--                                    <div class="first-screen-slide__icon">-->
-          <!--                                        <img src="@img/svg/fs-icon.svg" alt="icn">-->
-          <!--                                    </div>-->
-          <!--                                </div>-->
-          <!--                            </div>-->
-          <!--                            <div class="first-screen-slide__bg">-->
-          <!--                                <picture>-->
-          <!--                                    <img src="@img/fs-bg-red.jpg" alt="">-->
-          <!--                                </picture>-->
-          <!--                            </div>-->
-          <!--                        </a>-->
-          <!--                    </div>-->
-          <!--                    <div class="swiper-slide first-screen-slide bg-yellow">-->
-          <!--                        <a href="#" class="first-screen-slide__body">-->
-          <!--                            <div class="first-screen-slide__block">-->
-          <!--                                <div class="first-screen-slide__name">-->
-          <!--                                    Емкость 1,2л Маки (соль)-->
-          <!--                                    с&nbsp;ложкой М4828-->
-          <!--                                </div>-->
-          <!--                                <div class="first-screen-slide__btns">-->
-          <!--                                    <div class="first-screen-slide__btn btn default-anim bg-normal">-->
-          <!--                                        Подробнее-->
-          <!--                                    </div>-->
-          <!--                                </div>-->
-          <!--                            </div>-->
-          <!--                            <div class="first-screen-slide__block">-->
-          <!--                                <div class="first-screen-slide__img">-->
-          <!--                                    <picture>-->
-          <!--                                        <img src="@img/fs-2.jpg" alt="">-->
-          <!--                                    </picture>-->
-          <!--                                    <div class="first-screen-slide__icon">-->
-          <!--                                        <img src="@img/svg/fs-icon.svg" alt="icn">-->
-          <!--                                    </div>-->
-          <!--                                </div>-->
-          <!--                            </div>-->
-          <!--                            <div class="first-screen-slide__bg">-->
-          <!--                                <picture>-->
-          <!--                                    <img src="@img/fs-bg-yellow.jpg" alt="">-->
-          <!--                                </picture>-->
-          <!--                            </div>-->
-          <!--                        </a>-->
-          <!--                    </div>-->
-          <!--                    <div class="swiper-slide first-screen-slide bg-blue">-->
-          <!--                        <a href="#" class="first-screen-slide__body">-->
-          <!--                            <div class="first-screen-slide__block">-->
-          <!--                                <div class="first-screen-slide__name">-->
-          <!--                                    Емкость 1,2л Маки (соль)-->
-          <!--                                    с&nbsp;ложкой М4828-->
-          <!--                                </div>-->
-          <!--                                <div class="first-screen-slide__btns">-->
-          <!--                                    <div class="first-screen-slide__btn btn default-anim bg-yellow">-->
-          <!--                                        Подробнее-->
-          <!--                                    </div>-->
-          <!--                                </div>-->
-          <!--                            </div>-->
-          <!--                            <div class="first-screen-slide__block">-->
-          <!--                                <div class="first-screen-slide__img">-->
-          <!--                                    <picture>-->
-          <!--                                        <img src="@img/fs-3.jpg" alt="">-->
-          <!--                                    </picture>-->
-          <!--                                    <div class="first-screen-slide__icon">-->
-          <!--                                        <img src="@img/svg/fs-icon.svg" alt="icn">-->
-          <!--                                    </div>-->
-          <!--                                </div>-->
-          <!--                            </div>-->
-          <!--                            <div class="first-screen-slide__bg">-->
-          <!--                                <picture>-->
-          <!--                                    <img src="@img/fs-bg-blue.jpg" alt="">-->
-          <!--                                </picture>-->
-          <!--                            </div>-->
-          <!--                        </a>-->
-          <!--                    </div>-->
-
         </div>
         <div class="first-screen__arrows slider-arrows">
           <div class="first-screen__arrow default-anim slider-big-arrow slider-arrow__js left" v-anim-hover>
@@ -282,3 +92,187 @@ function getImagePath(image) {
 </template>
 
 <style scoped></style>
+
+
+
+<!-- не знаю что это за код и зачем он здесь нужен, похоже на неподключенную верстку -->
+<!--                    <div class="swiper-slide first-screen-slide bg-red">-->
+<!--                        <a href="#" class="first-screen-slide__body">-->
+<!--                            <div class="first-screen-slide__block">-->
+<!--                                <div class="first-screen-slide__name">-->
+<!--                                    Емкость 1,2л Маки (соль)-->
+<!--                                    с&nbsp;ложкой М4828-->
+<!--                                </div>-->
+<!--                                <div class="first-screen-slide__btns">-->
+<!--                                    <div class="first-screen-slide__btn btn default-anim bg-yellow">-->
+<!--                                        Подробнее-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="first-screen-slide__block">-->
+<!--                                <div class="first-screen-slide__img">-->
+<!--                                    <picture>-->
+<!--                                        <img src="@img/fs-1.jpg" alt="icn">-->
+<!--                                    </picture>-->
+<!--                                    <div class="first-screen-slide__icon">-->
+<!--                                       <img src="@img/svg/fs-icon.svg" alt="icn">-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="first-screen-slide__bg">-->
+<!--                                <picture>-->
+<!--                                    <img src="@img/fs-bg-red.jpg" alt="">-->
+<!--                                </picture>-->
+<!--                            </div>-->
+<!--                        </a>-->
+<!--                    </div>-->
+<!--                    <div class="swiper-slide first-screen-slide bg-yellow">-->
+<!--                        <a href="#" class="first-screen-slide__body">-->
+<!--                            <div class="first-screen-slide__block">-->
+<!--                                <div class="first-screen-slide__name">-->
+<!--                                    Емкость 1,2л Маки (соль)-->
+<!--                                    с&nbsp;ложкой М4828-->
+<!--                                </div>-->
+<!--                                <div class="first-screen-slide__btns">-->
+<!--                                    <div class="first-screen-slide__btn btn default-anim bg-normal">-->
+<!--                                        Подробнее-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="first-screen-slide__block">-->
+<!--                                <div class="first-screen-slide__img">-->
+<!--                                    <picture>-->
+<!--                                        <img src="@img/fs-2.jpg" alt="icn">-->
+<!--                                    </picture>-->
+<!--                                    <div class="first-screen-slide__icon">-->
+<!--                                        <img src="@img/svg/fs-icon.svg" alt="icn">-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="first-screen-slide__bg">-->
+<!--                                <picture>-->
+<!--                                    <img src="@img/fs-bg-yellow.jpg" alt="">-->
+<!--                                </picture>-->
+<!--                            </div>-->
+<!--                        </a>-->
+<!--                    </div>-->
+<!--                    <div class="swiper-slide first-screen-slide bg-blue">-->
+<!--                        <a href="#" class="first-screen-slide__body">-->
+<!--                            <div class="first-screen-slide__block">-->
+<!--                                <div class="first-screen-slide__name">-->
+<!--                                    Емкость 1,2л Маки (соль)-->
+<!--                                    с&nbsp;ложкой М4828-->
+<!--                                </div>-->
+<!--                                <div class="first-screen-slide__btns">-->
+<!--                                    <div class="first-screen-slide__btn btn default-anim bg-yellow">-->
+<!--                                        Подробнее-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="first-screen-slide__block">-->
+<!--                                <div class="first-screen-slide__img">-->
+<!--                                    <picture>-->
+<!--                                        <img src="@img/fs-3.jpg" alt="icn">-->
+<!--                                    </picture>-->
+<!--                                    <div class="first-screen-slide__icon">-->
+<!--                                        <img src="@img/svg/fs-icon.svg" alt="icn">-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="first-screen-slide__bg">-->
+<!--                                <picture>-->
+<!--                                    <img src="@img/fs-bg-blue.jpg" alt="">-->
+<!--                                </picture>-->
+<!--                            </div>-->
+<!--                        </a>-->
+<!--                    </div>-->
+<!--                    <div class="swiper-slide first-screen-slide bg-red">-->
+<!--                        <a href="#" class="first-screen-slide__body">-->
+<!--                            <div class="first-screen-slide__block">-->
+<!--                                <div class="first-screen-slide__name">-->
+<!--                                    Емкость 1,2л Маки (соль)-->
+<!--                                    с&nbsp;ложкой М4828-->
+<!--                                </div>-->
+<!--                                <div class="first-screen-slide__btns">-->
+<!--                                    <div class="first-screen-slide__btn btn default-anim bg-yellow">-->
+<!--                                        Подробнее-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="first-screen-slide__block">-->
+<!--                                <div class="first-screen-slide__img">-->
+<!--                                    <picture>-->
+<!--                                        <img src="@img/fs-1.jpg" alt="">-->
+<!--                                    </picture>-->
+<!--                                    <div class="first-screen-slide__icon">-->
+<!--                                        <img src="@img/svg/fs-icon.svg" alt="icn">-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="first-screen-slide__bg">-->
+<!--                                <picture>-->
+<!--                                    <img src="@img/fs-bg-red.jpg" alt="">-->
+<!--                                </picture>-->
+<!--                            </div>-->
+<!--                        </a>-->
+<!--                    </div>-->
+<!--                    <div class="swiper-slide first-screen-slide bg-yellow">-->
+<!--                        <a href="#" class="first-screen-slide__body">-->
+<!--                            <div class="first-screen-slide__block">-->
+<!--                                <div class="first-screen-slide__name">-->
+<!--                                    Емкость 1,2л Маки (соль)-->
+<!--                                    с&nbsp;ложкой М4828-->
+<!--                                </div>-->
+<!--                                <div class="first-screen-slide__btns">-->
+<!--                                    <div class="first-screen-slide__btn btn default-anim bg-normal">-->
+<!--                                        Подробнее-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="first-screen-slide__block">-->
+<!--                                <div class="first-screen-slide__img">-->
+<!--                                    <picture>-->
+<!--                                        <img src="@img/fs-2.jpg" alt="">-->
+<!--                                    </picture>-->
+<!--                                    <div class="first-screen-slide__icon">-->
+<!--                                        <img src="@img/svg/fs-icon.svg" alt="icn">-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="first-screen-slide__bg">-->
+<!--                                <picture>-->
+<!--                                    <img src="@img/fs-bg-yellow.jpg" alt="">-->
+<!--                                </picture>-->
+<!--                            </div>-->
+<!--                        </a>-->
+<!--                    </div>-->
+<!--                    <div class="swiper-slide first-screen-slide bg-blue">-->
+<!--                        <a href="#" class="first-screen-slide__body">-->
+<!--                            <div class="first-screen-slide__block">-->
+<!--                                <div class="first-screen-slide__name">-->
+<!--                                    Емкость 1,2л Маки (соль)-->
+<!--                                    с&nbsp;ложкой М4828-->
+<!--                                </div>-->
+<!--                                <div class="first-screen-slide__btns">-->
+<!--                                    <div class="first-screen-slide__btn btn default-anim bg-yellow">-->
+<!--                                        Подробнее-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="first-screen-slide__block">-->
+<!--                                <div class="first-screen-slide__img">-->
+<!--                                    <picture>-->
+<!--                                        <img src="@img/fs-3.jpg" alt="">-->
+<!--                                    </picture>-->
+<!--                                    <div class="first-screen-slide__icon">-->
+<!--                                        <img src="@img/svg/fs-icon.svg" alt="icn">-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="first-screen-slide__bg">-->
+<!--                                <picture>-->
+<!--                                    <img src="@img/fs-bg-blue.jpg" alt="">-->
+<!--                                </picture>-->
+<!--                            </div>-->
+<!--                        </a>-->
+<!--                    </div>-->

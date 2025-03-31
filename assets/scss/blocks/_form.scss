@@ -34,6 +34,9 @@ button {
 	position: relative;
 	margin-bottom: 1.6rem;
 }
+.checkbox-house .form-item {
+	margin-bottom: 0;
+}
 
 .form-item__body {
 	position: relative;
@@ -419,25 +422,6 @@ button {
 	height: 4.8rem;
 }
 
-.form-politics {
-	max-width: 31.3rem;
-	font-size: 1.2rem;
-	line-height: 140%;
-	color: var(--text-grey);
-}
-
-.form-politics a {
-	display: inline;
-	color: var(--black);
-	text-decoration: underline;
-}
-
-@media (hover: hover) and (pointer: fine) {
-	.form-politics a:hover{
-		text-decoration: none;
-	}
-}
-
 .swith-btn {
 	position: relative;
 }
@@ -582,6 +566,31 @@ button {
 	opacity: 1;
 }
 
+.form-politics {
+	font-size: 1rem;
+	line-height: 140%;
+	color: var(--text-grey);
+}
+
+.form-politics a {
+	display: inline;
+	color: var(--black);
+	text-decoration: underline;
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.form-politics a:hover{
+		text-decoration: none;
+	}
+}
+
+.form-politics{
+	&.form-check-label::before,
+	&.form-check-label::after {
+		transform: unset;
+	}
+}
+
 .form-item.textarea{
 	width: 100%;
 }
@@ -619,6 +628,9 @@ button {
     visibility: hidden;
 }
 
+form._send .form-btn {
+	pointer-events: none;
+}
 form._send .form-btn span {
     opacity: 0;
 }
@@ -632,27 +644,20 @@ form._send .form-btn__dots {
     width: 1rem;
     height: 1rem;
     border-radius: 100%;
-    -webkit-border-radius: 100%;
-    -moz-border-radius: 100%;
-    -ms-border-radius: 100%;
-    -o-border-radius: 100%;
     background: var(--black);
     opacity: 0.1;
 }
 
 form._send .form-btn__dots .dot.dot-1 {
     animation: anim-dot 800ms linear 300ms infinite normal forwards;
-    -webkit-animation: anim-dot 800ms linear 300ms infinite normal forwards;
 }
 
 form._send .form-btn__dots .dot.dot-2 {
     animation: anim-dot 800ms linear 600ms infinite normal forwards;
-    -webkit-animation: anim-dot 800ms linear 600ms infinite normal forwards;
 }
 
 form._send .form-btn__dots .dot.dot-3 {
     animation: anim-dot 800ms linear 900ms infinite normal forwards;
-    -webkit-animation: anim-dot 800ms linear 900ms infinite normal forwards;
 }
 
 @keyframes anim-dot {

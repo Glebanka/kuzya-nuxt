@@ -65,6 +65,7 @@ const animScroll = {
         let _startTrigger = animItem.dataset.startTrigger ? animItem.dataset.startTrigger : 0;
         let _startTrig = `0% 95%`;
         if (_startTrigger) {
+            console.log('animScroll');
             if (getNormalTrigger(animItem, _startTrigger)[0]) {
                 _startTrig = `${getNormalTrigger(animItem, _startTrigger)[0]} 60%`;
                 if (getNormalTrigger(animItem, _startTrigger)[1]) {
@@ -125,6 +126,7 @@ const animScroll = {
                 }
             }
         })
+
         $ScrollTrigger.refresh();
     }
 }

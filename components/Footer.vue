@@ -1,92 +1,62 @@
 <script>
-
 // import "@/native_js/nouislider.min.js";
-// import store from "@/store/store";
 export default {
     data() {
         return {
-            footerMenu: [],
             selectedShop: '',
         }
     },
     inject: [
         'configs',
         'openAuthPopUp',
-        'getUserAvatar',
         'userAvatar',
     ],
     components: {
         // PopupBasket,
         // SelectShop,
     },
-    methods: {
-        // getMainMenu() {
-        //     axios.get('/api/main-menu')
-        //         .then(res => {
-        //             if (res.data.success) {
-        //                 let nav = res.data.data;
-        //                 this.footerMenu = nav;
-        //                 this.menuBodyAdditionalNav = nav;
-        //                 this.$nextTick(() => {
-        //                     this.footerNativeJs();
-        //                 })
-        //             }
-        //         })
-        //         .catch(err => {
-        //             console.log('api/main-menu', err)
-        //         })
-        // },
-        async getMainMenu() {
-            const { data, error, execute } = useFetch('https://kuzya.loc/api/main-menu')
-            await execute()
-            if (error.value) {
-                console.error('Ошибка при загрузке меню в футере:', error.value);
-                this.footerMenu = []
-                return;
-            }
+}
+</script>
 
-            this.footerMenu = data.value.data;
-            this.$nextTick(() => {
-                this.footerNativeJs();
-            })
-        },
-        footerNativeJs() {
-            const { isDesktop } = useVars();
-            
-            const submenuItems = selectElements('.footer-submenu__js');
-            if (submenuItems.length && !isDesktop) {
-                submenuItems.forEach(($item, indx) => {
-                    $item.addEventListener('click', (e) => {
-                        /*
-                        footer-nav__block
-                        footer-nav__body
-                        */
-                        $item.parentElement.classList.toggle('_active');
-                        if ($item.parentElement.classList.contains('_active')) {
-                            $item.parentElement.querySelector('.footer-nav__body').style.height = $item.parentElement.querySelector('.footer-nav__body').scrollHeight + 1 + 'px';
-                            siblingsAction($item.parentElement, (item, indx) => {
-                                item.classList.remove('_active');
-                                item.querySelector('.footer-nav__body').style.height = 0;
-                            })
-                        } else {
-                            $item.parentElement.querySelector('.footer-nav__body').style.height = 0;
-                        }
-                    });
-                });
-            }
-        }
-    },
-    computed: {
-        // cartQuantity() {
-        //     return store.state.cart.items.length
-        // }
-    },
-    async mounted() {
-        this.getUserAvatar()
-        await this.getMainMenu();
+<script setup>
+const footerMenu = ref([]);
+
+const { data } = await useAPI(`/main-menu`)
+footerMenu.value = data.value.data;
+
+const cartStore = useCartStore();
+const cartQuantity = computed(() => {
+    return cartStore.items.length;
+})
+const { isDesktop } = useVars();
+
+onMounted(() => {
+    footerNativeJs();
+})
+
+function footerNativeJs() {
+    const submenuItems = selectElements('.footer-submenu__js');
+    if (submenuItems.length && !isDesktop) {
+        submenuItems.forEach(($item, indx) => {
+            $item.addEventListener('click', (e) => {
+                /*
+                footer-nav__block
+                footer-nav__body
+                */
+                $item.parentElement.classList.toggle('_active');
+                if ($item.parentElement.classList.contains('_active')) {
+                    $item.parentElement.querySelector('.footer-nav__body').style.height = $item.parentElement.querySelector('.footer-nav__body').scrollHeight + 1 + 'px';
+                    siblingsAction($item.parentElement, (item, indx) => {
+                        item.classList.remove('_active');
+                        item.querySelector('.footer-nav__body').style.height = 0;
+                    })
+                } else {
+                    $item.parentElement.querySelector('.footer-nav__body').style.height = 0;
+                }
+            });
+        });
     }
 }
-
 </script>
 
 <template>
@@ -120,22 +90,19 @@ export default {
                     </div>
                 </div>
                 <div class="footer-nav">
-                    <template v-if="footerMenu.length">
-                        <div v-for="(menuBlock, indx) in footerMenu" :key="'footerMenu' + indx"
-                            class="footer-nav__block">
-                            <div class="footer-nav__label footer-submenu__js">{{ menuBlock.name }}</div>
-                            <div class="footer-nav__body">
-                                <ul class="list-style-none footer-nav__list">
-                                    <li v-for="item in menuBlock.tabs" class="footer-nav-item">
-                                        <router-link :to="'/' + item.url_page + '/'" class="text-anim">
-                                            <span>{{ item.name_menu }}</span>
-                                            <span>{{ item.name_menu }}</span>
-                                        </router-link>
-                                    </li>
-                                </ul>
-                            </div>
+                    <div v-for="(menuBlock, indx) in footerMenu" :key="'footerMenu' + indx" class="footer-nav__block">
+                        <div class="footer-nav__label footer-submenu__js">{{ menuBlock.name }}</div>
+                        <div class="footer-nav__body">
+                            <ul class="list-style-none footer-nav__list">
+                                <li v-for="item in menuBlock.tabs" class="footer-nav-item">
+                                    <router-link :to="'/' + item.url_page + '/'" class="text-anim">
+                                        <span>{{ item.name_menu }}</span>
+                                        <span>{{ item.name_menu }}</span>
+                                    </router-link>
+                                </li>
+                            </ul>
                         </div>
-                    </template>
+                    </div>
                 </div>
             </div>
             <div class="footer__row row-2">
