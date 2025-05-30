@@ -1,7 +1,5 @@
 <script>
 import { mapState } from 'pinia'
-import "~/utils/vanilla-calendar.min";
-import "~/utils/nouislider.min.js";
 export default {
   data() {
     return {
@@ -323,8 +321,9 @@ export default {
 
 <script setup>
 const configs = ref({});
+
 const { data } = await useAPI('/pages', { params: { url_page: '/home' } })
-configs.value = data.value.metaTag
+configs.value = data.value?.metaTag
 provide('configs', configs)
 
 onMounted(() => {
