@@ -663,8 +663,8 @@ useSeoMeta(useMetaTags(data.value));
         <MonthCatalog></MonthCatalog>
         <CarouselProductHistory></CarouselProductHistory>
         <ProductsBrands class="hidden"></ProductsBrands>
-        <AskQuestionForm></AskQuestionForm>
-        <InfoActionsForm></InfoActionsForm>
+        <!-- <AskQuestionForm></AskQuestionForm>
+        <InfoActionsForm></InfoActionsForm> -->
     </main>
 </template>
 
