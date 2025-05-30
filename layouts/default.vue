@@ -1,7 +1,7 @@
 <script>
 import { mapState } from 'pinia'
-import "~/utils/vanilla-calendar.min";
-import "~/utils/nouislider.min.js";
+// import "~/utils/vanilla-calendar.min";
+// import "~/utils/nouislider.min.js";
 export default {
   data() {
     return {
