@@ -366,7 +366,7 @@ onMounted(() => {
   <slot />
   <ClientOnly>
     <PopUpMenu ref="popUpMenu"></PopUpMenu>
-    <!-- <AuthPopUp ref="authPopUp"></AuthPopUp> -->
+    <AuthPopUp ref="authPopUp"></AuthPopUp>
     <BnplModal></BnplModal>
     <ConfirmPopUp ref="confirmPopUp" />
   </ClientOnly>
