@@ -1,7 +1,5 @@
 <script>
 import { mapState } from 'pinia'
-// import "~/utils/vanilla-calendar.min";
-// import "~/utils/nouislider.min.js";
 export default {
   data() {
     return {
@@ -325,11 +323,6 @@ export default {
 const configs = ref({});
 
 const { data } = await useAPI('/pages', { params: { url_page: '/home' } })
-console.log('data: ', data);
-
-const { data: fetchData } = await useFetch('https://xn--80aaaldvhd1agchd1a2o.xn--p1ai/api/pages', { params: { url_page: '/home' } })
-console.log('data: ', fetchData);
-
 configs.value = data.value?.metaTag
 provide('configs', configs)
 

@@ -130,6 +130,7 @@ export default {
         dateBirth() {
             const context = this;
             const $calendar = selectElement('.vanilla-calendar.birth-vanilla-calendar');
+            
             let today = new Date();
 
             if ($calendar) {
@@ -170,6 +171,7 @@ export default {
                     },
                     DOMTemplates: CalendarDOMTemplate,
                 });
+                
                 calendar.init();
 
                 if (calendarInfoDate) {
@@ -297,17 +299,17 @@ export default {
             } else {
                 this.setUserData()
             }
-            this.dateBirth()
-            this.weddingDay()
-
+            
             let ESC = 27;
             document.addEventListener('keydown', (e) => {
                 if (e.code === ESC) {
                     this.isActiveChildrenUnderEighteenSelect = false;
                 }
             });
-
+            
             this.$nextTick(() => {
+                this.dateBirth()
+                this.weddingDay()
                 this.initMeta();
                 this.fileInput();
             });
