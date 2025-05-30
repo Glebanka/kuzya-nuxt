@@ -1,5 +1,3 @@
-import { ref } from "vue";
-
 
 // КОД ПАРАШИ НЕ ИСПОЛЬЗОВАТЬ
 
@@ -7,7 +5,6 @@ export const $page = ref(null);
 export const $footer = ref(null);
 export const $selectShopPopup = ref(null);
 export const $popupShare = ref(null);
-export const $body = ref(null);
 
 $page.value = selectElement('.page');
 $footer.value = selectElement('.footer');
@@ -97,9 +94,7 @@ export function maxHeightBlock($items) {
 		});
 	});
 }
-export function numberWithSpaces(x) {
-	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-}
+
 /*
 let telPattern = /^\+7\([0-9]{3}\)[0-9]{3}\-[0-9]{2}\-[0-9]{2}$/;
 let emailPattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
@@ -273,98 +268,7 @@ export class Accordions {
 		}
 	}
 }
-export class Tabs {
-	constructor($items) {
-		this.tabs = $items;
-		if (this.tabs.length) {
-			this.tabs.forEach(($tab, indx) => {
-				this.click($tab, indx);
-			});
-		}
-	}
 
-	click($tab, indx) {
-		let i = 0;
-		$tab.addEventListener('click', (e) => {
-			let _this = e.target;
-
-			if (_this.closest('.click-tab-item__js')) {
-				let $item = _this.closest('.click-tab-item__js');
-				let indx = getIndex($item, $tab.querySelectorAll('.click-tab-item__js'));
-
-				setClass($tab.querySelectorAll('.click-tab-item__js'), { remove: '_active' });
-				if ($tab.querySelectorAll('.tab-item-block')[indx]) {
-					siblingsClass($tab.querySelectorAll('.tab-item-block')[indx], { remove: '_active' });
-				}
-
-				$item.classList.add('_active');
-				if ($tab.querySelectorAll('.tab-item-block')[indx]) {
-					$tab.querySelectorAll('.tab-item-block')[indx].classList.add('_active');
-				}
-			} else {
-				return;
-			}
-		});
-	}
-
-}
-export class SelectBox {
-	constructor($items) {
-		this.items = document.querySelectorAll($items);
-		if (this.items.length) {
-			this.items.forEach(($item, indx) => {
-				this.click($item, indx);
-			});
-		}
-	}
-	click($item, indx) {
-		$item.querySelector('.select-box__head').addEventListener('click', () => {
-			diffElements(this.items, indx, false);
-			$item.classList.toggle('_active');
-			if ($item.classList.contains('sb-anim-height')) {
-				if ($item.classList.contains('_active')) {
-					_slideDown($item.querySelector('.select-box__body'));
-				} else {
-					_slideUp($item.querySelector('.select-box__body'));
-				}
-			}
-
-		});
-		$item.addEventListener('click', (e) => {
-			if (e.target.closest('.select-box-item__js')) {
-				let $this = e.target.closest('.select-box-item__js');
-
-				$item.querySelector('.select-box__label').textContent = $this.querySelector('span').textContent.trim();
-
-				if ($item.querySelector('.select-box-input-hidden')) {
-					$item.querySelector('.select-box-input-hidden').value = $this.querySelector('span').textContent.trim();
-				}
-
-				if (!$item.classList.contains('no-hidden-li')) {
-					siblingsClass($this, { remove: 'hidden' });
-					$this.classList.add('hidden');
-				}
-
-
-				$item.classList.add('_selected');
-				$item.classList.remove('_active');
-				if ($item.classList.contains('sb-anim-height')) {
-					_slideUp($item.querySelector('.select-box__body'));
-				}
-			}
-		});
-	}
-	close() {
-		if (this.items.length) {
-			this.items.forEach(($item, indx) => {
-				$item.classList.remove('_active');
-				if ($item.classList.contains('sb-anim-height')) {
-					_slideUp($item.querySelector('.select-box__body'));
-				}
-			});
-		}
-	}
-}
 
 export class BtnSelect {
 	constructor($items) {

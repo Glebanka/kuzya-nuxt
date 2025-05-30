@@ -5,6 +5,10 @@ export default defineNuxtPlugin((nuxtApp) => {
     baseURL: config.public.apiBaseURL,
 
     async onResponseError({ response }) {
+      // Handle 401 Unauthorized error and 422 Unvalidation error
+      if(response.status === 401 || response.status === 422) {
+        return
+      }
       console.error('Ошибка ответа сервера:', response);
     },
 

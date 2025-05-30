@@ -22,7 +22,7 @@
 @use './blocks/popup';
 
 // styles pages
-// @use './pages/404';
+@use './pages/error-page';
 @use './pages/action-page';
 @use './pages/actions-page';
 @use './pages/basket-page';

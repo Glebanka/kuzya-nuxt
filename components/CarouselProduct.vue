@@ -2,7 +2,6 @@
 import Swiper from 'swiper';
 import { Navigation, Pagination, Scrollbar } from 'swiper/modules';
 
-
 const products = ref([]);
 const titleCategory = ref('');
 const urlCategory = ref('');
@@ -11,13 +10,18 @@ const { carouselId } = defineProps({
   carouselId: Number
 })
 
-const { data, error } = await useAsyncData(`carousel-product${carouselId}`,
-  () => useNuxtApp().$apiFetch(`/carousel-product`, {
-    method: 'POST',
-    body: { id_category: carouselId },
-  }));
-if (error.value) {
-  console.error('Ошибка при загрузке CarouselProduct:', error.value);
+const data = ref({});
+
+const { data: cachedData} = useNuxtData(`carousel-product-data-id-${carouselId}`);
+if(cachedData.value){
+    data.value = cachedData.value;
+} else {
+    const { data: apiData } = await useAPI('/carousel-product', {
+      method: 'POST',
+      body: { id_category: carouselId },
+      key: `carousel-product-data-id-${carouselId}`,
+    })
+    data.value = apiData.value;
 }
 
 if (data.value.data) {

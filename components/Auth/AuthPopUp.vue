@@ -1,7 +1,5 @@
 <script>
-import ForgotPassForm from './forgotPassForm.vue';
-import SignInForm from './signInForm.vue';
-import SignUpForm from './signUpForm.vue';
+import { mapState } from 'pinia';
 
 export default {
     data() {
@@ -15,8 +13,7 @@ export default {
     ],
     methods: {
         open() {
-            this.checkToken();
-            if (this.activeToken) {
+            if (this.isAuthenticated) {
                 this.openPopUpMenu('person')
             } else {
                 this.formType = 'signIn'
@@ -35,19 +32,10 @@ export default {
         handleSignInFormDataUpdate(updatedData) {
             this.signInFormData = updatedData;
         },
-        checkToken() {
-            const token = localStorage.getItem('token');
-
-            if (token && !isTokenExpired(token)) {
-                this.activeToken = true;
-            }
-        },
     },
-    components: {
-        SignUpForm,
-        SignInForm,
-        ForgotPassForm
-    }
+    computed: {
+        ...mapState(useAuthStore, ['token', 'isAuthenticated']),
+    },
 }
 </script>
 <template>
@@ -60,7 +48,7 @@ export default {
                 </svg>
             </div>
 
-            <img src="/vendor/laravel-filemanager/images/test-folder/Frame 37184.jpg" alt="" class="left-col-image">
+            <img :src="`${useRuntimeConfig().public.imgBaseURL}/vendor/laravel-filemanager/images/test-folder/Frame 37184.jpg`" alt="" class="left-col-image">
 
             <signInForm v-if="formType === 'signIn'" @changeFormType="changeFormType"></signInForm>
 

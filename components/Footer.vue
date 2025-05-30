@@ -1,5 +1,4 @@
 <script>
-// import "@/native_js/nouislider.min.js";
 export default {
     data() {
         return {
@@ -9,12 +8,7 @@ export default {
     inject: [
         'configs',
         'openAuthPopUp',
-        'userAvatar',
     ],
-    components: {
-        // PopupBasket,
-        // SelectShop,
-    },
 }
 </script>
 
@@ -25,10 +19,12 @@ const { data } = await useAPI(`/main-menu`)
 footerMenu.value = data.value.data;
 
 const cartStore = useCartStore();
-const cartQuantity = computed(() => {
-    return cartStore.items.length;
-})
+const cartQuantity = computed(() => cartStore.items.length)
 const { isDesktop } = useVars();
+const currentYear = new Date().getFullYear();
+
+const { userData } = storeToRefs(useAuthStore())
+const userAvatar = computed(() => userData.value?.image || '')
 
 onMounted(() => {
     footerNativeJs();
@@ -156,16 +152,20 @@ function footerNativeJs() {
                 </div>
             </div>
             <div class="footer__row row-3">
-                <div class="footer__copy">© Холдинг ВелКом, 2017 – 2024</div>
+                <div class="footer__copy">© Холдинг ВелКом, 2017 – {{ currentYear }}</div>
                 <div class="footer__box">
-                    <!--
-                   <div class="footer__rules">
-                        <router-link to="#" target="_blank" class="text-anim">
-                            <span>Правила продажи</span>
-                            <span>Правила продажи</span>
+                    <div class="footer__payment-security">
+                        <router-link to="/payment-security/" target="_blank" class="text-anim">
+                            <span>Безопасность платежей</span>
+                            <span>Безопасность платежей</span>
                         </router-link>
                     </div>
-                    -->
+                    <div class="footer__oferta">
+                        <router-link to="/oferta/" target="_blank" class="text-anim">
+                            <span>Оферта</span>
+                            <span>Оферта</span>
+                        </router-link>
+                    </div>
                     <div class="footer__politics">
                         <router-link to="/politics/" target="_blank" class="text-anim">
                             <span>Политика конфиденциальности</span>
@@ -237,7 +237,7 @@ function footerNativeJs() {
                     </div>
                 </div>
                 <div class="panel-nav-item" @click="openAuthPopUp">
-                    <img v-if="userAvatar" :src="`/storage/uploads/users/${this.userAvatar}`" alt="avatar"
+                    <img v-if="userAvatar" :src="`${useRuntimeConfig().public.imgBaseURL}/storage/uploads/users/${userAvatar}`" alt="avatar"
                         class="panel-nav-item__avatar">
                     <div v-else class="panel-nav-item__body">
                         <svg class="person" width="28" height="28" viewBox="0 0 28 28" fill="none"
@@ -254,7 +254,7 @@ function footerNativeJs() {
             </div>
         </div>
     </div>
-    <!-- <select-shop></select-shop> -->
+    <SelectShop></SelectShop>
     <div class="popup-share popup">
         <div class="popup-share__container popup__container center w400">
             <div class="popup-share__head popup__head">
@@ -332,7 +332,7 @@ function footerNativeJs() {
             </div>
         </div>
     </div>
-    <!-- <popup-basket></popup-basket> -->
+    <PopupBasket></PopupBasket>
 
     <!-- Классы для popups:
     - left,

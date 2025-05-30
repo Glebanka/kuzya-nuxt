@@ -1,7 +1,6 @@
 <script>
 
 export default {
-  // components: { AuthPopUp },
   data() {
     return {
       selectedShop: '',
@@ -13,15 +12,11 @@ export default {
     'configs',
     'openPopUpMenu',
     'openAuthPopUp',
-    'userAvatar',
   ],
   created() {
     if (import.meta.client) {
       window.addEventListener('storage', this.syncSelectedShop);
     }
-  },
-  beforeUnmount() {
-    window.removeEventListener('storage', this.syncSelectedShop);
   },
   methods: {
     syncSelectedShop(event) {
@@ -115,12 +110,66 @@ const { isDesktop } = useVars();
 const topNav = ref([]);
 
 const cartStore = useCartStore();
-const cartQuantity = computed(() => {
-  return cartStore.items.length;
-})
+const cartQuantity = computed(() => cartStore.items.length)
 
 const { data } = await useAPI(`/header-menu`)
 topNav.value = data.value.data
+
+const { userData } = storeToRefs(useAuthStore())
+
+const userAvatar = computed(() => userData.value?.image || '')
+
+onMounted(()=>{
+  selectCity()
+})
+
+function selectCity() {
+  const $changeCity = selectElements('.change-shop__js');
+  const $selectShopPopup = selectElement('.select-shop');
+  const { $body } = useVars();
+  
+  if ($changeCity.length) {
+    $changeCity.forEach(($item, indx) => {
+      $item.addEventListener('click', () => {
+        $selectShopPopup.classList.add('_active');
+        $body.value.classList.add('_overflow');
+      });
+    })
+  }
+
+  if ($selectShopPopup) {
+    $selectShopPopup.addEventListener('click', (e) => {
+      let $selectShop = e.target.closest('.select-shop__js');
+      if ($selectShop) {
+        $changeCity.forEach(($item, indx) => {
+          if ($item.querySelectorAll('span').length) {
+            $item.querySelectorAll('span').forEach(span => {
+              span.textContent = $selectShop.closest('.select-shop-region-item').querySelector('.select-shop-region-item__city').textContent;
+
+            })
+          }
+          if ($item.querySelector('input')) {
+            $item.querySelector('input').vakue = $selectShop.closest('.select-shop-region-item').querySelector('.select-shop-region-item__city').textContent;
+          }
+        })
+        $selectShopPopup.classList.remove('_active');
+        $body.value.classList.remove('_overflow');
+        $selectShop.closest('.select-shop-region-item').classList.remove('_active');
+      } else {
+        return;
+      }
+    });
+  }
+
+  const $closeSelectShopPopup = selectElement('.close-select-shop-popup__js');
+  if ($closeSelectShopPopup) {
+    $closeSelectShopPopup.addEventListener('click', () => {
+      $selectShopPopup.classList.remove('_active');
+      $body.value.classList.remove('_overflow');
+    });
+
+  }
+}
 </script>
 
 <template>
@@ -182,11 +231,11 @@ topNav.value = data.value.data
         <div class="main-header__container">
           <div class="main-header__col col-1">
             <div class="main-header__logo">
-              <router-link to="/">
+              <NuxtLink to="/">
                 <picture>
-                  <!-- <img src="/storage/logo.gif" alt=""> -->
+                  <img :src="`${useRuntimeConfig().public.imgBaseURL}/storage/logo.gif`" alt="">
                 </picture>
-              </router-link>
+              </NuxtLink>
             </div>
           </div>
           <div class="main-header__col col-2">
@@ -213,7 +262,7 @@ topNav.value = data.value.data
           <div class="main-header__col col-3">
             <div class="main-header-user-nav">
               <div @click="openAuthPopUp" class="main-header-user-nav-item">
-                <img v-if="userAvatar" :src="`/storage/uploads/users/${this.userAvatar}`" alt="avatar"
+                <img v-if="userAvatar" :src="`${useRuntimeConfig().public.imgBaseURL}/storage/uploads/users/${userAvatar}`" alt="avatar"
                   class="main-header-user-nav-item__avatar">
                 <div v-else class="main-header-user-nav-item__body">
                   <div class="main-header-user-nav-item__icon">

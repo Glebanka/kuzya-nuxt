@@ -1,6 +1,23 @@
 <script>
 import { mapActions, mapState } from 'pinia';
 export default {
+	setup(props) {
+		const parseProduct = ref({
+			id: props.product.id,
+			title: props.product.title || props.product.name,
+			price: props.product.price,
+			url_page: props.product.url_page,
+			json_imgs: props.product.json_imgs && props.product.json_imgs.length ? props.product.json_imgs[0] : null,
+			unit: props.product.unit || null
+		});
+
+		const isClient = import.meta.client;
+
+		return {
+			parseProduct,
+			isClient,
+		}
+	},
 	props: {
 		product: Object,
 	},
@@ -10,7 +27,6 @@ export default {
 			inBasket: false,
 			isFavorite: false,
 			isCompare: false,
-			parseProduct: null,
 		}
 	},
 	methods: {
@@ -21,6 +37,9 @@ export default {
 		]),
 		getParsePrice(price) {
 			return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+		},
+		errorHandler() {
+			this.parseProduct.json_imgs = null;
 		},
 		handleCartBtn() {
 			if (!this.inCart) {
@@ -39,7 +58,7 @@ export default {
 		},
 		minusOneProduct() {
 			const isLastItem = this.itemQuantity <= 1;
-            if (!isLastItem) {
+			if (!isLastItem) {
 				this.decreaseQuantity(this.parseProduct)
 			} else {
 				this.removeFromCart(this.parseProduct)
@@ -50,8 +69,6 @@ export default {
 		},
 		init() {
 			const parseProducts = () => {
-				this.parseProduct = { id: this.product.id, title: this.product.title ? this.product.title : this.product.name, price: this.product.price, url_page: this.product.url_page, json_imgs: this.product.json_imgs && this.product.json_imgs.length ? this.product.json_imgs[0] : null, unit: this.product.unit ? this.product.unit : null };
-
 				let productInCart = this.findInCart(this.parseProduct.id)
 				if (productInCart) {
 					this.inCart = true;
@@ -61,20 +78,13 @@ export default {
 				}
 			}
 			parseProducts()
-			this.$nextTick(() => {
-				if(this.$refs.imgBlock){
-					this.$refs.imgBlock.addEventListener('error', () => {
-						this.parseProduct.json_imgs = null;
-					});
-				}
-			});
 		}
 	},
 	mounted() {
 		this.init();
 	},
 	watch: {
-		isItemInCart(newValue,oldValue) {
+		isItemInCart(newValue, oldValue) {
 			if ((newValue !== oldValue) && newValue == undefined) {
 				this.inCart = false;
 			}
@@ -84,15 +94,15 @@ export default {
 		...mapState(useCartStore, {
 			findInCart: 'getItemById',
 		}),
-		itemQuantity(){
+		itemQuantity() {
 			const item = this.findInCart(this.product.id);
-			if(item) {
+			if (item) {
 				return item.quantity
 			} else {
 				return null
 			}
 		},
-		isItemInCart(){
+		isItemInCart() {
 			return this.findInCart(this.product.id);
 		}
 	},
@@ -104,19 +114,21 @@ export default {
 		'_basket': inCart,
 		'_favorite': isFavorite, '_compare': isCompare
 	}]">
-		<div v-if="parseProduct" class="card-product__body anim-item" v-anim-scroll>
+		<div class="card-product__body anim-item" v-anim-scroll>
 			<router-link :to="'/products/' + parseProduct.url_page + '/'"></router-link>
 			<div class="card-product__block">
 				<div class="card-product__img">
-					<template v-if="parseProduct.json_imgs">
-						<picture>
-							<img ref="imgBlock" :src="parseProduct.json_imgs" alt="">
-						</picture>
-					</template>
-					<template v-else>
-						<picture>
-							<img src="~/assets/img/empty-img.png" alt="empty-img">
-						</picture>
+					<template v-if="isClient">
+						<template v-if="parseProduct.json_imgs">
+							<picture>
+								<img @error="errorHandler" :src="parseProduct.json_imgs">
+							</picture>
+						</template>
+						<template v-else>
+							<picture>
+								<img src="~/assets/img/empty-img.png" alt="empty-img">
+							</picture>
+						</template>
 					</template>
 				</div>
 			</div>

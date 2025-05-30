@@ -2,18 +2,29 @@
 import { Navigation, Pagination, Scrollbar } from "swiper/modules";
 import Swiper from "swiper";
 
+const data = ref({});
+
+const { data: cachedData} = useNuxtData(`product-slider-data`);
+if(cachedData.value){
+    data.value = cachedData.value;
+} else {
+    const { data: apiData } = await useAPI('/product-slider', {
+      key: `product-slider-data`,
+    })
+    data.value = apiData.value;
+}
+
 const slides = ref([]);
-
-const { isDesktop } = useVars();
-
-const { data } = await useAPI(`/product-slider`)
 slides.value = data.value.data;
+
 
 onMounted(() => {
   nextTick(() => {
     initSwiper();
   })
 })
+
+const { isDesktop } = useVars();
 
 function initSwiper() {
   const $slider = selectElement('.first-screen__slider');
@@ -42,8 +53,6 @@ function initSwiper() {
 function getImagePath(image) {
   return `${useRuntimeConfig().public.imgBaseURL}/storage/${image}`;
 }
-
-
 </script>
 
 <template>

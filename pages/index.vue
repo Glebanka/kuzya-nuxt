@@ -1,4 +1,35 @@
+<script>
+export default {
+    inject: [
+        'openPopUpMenu',
+        'openAuthPopUp'
+    ],
+    mounted() {
+        if (this.$route.query.justLoggedIn) {
+            this.openPopUpMenu('person');
+        }
+        if (this.$route.query.justRegistrated) {
+            this.openAuthPopUp();
+        }
+    },
+    watch: {
+        $route(newRoute) {
+            if (newRoute.query.justLoggedIn) {
+                this.openPopUpMenu('person');
+            }
+            if (newRoute.query.justRegistrated) {
+                this.openAuthPopUp();
+            }
+        }
+    }
+}
+</script>
 <script setup>
+const { data } = await usePageData({ 
+  urlPage: '/home', 
+  cacheKey: 'home-page-data'
+});
+useSeoMeta(useMetaTags(data.value));
 </script>
 <template>
     <main class="main main-page">
@@ -632,10 +663,8 @@
         <MonthCatalog></MonthCatalog>
         <CarouselProductHistory></CarouselProductHistory>
         <ProductsBrands class="hidden"></ProductsBrands>
-        <ClientOnly>
-            <AskQuestionForm></AskQuestionForm>
-            <InfoActionsForm></InfoActionsForm>
-        </ClientOnly>
+        <AskQuestionForm></AskQuestionForm>
+        <InfoActionsForm></InfoActionsForm>
     </main>
 </template>
 

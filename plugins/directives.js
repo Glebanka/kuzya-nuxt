@@ -135,6 +135,38 @@ const tabs = {
         let tabs = new Tabs(tab);
     },
 }
+class Tabs {
+    constructor($items) {
+        this.tabs = $items;
+        if (this.tabs) {
+            this.click(this.tabs);
+        }
+    }
+
+    click($tab) {
+        let i = 0;
+        $tab.addEventListener('click', (e) => {
+            let _this = e.target;
+            if (_this.closest('.click-tab-item__js')) {
+                let $item = _this.closest('.click-tab-item__js');
+                let indx = getIndex($item, $tab.querySelectorAll('.click-tab-item__js'));
+
+                setClass($tab.querySelectorAll('.click-tab-item__js'), { remove: '_active' });
+                if ($tab.querySelectorAll('.tab-item-block')[indx]) {
+                    siblingsClass($tab.querySelectorAll('.tab-item-block')[indx], { remove: '_active' });
+                }
+
+                $item.classList.add('_active');
+                if ($tab.querySelectorAll('.tab-item-block')[indx]) {
+                    $tab.querySelectorAll('.tab-item-block')[indx].classList.add('_active');
+                }
+            } else {
+                return;
+            }
+        });
+    }
+
+}
 
 
 const ssrProps = {

@@ -225,3 +225,80 @@ export function getUserIdFromToken(token) {
 	const decodedPayload = JSON.parse(atob(payload));
 	return decodedPayload.sub || null;
 }
+
+export function numberWithSpaces(x) {
+	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
+export class SelectBox {
+	constructor($items) {
+		this.items = document.querySelectorAll($items);
+		if (this.items.length) {
+			this.items.forEach(($item, indx) => {
+				this.click($item, indx);
+			});
+		}
+	}
+	click($item, indx) {
+		$item.querySelector('.select-box__head').addEventListener('click', () => {
+			diffElements(this.items, indx, false);
+			$item.classList.toggle('_active');
+			if ($item.classList.contains('sb-anim-height')) {
+				if ($item.classList.contains('_active')) {
+					_slideDown($item.querySelector('.select-box__body'));
+				} else {
+					_slideUp($item.querySelector('.select-box__body'));
+				}
+			}
+
+		});
+		$item.addEventListener('click', (e) => {
+			if (e.target.closest('.select-box-item__js')) {
+				let $this = e.target.closest('.select-box-item__js');
+
+				$item.querySelector('.select-box__label').textContent = $this.querySelector('span').textContent.trim();
+
+				if ($item.querySelector('.select-box-input-hidden')) {
+					$item.querySelector('.select-box-input-hidden').value = $this.querySelector('span').textContent.trim();
+				}
+
+				if (!$item.classList.contains('no-hidden-li')) {
+					siblingsClass($this, { remove: 'hidden' });
+					$this.classList.add('hidden');
+				}
+
+
+				$item.classList.add('_selected');
+				$item.classList.remove('_active');
+				if ($item.classList.contains('sb-anim-height')) {
+					_slideUp($item.querySelector('.select-box__body'));
+				}
+			}
+		});
+	}
+	close() {
+		if (this.items.length) {
+			this.items.forEach(($item, indx) => {
+				$item.classList.remove('_active');
+				if ($item.classList.contains('sb-anim-height')) {
+					_slideUp($item.querySelector('.select-box__body'));
+				}
+			});
+		}
+	}
+}
+
+export function sklonenie(n, text_forms) {
+	n = Math.abs(n) % 100;
+	var n1 = n % 10;
+	if (n > 10 && n < 20) {
+		return text_forms[2];
+	}
+	if (n1 > 1 && n1 < 5) {
+		return text_forms[1];
+	}
+	if (n1 == 1) {
+		return text_forms[0];
+	}
+	return text_forms[2];
+}

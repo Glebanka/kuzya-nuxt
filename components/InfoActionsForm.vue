@@ -5,7 +5,8 @@ import { mapState } from 'pinia';
 export default {
 	setup() {
 		return {
-			v$: useVuelidate()
+			v$: useVuelidate(),
+			isClient: import.meta.client,
 		}
 	},
 	data() {
@@ -61,6 +62,7 @@ export default {
 				}
 			}
 		},
+		// добавить сохранение состояния
 		async checkUser() {
 			if (this.isAuthenticated) {
 				let id = getUserIdFromToken(this.token)
@@ -101,35 +103,66 @@ export default {
 				<template v-if="responseMessage === ''">
 					<h2 class="get-info-actions__title m-0">Узнавайте первыми об акциях!</h2>
 					<div class="get-info-actions__form-container">
-						<form action="" class="get-info-actions-form form" @submit.prevent="formSubmit">
-							<div class="get-info-actions-form__item form-item input _required"
-								:class="{ 'has-success': (!v$.form.email.$error && !v$.form.email.required.$invalid && !v$.form.email.email.$invalid), 'has-error': (v$.form.email.$error) || (v$.form.email.email.$invalid && !v$.form.email.required.$invalid) }">
-								<div class="get-info-actions-form__body form-item__body">
-									<input type="text" name="email" autocomplete="email"
-										class="get-info-actions-form__input form-input email" v-model="form.email"
-										placeholder="Введите E-mail">
+						<template v-if="isClient">
+							<form class="get-info-actions-form form" @submit.prevent="formSubmit">
+								<div class="get-info-actions-form__item form-item input _required"
+									:class="{ 'has-success': (!v$.form.email.$error && !v$.form.email.required.$invalid && !v$.form.email.email.$invalid), 'has-error': (v$.form.email.$error) || (v$.form.email.email.$invalid && !v$.form.email.required.$invalid) }">
+									<div class="get-info-actions-form__body form-item__body">
+										<input type="text" name="email" autocomplete="email"
+											class="get-info-actions-form__input form-input email" v-model="form.email"
+											placeholder="Введите E-mail">
+									</div>
+								</div>
+								<button type="submit" class="get-info-actions-form__btn form-btn btn default-anim bg-yellow"
+									v-anim-hover>Подписка</button>
+							</form>
+							<div class="checkbox-house form-checkboxes">
+								<div class="form-item" :class="{ '_checked': form.privacy_policy }">
+									<input type="checkbox" id="get-info_privacy_policy" v-model="form.privacy_policy"
+										class="form-checkbox">
+									<label for="get-info_privacy_policy"
+										class="form-check-label make-order-form__politics form-politics">Я даю
+										согласие на
+										обработку персональных
+										данных, в соответствии с <router-link to="/politics/" target="_blank">Политикой
+											конфиденциальности</router-link>,
+										и соглашаюсь с <router-link to="#" target="_blank">Правилами</router-link>.</label>
+									<div class="helper-block"
+										v-if="v$.form.privacy_policy.sameAs.$invalid && v$.form.privacy_policy.$error">
+										Обязательно
+									</div>
 								</div>
 							</div>
-							<button type="submit" class="get-info-actions-form__btn form-btn btn default-anim bg-yellow"
-								v-anim-hover>Подписка</button>
-						</form>
-						<div class="checkbox-house form-checkboxes">
-							<div class="form-item" :class="{ '_checked': form.privacy_policy }">
-								<input type="checkbox" id="get-info_privacy_policy" v-model="form.privacy_policy"
-									class="form-checkbox">
-								<label for="get-info_privacy_policy"
-									class="form-check-label make-order-form__politics form-politics">Я даю
-									согласие на
-									обработку персональных
-									данных, в соответствии с <router-link to="/politics/" target="_blank">Политикой
-										конфиденциальности</router-link>,
-									и соглашаюсь с <router-link to="#" target="_blank">Правилами</router-link>.</label>
-								<div class="helper-block"
-									v-if="v$.form.privacy_policy.sameAs.$invalid && v$.form.privacy_policy.$error">
-									Обязательно
+						</template>
+						<template v-else>
+							<form class="get-info-actions-form form">
+								<div class="get-info-actions-form__item form-item input _required">
+									<div class="get-info-actions-form__body form-item__body">
+										<input type="text" name="email" autocomplete="email"
+											class="get-info-actions-form__input form-input email"
+											placeholder="Введите E-mail">
+									</div>
+								</div>
+								<button type="submit" class="get-info-actions-form__btn form-btn btn default-anim bg-yellow"
+									v-anim-hover>Подписка</button>
+							</form>
+							<div class="checkbox-house form-checkboxes">
+								<div class="form-item">
+									<input type="checkbox" id="get-info_privacy_policy"
+										class="form-checkbox">
+									<label for="get-info_privacy_policy"
+										class="form-check-label make-order-form__politics form-politics">Я даю
+										согласие на
+										обработку персональных
+										данных, в соответствии с <router-link to="/politics/" target="_blank">Политикой
+											конфиденциальности</router-link>,
+										и соглашаюсь с <router-link to="#" target="_blank">Правилами</router-link>.</label>
+									<div class="helper-block">
+										Обязательно
+									</div>
 								</div>
 							</div>
-						</div>
+						</template>
 					</div>
 				</template>
 				<h2 v-else class="get-info-actions__title m-0 custom-get-info">

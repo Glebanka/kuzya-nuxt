@@ -15,7 +15,7 @@ async function getProducts() {
                 params: { product_ids: JSON.stringify(latestProducts) }
             });
     
-            products.value = response.data.products.map(product => ({
+            products.value = response.products.map(product => ({
                 ...product,
                 title: product.headline,
                 json_imgs: [product.img]

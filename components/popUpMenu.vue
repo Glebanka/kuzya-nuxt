@@ -46,10 +46,6 @@ export default {
             document.addEventListener('keydown', this.handleKeydown);
         }
     },
-    beforeUnmount() {
-        window.removeEventListener('storage', this.syncSelectedShop);
-        document.removeEventListener('keydown', this.handleKeydown);
-    },
     methods: {
         ...mapActions(useAuthStore, ['logout']),
         openMenu(menuType) {
@@ -146,7 +142,6 @@ export default {
     },
     inject: [
         'configs',
-        'userAvatar',
     ],
     mounted() {
         this.getSelectedShop();
@@ -162,6 +157,10 @@ const { data } = await useAPI(`/main-menu`)
 menuBodyAdditionalNav.value = data.value.data;
 
 defineExpose()
+
+const { userData } = storeToRefs(useAuthStore())
+const userAvatar = computed(() => userData.value?.image || '')
+
 </script>
 <template>
     <div class="menu-body" :class="{ '_active': isActive }">
@@ -227,8 +226,8 @@ defineExpose()
                 </div>
                 <div class="menu-body-person" v-if="menuType == 'person'">
                     <div class="menu-body-img-container">
-                        <img class="menu-body-img" :src="`/storage/uploads/users/${userAvatar}`"
-                            v-if="userAvatar !== ''" alt="avatar">
+                        <img class="menu-body-img" :src="`${useRuntimeConfig().public.imgBaseURL}/storage/uploads/users/${userAvatar}`"
+                            v-if="userAvatar" alt="avatar">
                         <svg class="menu-body-avatar" v-else width="60" height="60"
                             viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"
                             xmlns:xlink="http://www.w3.org/1999/xlink">

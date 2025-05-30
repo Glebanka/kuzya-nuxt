@@ -1,5 +1,7 @@
 // stores/cart.ts
 
+import { useConfirmPopup } from "~/composables/useConfirmPopup"
+
 export interface CartItem {
   id: number | string
   price: number
@@ -9,16 +11,12 @@ export interface CartItem {
   [key: string]: any
 }
 
-// Если confirmPopUp используется, опишите его тип, например:
-// export const confirmPopUp: (message: string) => Promise<boolean> = async (message) => { /* ... */ }
-
 export const useCartStore = defineStore('cart', () => {
   // state
-  const items = ref<CartItem[]>(typeof localStorage !== 'undefined' ?
-    JSON.parse(localStorage.getItem('cart')|| '[]') : [])
+  const items = ref<CartItem[]>([])
 
   const addItem = (product: CartItem) => {
-    items.value.push({ ...product, quantity: 1, isChecked: true})
+    items.value.push({ ...product, quantity: 1, isChecked: true })
   }
 
   const updateItemPrice = (product: CartItem, price: number) => {
@@ -86,7 +84,7 @@ export const useCartStore = defineStore('cart', () => {
     removeItems(remItems)
   }
 
-  const addToCart = (item : CartItem) => {
+  const addToCart = (item: CartItem) => {
     const existingItem = getItemById(item.id)
     if (existingItem) {
       incrementQuantity(existingItem)
@@ -105,13 +103,13 @@ export const useCartStore = defineStore('cart', () => {
   const removeFromCart = async (item: CartItem): Promise<void> => {
     const product = getItemById(item.id)
     if (!product) return
-    // Если функция confirmPopUp используется, раскомментируйте и замените её на свою реализацию
-    // const ques = await confirmPopUp("Удалить товар из корзины?")
-    // if (ques) {
-    //   removeItem(product)
-    // }
-    // Для простоты здесь просто удаляем
-    removeItem(product)
+    
+    const confirmPopUp = useConfirmPopup()
+    const ques = await confirmPopUp("Удалить товар из корзины?")
+
+    if (ques) {
+      removeItem(product)
+    }
   }
 
   const toggleChecked = (item: CartItem) => {
@@ -122,40 +120,52 @@ export const useCartStore = defineStore('cart', () => {
     }
   }
 
+  const getCartFromStorage = () => {
+    items.value = JSON.parse(localStorage.getItem('cart') || '[]')
+  }
+
   const saveCartToStorage = () => {
     localStorage.setItem('cart', JSON.stringify(items.value))
   }
 
-  // const updatePrices = async (): Promise<void> => {
-  //   const twoHoursInMs = 2 * 60 * 60 * 1000
-  //   const currentTime = Date.now()
-  //   // Если метка времени отсутствует, используем время "2 часа назад + 10 секунд"
-  //   const lastUpdateTime =
-  //     parseInt(localStorage.getItem('cartLastUpdateTime') || '0', 10) ||
-  //     (Date.now() - twoHoursInMs - 10000)
+  const updatePrices = async (): Promise<void> => {
+    const twoHoursInMs = 2 * 60 * 60 * 1000
+    const currentTime = Date.now()
+    // Если метка времени отсутствует, используем время "2 часа назад + 10 секунд"
+    const lastUpdateTime =
+      parseInt(localStorage.getItem('cartLastUpdateTime') || '0', 10) ||
+      (Date.now() - twoHoursInMs - 10000)
 
-  //   if (currentTime - lastUpdateTime > twoHoursInMs) {
-  //     const productsItemsIDs = items.value.map(item => item.id)
-  //     try {
-  //       const response = await axios.get('/api/productsGetter', {
-  //         params: {
-  //           product_ids: JSON.stringify(productsItemsIDs),
-  //         },
-  //       })
-  //       // Предположим, что сервер возвращает массив объектов с id и price
-  //       const updatedItems: { id: number | string; price: number }[] = response.data.products
-  //       updatedItems.forEach(updatedItem => {
-  //         const existingItem = getItemById(updatedItem.id)
-  //         if (existingItem) {
-  //           updateItemPrice(existingItem, updatedItem.price)
-  //         }
-  //       })
-  //       localStorage.setItem('cartLastUpdateTime', currentTime.toString())
-  //     } catch (error) {
-  //       console.error(error)
-  //     }
-  //   }
-  // }
+      // currentTime - lastUpdateTime > twoHoursInMs
+    if (true) {
+      const productsItemsIDs = items.value.map(item => item.id)
+      if(productsItemsIDs.length <= 0) return
+      console.log('productsItemsIDs: ', productsItemsIDs);
+
+
+      const data = ref<{ products: CartItem[] }>();
+      const { data: apiData } = await useAPI(`/productsGetter`, {
+        key: `productsGetter-${JSON.stringify(productsItemsIDs)}-data`,
+        params: {
+          product_ids: JSON.stringify(productsItemsIDs),
+        },
+      })
+      const response = apiData.value as { products: CartItem[] };
+      console.log('apiData.value: ', apiData.value);
+      data.value = response;
+
+
+      const updatedItems = data.value.products
+      updatedItems.forEach(updatedItem => {
+        const existingItem = getItemById(updatedItem.id)
+        if (existingItem) {
+          updateItemPrice(existingItem, updatedItem.price)
+        }
+      })
+      localStorage.setItem('cartLastUpdateTime', currentTime.toString())
+
+    }
+  }
 
   return {
     items,
@@ -175,7 +185,8 @@ export const useCartStore = defineStore('cart', () => {
     removeFromCart,
     toggleChecked,
     saveCartToStorage,
-    // updatePrices,
+    getCartFromStorage,
+    updatePrices,
     getItemById,
     totalPrice,
     checkedItems,
