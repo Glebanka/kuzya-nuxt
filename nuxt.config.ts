@@ -2,19 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
 
-  logLevel: 'verbose', // Options: 'silent', 'info', 'verbose'
-  sourcemap: {
-    server: true,
-    client: true
-  },
-
-  ssr: true,
   // debug: true,
-  nitro: {
-    logLevel: 'debug', // 👈 покажет ошибки в логах
-    sourceMap: true,
-  },
-  vite: { build: { sourcemap: true } },
 
   app: {
     head: {
