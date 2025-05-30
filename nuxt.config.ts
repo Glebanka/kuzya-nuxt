@@ -9,7 +9,7 @@ export default defineNuxtConfig({
   },
 
   ssr: true,
-  debug: true,
+  // debug: true,
   nitro: {
     logLevel: 'debug', // 👈 покажет ошибки в логах
     sourceMap: true,
@@ -57,11 +57,6 @@ export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt',
   ],
-
-
-  devtools: {
-    enabled: true,
-  },
 
   hooks: {
     'pages:extend'(pages) {
