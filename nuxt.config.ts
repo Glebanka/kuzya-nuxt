@@ -1,6 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
+  
+  logLevel: 'verbose', // Options: 'silent', 'info', 'verbose'
+  sourcemap: {
+    server: true,
+    client: true
+  },
 
   ssr: true,
   debug: true,
