@@ -1,12 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
-  
+
   ssr: true,
   debug: true,
   nitro: {
     logLevel: 'debug', // 👈 покажет ошибки в логах
+    sourceMap: true,
   },
+  vite: { build: { sourcemap: true } },
 
   app: {
     head: {
@@ -32,7 +34,7 @@ export default defineNuxtConfig({
 
   components: [
     {
-      path: '~/components', 
+      path: '~/components',
       pathPrefix: false,
     },
   ],
@@ -56,19 +58,19 @@ export default defineNuxtConfig({
   },
 
   hooks: {
-    'pages:extend' (pages) {
+    'pages:extend'(pages) {
       pages.push({
         name: 'about',
         path: '/o-kompanii',
         file: '~/pages/(static)/about.vue'
       })
-      
+
       pages.push({
         name: 'giftCard',
         path: '/podarochnye-karty',
         file: '~/pages/(static)/giftCard.vue'
       })
-      
+
       pages.push({
         name: 'customerCard',
         path: '/karta-lybov-pokupatelya',
