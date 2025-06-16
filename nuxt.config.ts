@@ -29,8 +29,6 @@ export default defineNuxtConfig({
   },
 
   css: [
-    '~/assets/css/vanilla-calendar.min.css',
-    '~/assets/css/nouislider.min.css',
     '~/assets/scss/app.scss'
   ],
 
@@ -109,7 +107,24 @@ export default defineNuxtConfig({
         path: '/catalog/',
         file: '~/pages/catalog.vue'
       })
+      
+      pages.push({
+        name: 'discountsItem',
+        path: '/discounts/:discountName/',
+        file: '~/pages/discountsItem.vue'
+      })
 
+      pages.push({
+        name: 'discounts',
+        path: '/discounts/',
+        file: '~/pages/discounts.vue'
+      })
+
+      pages.push({
+        name: 'myOrder',
+        path: '/my-order/:orderId',
+        file: '~/pages/(auth)/my-order.vue'
+      })
     }
   },
 

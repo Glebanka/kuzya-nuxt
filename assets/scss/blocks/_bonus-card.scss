@@ -9,10 +9,6 @@
 
 	&__block.block-1 {
 		border-radius: 3.2rem;
-		-webkit-border-radius: 3.2rem;
-		-moz-border-radius: 3.2rem;
-		-ms-border-radius: 3.2rem;
-		-o-border-radius: 3.2rem;
 		background-color: var(--grey);
 		padding: 6rem 4rem;
 	}
@@ -34,10 +30,6 @@
 	&__img img {
 		width: 100%;
 		border-radius: 6rem;
-		-webkit-border-radius: 6rem;
-		-moz-border-radius: 6rem;
-		-ms-border-radius: 6rem;
-		-o-border-radius: 6rem;
 	}
 
 	@media screen and (orientation: portrait) {
@@ -59,10 +51,6 @@
 
 		&__img img {
 			border-radius: 3.2rem;
-			-webkit-border-radius: 3.2rem;
-			-moz-border-radius: 3.2rem;
-			-ms-border-radius: 3.2rem;
-			-o-border-radius: 3.2rem;
 		}
 	}
 }

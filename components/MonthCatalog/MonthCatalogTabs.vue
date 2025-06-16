@@ -22,7 +22,7 @@ export default {
     <div v-if="tabs.length" class="month-catalog-tab__head tab-head">
         <template v-for="(tab, indx) in tabs" :key="'catalogTab'+indx">
             <div class="anim-item" v-anim-scroll>
-                <div class="tab-item default-anim btn-2" v-anim-hover :class="{ '_active': indx === this.currentTab }" @click="selectTab($event, indx)">
+                <div class="tab-item default-anim btn-2" v-anim-hover :class="{ '_active': indx === currentTab }" @click="selectTab($event, indx)">
                    Каталог {{ tab.name }}
                 </div>
             </div>

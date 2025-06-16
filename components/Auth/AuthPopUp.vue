@@ -48,7 +48,7 @@ export default {
                 </svg>
             </div>
 
-            <img :src="`${useRuntimeConfig().public.imgBaseURL}/vendor/laravel-filemanager/images/test-folder/Frame 37184.jpg`" alt="" class="left-col-image">
+            <img src="~/assets/img/AuthBanner.jpg" alt="" class="left-col-image">
 
             <signInForm v-if="formType === 'signIn'" @changeFormType="changeFormType"></signInForm>
 

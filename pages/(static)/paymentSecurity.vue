@@ -3,10 +3,9 @@ const breadcrumbs = ref([]);
 const aboutPage = ref({});
 const isAnimActive = ref(false);
 
-
-const { data } = await usePageData({
-  urlPage: '/payment-security',
-  cacheKey: 'payment-security-page-data'
+const { data } = await useGetData('/pages', { 
+    params: { url_page: '/payment-security' },
+    key: 'payment-security-page-data'
 });
 breadcrumbs.value = [{ [data.value.data.breadcrumbs]: '' }];
 aboutPage.value = data.value.data;
@@ -24,14 +23,14 @@ onMounted(() => {
       <div class="container default-content anim-item" :class="{ 'anim-item-active': isAnimActive }">
         <h1 v-html="aboutPage.headline"></h1>
         <div class="payment-logos">
-          <img class="visa" :src="`${useRuntimeConfig().public.imgBaseURL}/assets/Visa.png`" alt="visa payment system">
+          <img class="visa" src="~/assets/img/Visa.png" alt="visa payment system">
           <div class="mastercard">
-            <img class="mastercard-img" :src="`${useRuntimeConfig().public.imgBaseURL}/assets/MasterCard.png`"
+            <img class="mastercard-img" src="~/assets/img/MasterCard.png"
               alt="mastercard payment system">
             <p class="mastercard-text">mastercard</p>
           </div>
-          <img class="mir" :src="`${useRuntimeConfig().public.imgBaseURL}/assets/Mir.png`" alt="mir payment system">
-          <img class="paygine" :src="`${useRuntimeConfig().public.imgBaseURL}/assets/paygine.png`"
+          <img class="mir" src="~/assets/img/Mir.png" alt="mir payment system">
+          <img class="paygine" src="~/assets/img/paygine.png"
             alt="paygine payment system">
         </div>
         <div v-html="aboutPage.content"></div>

@@ -136,12 +136,9 @@ export const useCartStore = defineStore('cart', () => {
       parseInt(localStorage.getItem('cartLastUpdateTime') || '0', 10) ||
       (Date.now() - twoHoursInMs - 10000)
 
-      // currentTime - lastUpdateTime > twoHoursInMs
-    if (true) {
+    if (currentTime - lastUpdateTime > twoHoursInMs) {
       const productsItemsIDs = items.value.map(item => item.id)
       if(productsItemsIDs.length <= 0) return
-      console.log('productsItemsIDs: ', productsItemsIDs);
-
 
       const data = ref<{ products: CartItem[] }>();
       const { data: apiData } = await useAPI(`/productsGetter`, {
@@ -151,11 +148,9 @@ export const useCartStore = defineStore('cart', () => {
         },
       })
       const response = apiData.value as { products: CartItem[] };
-      console.log('apiData.value: ', apiData.value);
       data.value = response;
 
-
-      const updatedItems = data.value.products
+      const updatedItems = data.value?.products || []
       updatedItems.forEach(updatedItem => {
         const existingItem = getItemById(updatedItem.id)
         if (existingItem) {

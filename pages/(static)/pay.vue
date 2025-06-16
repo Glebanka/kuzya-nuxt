@@ -4,9 +4,9 @@ const breadcrumbs = ref([]);
 const aboutPage = ref({});
 const isAnimActive = ref(false);
 
-const { data } = await usePageData({ 
-  urlPage: '/pay', 
-  cacheKey: 'pay-page-data'
+const { data } = await useGetData('/pages', { 
+    params: { url_page: '/pay' },
+    key: 'pay-page-data'
 });
 breadcrumbs.value = [{ [data.value.data.breadcrumbs]: '' }];
 aboutPage.value = data.value.data;

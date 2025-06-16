@@ -40,19 +40,10 @@ export default {
             }
         }
     },
-    created() {
-        if (import.meta.client) {
-            window.addEventListener('storage', this.syncSelectedShop);
-            document.addEventListener('keydown', this.handleKeydown);
-        }
-    },
     methods: {
         ...mapActions(useAuthStore, ['logout']),
         openMenu(menuType) {
             this.menuType = menuType
-            this.$nextTick(() => {
-                this.menuBody();
-            })
             this.isActive = true;
             document.body.classList.add('_overflow');
         },
@@ -91,21 +82,13 @@ export default {
                 recursionSetTimeout();
             }
         },
-        menuBody() {
-            const $menuBodyLinks = selectElements('.menu-body-link__js');
-            if ($menuBodyLinks.length) {
-                $menuBodyLinks.forEach(($link, indx) => {
-                    $link.addEventListener('click', () => {
-                        this.closeMenu()
-                        document.body.classList.remove('_overflow');
-                        $link.closest('.menu-body').classList.remove('_active');
-                        document.querySelector('.open-menu-body__js').classList.remove('_active');
-                        if ($link.closest('.menu-body-nav-body__js')) {
-                            $link.closest('.menu-body-nav-body__js').parentElement.classList.remove('_active');
-                            $link.closest('.menu-body-nav-body__js').style.height = 0;
-                        }
-                    })
-                });
+        linkClickHandler(e) {
+            this.closeMenu()
+            document.body.classList.remove('_overflow');
+            e.target.closest('.menu-body').classList.remove('_active');
+            if (e.target.closest('.menu-body-nav-body__js')) {
+                e.target.closest('.menu-body-nav-body__js').parentElement.classList.remove('_active');
+                e.target.closest('.menu-body-nav-body__js').style.height = 0;
             }
         },
         toggleMenuBodyItem(e) {
@@ -126,15 +109,6 @@ export default {
                     $body.style.height = 0;
                 }
             }
-
-        },
-        popUpMenuInit() {
-            const $closeMenuBody = selectElement('.close-menu-body__js');
-            if ($closeMenuBody) {
-                $closeMenuBody.addEventListener('click', (e) => {
-                    this.closeMenu();
-                });
-            }
         },
     },
     computed: {
@@ -144,8 +118,13 @@ export default {
         'configs',
     ],
     mounted() {
+        window.addEventListener('storage', this.syncSelectedShop);
+        document.addEventListener('keydown', this.handleKeydown);
         this.getSelectedShop();
-        this.popUpMenuInit();
+    },
+    beforeUnmount() {
+        window.removeEventListener('storage', this.syncSelectedShop);
+        document.removeEventListener('keydown', this.handleKeydown);
     },
 }
 </script>
@@ -164,7 +143,7 @@ const userAvatar = computed(() => userData.value?.image || '')
 </script>
 <template>
     <div class="menu-body" :class="{ '_active': isActive }">
-        <div class="menu-body__close close-menu-body__js default-anim" v-anim-hover>
+        <div @click="closeMenu" class="menu-body__close default-anim" v-anim-hover>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18" stroke="#1D1D1D" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round" />
@@ -186,7 +165,8 @@ const userAvatar = computed(() => userData.value?.image || '')
                         <ul class="list-style-none menu-body-nav__list">
                             <template v-for="(item, indx) in menuBodyNav" :key="'menyBodyItem'+indx">
                                 <li class="menu-body-nav-item">
-                                    <router-link :to="item.link" class="menu-body-nav-item__link menu-body-link__js"
+                                    <router-link :to="item.link" class="menu-body-nav-item__link"
+                                        @click="linkClickHandler"
                                         :class="{ '_active': $route.path.indexOf(item.link) === 0 }">{{ item.name
                                         }}</router-link>
                                 </li>
@@ -211,7 +191,8 @@ const userAvatar = computed(() => userData.value?.image || '')
                                             <template v-for="menuItem in menuCategory.tabs">
                                                 <li class="menu-body-additional-nav__item">
                                                     <router-link :to="'/' + menuItem.url_page"
-                                                        class="menu-body-additional-nav__link menu-body-link__js">
+                                                        class="menu-body-additional-nav__link"
+                                                        @click="linkClickHandler">
                                                         <span>{{ menuItem.name_menu }}</span>
                                                     </router-link>
                                                 </li>
@@ -226,11 +207,11 @@ const userAvatar = computed(() => userData.value?.image || '')
                 </div>
                 <div class="menu-body-person" v-if="menuType == 'person'">
                     <div class="menu-body-img-container">
-                        <img class="menu-body-img" :src="`${useRuntimeConfig().public.imgBaseURL}/storage/uploads/users/${userAvatar}`"
+                        <img class="menu-body-img"
+                            :src="`${useRuntimeConfig().public.imgBaseURL}/storage/uploads/users/${userAvatar}`"
                             v-if="userAvatar" alt="avatar">
-                        <svg class="menu-body-avatar" v-else width="60" height="60"
-                            viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <svg class="menu-body-avatar" v-else width="60" height="60" viewBox="0 0 60 60" fill="none"
+                            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                             <rect width="60" height="60" rx="30" fill="#F0F4FC" />
                             <mask id="mask0_209_6773" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0"
                                 width="60" height="60">
@@ -257,7 +238,8 @@ const userAvatar = computed(() => userData.value?.image || '')
                         <ul class="list-style-none menu-body-nav__list">
                             <template v-for="(item, indx) in menuBodyNav" :key="'menyBodyItem'+indx">
                                 <li class="menu-body-nav-item">
-                                    <router-link :to="item.link" class="menu-body-nav-item__link menu-body-link__js"
+                                    <router-link :to="item.link" class="menu-body-nav-item__link"
+                                        @click="linkClickHandler"
                                         :class="{ '_active': $route.path.indexOf(item.link) === 0 }">{{ item.name
                                         }}</router-link>
                                 </li>

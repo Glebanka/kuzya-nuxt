@@ -1,10 +1,10 @@
 export default defineNuxtRouteMiddleware((to) => {
   if (import.meta.server) return
-  const userStore = useAuthStore()
-  const { isAuthenticated } = storeToRefs(userStore)
+  const authStore = useAuthStore()
+  const { isAuthenticated } = storeToRefs(authStore)
   
-  userStore.$onAction(({name, after})=>{
-    if(name == 'getToken'){      
+  authStore.$onAction(({name, after})=>{
+    if(name == 'getToken'){
       after(()=>{
         if(!isAuthenticated.value){
           return navigateTo('/')

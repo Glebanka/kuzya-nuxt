@@ -22,6 +22,7 @@ export function useAPI<T>(
   url: string | (() => string),
   options?: UseFetchOptions<T>,
 ): ReturnType<typeof useFetch> {
+  
   const result = useFetch(url, {
     ...options,
     $fetch: useNuxtApp().$apiFetch as typeof $fetch,

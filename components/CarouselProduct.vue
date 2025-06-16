@@ -10,19 +10,12 @@ const { carouselId } = defineProps({
   carouselId: Number
 })
 
-const data = ref({});
+const { data } = await useGetData('/carousel-product', { 
+    method: 'POST',
+    body: { id_category: carouselId },
+    key: `carousel-product-data-id-${carouselId}`
+});
 
-const { data: cachedData} = useNuxtData(`carousel-product-data-id-${carouselId}`);
-if(cachedData.value){
-    data.value = cachedData.value;
-} else {
-    const { data: apiData } = await useAPI('/carousel-product', {
-      method: 'POST',
-      body: { id_category: carouselId },
-      key: `carousel-product-data-id-${carouselId}`,
-    })
-    data.value = apiData.value;
-}
 
 if (data.value.data) {
   if (data.value.data.product) {

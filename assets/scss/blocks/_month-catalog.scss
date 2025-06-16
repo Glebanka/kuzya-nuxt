@@ -28,10 +28,6 @@
 		position: absolute;
 		top: 50%;
 		transform: translateY(-50%);
-		-webkit-transform: translateY(-50%);
-		-moz-transform: translateY(-50%);
-		-ms-transform: translateY(-50%);
-		-o-transform: translateY(-50%);
 	}
 
 	&__arrow.left {
@@ -64,10 +60,6 @@
 
 	&__icon svg path {
 		transition: stroke 0.3s ease-out;
-		-webkit-transition: stroke 0.3s ease-out;
-		-moz-transition: stroke 0.3s ease-out;
-		-ms-transition: stroke 0.3s ease-out;
-		-o-transition: stroke 0.3s ease-out;
 	}
 
 	@media (hover: hover) and (pointer: fine) {
@@ -116,10 +108,6 @@
 .month-catalog-slide img {
 	width: 100%;
 	border-radius: 2rem;
-	-webkit-border-radius: 2rem;
-	-moz-border-radius: 2rem;
-	-ms-border-radius: 2rem;
-	-o-border-radius: 2rem;
 }
 
 .month-catalog-counter {
@@ -136,10 +124,6 @@
 
 	&__arrow svg path {
 		transition: stroke 0.3s ease-out;
-		-webkit-transition: stroke 0.3s ease-out;
-		-moz-transition: stroke 0.3s ease-out;
-		-ms-transition: stroke 0.3s ease-out;
-		-o-transition: stroke 0.3s ease-out;
 	}
 
 	&__arrow.swiper-button-disabled svg path {

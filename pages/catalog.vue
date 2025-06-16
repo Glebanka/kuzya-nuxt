@@ -1,17 +1,9 @@
 <script>
 export default {
   async setup() {
-    const data = ref({});
-    const { data: cachedData } = useNuxtData(`catalog-list-data`);
-    if (cachedData.value) {
-      data.value = cachedData.value;
-    } else {
-      const { data: apiData } = await useAPI(`/catalog/`, {
-        key: `catalog-list-data`,
-      })
-      data.value = apiData.value;
-    }
-
+    const { data } = await useGetData(`/catalog/`, {
+      key: `catalog-list-data`
+    });
 
     const breadcrumbs = ref([{ ['Каталог']: '' }]);
     const aboutPage = ref({

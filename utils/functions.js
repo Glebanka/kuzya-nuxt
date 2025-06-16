@@ -230,6 +230,48 @@ export function numberWithSpaces(x) {
 	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
 
+export function diffElements($items, i, _parent) {
+	if ($items.length) {
+		$items.forEach((item, indx) => {
+			if (i !== indx) {
+				if (_parent) {
+					item.parentElement.classList.remove('_active');
+				} else {
+					item.classList.remove('_active');
+				}
+			}
+		});
+	}
+}
+
+export function sliderSlideOpacity(slider, _count) {
+	if (slider.el) {
+		let $slides = slider.el.querySelectorAll('.swiper-slide');
+		if ($slides.length) {
+			$slides.forEach(($item, indx) => {
+				if (indx > (_count - 1)) {
+					$item.classList.add('_opacity');
+				}
+			});
+		}
+
+		slider.on('realIndexChange', function (e) {
+			slider.el.querySelectorAll('.swiper-slide').forEach(($item, indx) => {
+				if (indx === e.realIndex) {
+					$item.classList.remove('_opacity');
+				}
+				if (indx < e.realIndex) {
+					$item.classList.add('_opacity');
+				} else if (indx >= (e.realIndex + (_count))) {
+					$item.classList.add('_opacity');
+				} else if (indx <= (e.realIndex + (_count - 1))) {
+					$item.classList.remove('_opacity');
+				}
+			})
+		});
+	}
+}
+
 export class SelectBox {
 	constructor($items) {
 		this.items = document.querySelectorAll($items);
@@ -301,4 +343,15 @@ export function sklonenie(n, text_forms) {
 		return text_forms[0];
 	}
 	return text_forms[2];
+}
+
+export function clickScrollTo(id, _offset = 120) {
+	let minMarginTop = _offset;
+	if (id) {
+		let el = document.querySelector(`#${id}`);
+		if (el) {
+			let offset = getCoords(el).top;
+			useNuxtApp().$gsap.to(window, { duration: 1, scrollTo: (offset - minMarginTop) });
+		}
+	}
 }

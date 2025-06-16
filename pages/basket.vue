@@ -3,9 +3,9 @@ import { mapActions, mapState } from "pinia";
 
 export default {
     async setup() {
-        const { data } = await usePageData({
-            urlPage: '/basket',
-            cacheKey: 'basket-page-data'
+        const { data } = await useGetData('/pages', {
+            params: { url_page: '/basket' },
+            key: 'basket-page-data'
         });
         const breadcrumbs = ref([]);
         breadcrumbs.value = [{ [data.value.data.breadcrumbs]: '' }];
@@ -170,7 +170,7 @@ export default {
                                             <div v-if="products.length"
                                                 class="basket-form-info__count-product block-basket__count-product">
                                                 {{ checkedItems.length + ' ' + sklonenie(checkedItems.length,
-                                                ['товар', 'товара', 'товаров']) }}
+                                                    ['товар', 'товара', 'товаров']) }}
                                             </div>
 
                                             <div class="basket-form-info__promocodes hidden">

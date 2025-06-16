@@ -8,10 +8,6 @@
 	top: 50%;
 	z-index: 4;
 	transform: translateY(-50%);
-	-webkit-transform: translateY(-50%);
-	-moz-transform: translateY(-50%);
-	-ms-transform: translateY(-50%);
-	-o-transform: translateY(-50%);
 	width: 10.6rem;
 	height: 10.6rem;
 	background-color: var(--grey);
@@ -19,10 +15,6 @@
 	align-items: center;
 	justify-content: center;
 	border-radius: 50%;
-	-webkit-border-radius: 50%;
-	-moz-border-radius: 50%;
-	-ms-border-radius: 50%;
-	-o-border-radius: 50%;
 	border: 13px solid var(--white);
 	cursor: pointer;
 	overflow: hidden;
@@ -49,10 +41,6 @@
 	align-items: center;
 	justify-content: center;
 	border-radius: 50%;
-	-webkit-border-radius: 50%;
-	-moz-border-radius: 50%;
-	-ms-border-radius: 50%;
-	-o-border-radius: 50%;
 	overflow: hidden;
 	cursor: pointer;
 }
@@ -71,28 +59,16 @@
 	background-color: var(--grey);
 	margin-top: 4rem;
 	border-radius: 10rem;
-	-webkit-border-radius: 10rem;
-	-moz-border-radius: 10rem;
-	-ms-border-radius: 10rem;
-	-o-border-radius: 10rem;
 	display: none;
 }
 
 ._swiper .swiper-scrollbar-drag {
 	background-color: var(--blue);
 	border-radius: 10rem;
-	-webkit-border-radius: 10rem;
-	-moz-border-radius: 10rem;
-	-ms-border-radius: 10rem;
-	-o-border-radius: 10rem;
 }
 
 .swiper-slide{
 	transition: opacity 0.3s ease-out;
-	-webkit-transition: opacity 0.3s ease-out;
-	-moz-transition: opacity 0.3s ease-out;
-	-ms-transition: opacity 0.3s ease-out;
-	-o-transition: opacity 0.3s ease-out;
 }
 
 .swiper-slide._opacity {
@@ -144,10 +120,6 @@
 	top: 0;
 	left: 50%;
 	transform: translateX(-50%);
-	-webkit-transform: translateX(-50%);
-	-moz-transform: translateX(-50%);
-	-ms-transform: translateX(-50%);
-	-o-transform: translateX(-50%);
 }
 
 .lg-backdrop {
@@ -156,9 +128,5 @@
 
 .lg-icon {
 	border-radius: 50%;
-	-webkit-border-radius: 50%;
-	-moz-border-radius: 50%;
-	-ms-border-radius: 50%;
-	-o-border-radius: 50%;
 }
 /* ---------------- gallery END ------------------- */
