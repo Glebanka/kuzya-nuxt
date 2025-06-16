@@ -23,9 +23,9 @@
 		position: relative;
 	}
 
-    &__block:nth-child(2){
-        transition-delay: 0.3s;
-    }
+	&__block:nth-child(2) {
+		transition-delay: 0.3s;
+	}
 
 	&__block-body {
 		position: sticky;
@@ -193,9 +193,9 @@
 	@media screen and (orientation: portrait) {
 		margin-bottom: 12rem;
 
-        &__block:nth-child(2) {
-            transition-delay: 0s;
-        }
+		&__block:nth-child(2) {
+			transition-delay: 0s;
+		}
 
 		&__block-body {
 			position: unset;
@@ -283,7 +283,7 @@
 	opacity: 0 !important;
 	border-radius: 3.2rem;
 	overflow: hidden;
-    min-height: 47.4rem;
+	height: 47.4rem;
 
 	&.swiper-slide-active {
 		opacity: 1 !important;
@@ -300,7 +300,7 @@
 	img {
 		width: 100%;
 		height: unset;
-        max-height: 100%;
+		max-height: 47.4rem;
 		object-fit: cover;
 		cursor: pointer;
 	}
@@ -312,8 +312,11 @@
 	}
 
 	@media screen and (orientation: portrait) {
-		height: unset;
-        min-height: 42.8rem;
+		height: 42.8rem;
+
+		img {
+			max-height: 42.8rem;
+		}
 	}
 }
 
@@ -349,10 +352,10 @@
 	}
 
 	&__item img {
-        width: 100%;
+		width: 100%;
 		max-width: 100%;
 		height: unset;
-        max-height: 8.4rem;
+		max-height: 8.4rem;
 		object-fit: cover;
 	}
 
@@ -367,7 +370,7 @@
 		height: 4.8rem;
 		background-color: var(--grey);
 		border-radius: 50%;
-		background-image: url(/public/storage/svg/preview-video.svg);
+		background-image: url(~/assets/img/svg/preview-video.svg);
 		background-repeat: no-repeat;
 		background-size: 2.4rem 2.4rem;
 		background-position: 60% center;
@@ -426,7 +429,7 @@
 	&__stars {
 		width: 12.4rem;
 		height: 2rem;
-		mask-image: url(/public/storage/svg/mask-stars.svg);
+		mask-image: url(~/assets/img/svg/mask-stars.svg);
 		mask-size: 12.4rem 2rem;
 		mask-position: 100% center;
 		position: relative;
@@ -670,10 +673,12 @@
 		font-size: 1.6rem;
 		line-height: 150%;
 	}
+
 	&__content ul {
 		max-width: 102.6rem;
 		margin: 0 auto 4rem;
 	}
+
 	&__content ol {
 		max-width: 102.6rem;
 		margin: 0 auto 4rem;

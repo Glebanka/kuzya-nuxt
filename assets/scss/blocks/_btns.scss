@@ -1,7 +1,8 @@
 /* ---------------  btn  ---------------------- */
 
 .btn,
-.btn-2 {
+.btn-2,
+.btn-3 {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -12,10 +13,6 @@
 	line-height: 100%;
 	font-weight: 600;
 	border-radius: 10rem;
-	-webkit-border-radius: 10rem;
-	-moz-border-radius: 10rem;
-	-ms-border-radius: 10rem;
-	-o-border-radius: 10rem;
 	cursor: pointer;
 }
 .btn-small{
@@ -30,10 +27,14 @@
 	line-height: 100%;
 	padding: 1.6rem 2.4rem;
 	transition: color 0.3s ease-out 0.1s;
-	-webkit-transition: color 0.3s ease-out 0.1s;
-	-moz-transition: color 0.3s ease-out 0.1s;
-	-ms-transition: color 0.3s ease-out 0.1s;
-	-o-transition: color 0.3s ease-out 0.1s;
+}
+.btn-3 {
+	background-color: var(--blue);
+	color: var(--white);
+	font-size: 1.6rem;
+	line-height: 100%;
+	padding: 1.6rem 2.4rem;
+	transition: color 0.3s ease-out 0.1s;
 }
 
 .btn-2.bg-yellow {
@@ -109,10 +110,6 @@
 	cursor: pointer;
 	border-radius: 10rem;
 	transition: all 0.3s ease-out 0.1s;
-	-webkit-transition: color 0.3s ease-out 0.1s;
-	-moz-transition: color 0.3s ease-out 0.1s;
-	-ms-transition: color 0.3s ease-out 0.1s;
-	-o-transition: color 0.3s ease-out 0.1s;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -146,11 +143,6 @@
 	z-index: 5;
 	margin-top: 0;
 	border-radius: 10rem;
-	-webkit-border-radius: 10rem;
-	-moz-border-radius: 10rem;
-	-ms-border-radius: 10rem;
-	-o-border-radius: 10rem;
-
 	&__btn {
 		width: 6.4rem;
 		height: 4.8rem;
@@ -168,10 +160,6 @@
 
 		svg path {
 			transition: all 0.3s ease-out;
-			-webkit-transition: all 0.3s ease-out;
-			-moz-transition: all 0.3s ease-out;
-			-ms-transition: all 0.3s ease-out;
-			-o-transition: all 0.3s ease-out;
 		}
 
 		@media (hover: hover) and (pointer: fine) {
@@ -215,10 +203,6 @@
 	align-items: center;
 	justify-content: center;
 	border-radius: 50%;
-	-webkit-border-radius: 50%;
-	-moz-border-radius: 50%;
-	-ms-border-radius: 50%;
-	-o-border-radius: 50%;
 	position: relative;
 	z-index: 2;
 }
@@ -238,16 +222,8 @@
 	background-color: #EE8208;
 	z-index: -1;
 	border-radius: 50%;
-	-webkit-border-radius: 50%;
-	-moz-border-radius: 50%;
-	-ms-border-radius: 50%;
-	-o-border-radius: 50%;
 	clip-path: circle(0% at 50% 50%);
 	transition: clip-path 0.3s cubic-bezier(0, .01, .8, .99);
-	-webkit-transition: clip-path 0.3s cubic-bezier(0, .01, .8, .99);
-	-moz-transition: clip-path 0.3s cubic-bezier(0, .01, .8, .99);
-	-ms-transition: clip-path 0.3s cubic-bezier(0, .01, .8, .99);
-	-o-transition: clip-path 0.3s cubic-bezier(0, .01, .8, .99);
 }
 
 .socials-list-item .socials-list-item__link:has(.ok)::after {
@@ -268,10 +244,6 @@
 
 .socials-list-item__link svg path {
 	transition: fill 0.3s ease-out;
-	-webkit-transition: fill 0.3s ease-out;
-	-moz-transition: fill 0.3s ease-out;
-	-ms-transition: fill 0.3s ease-out;
-	-o-transition: fill 0.3s ease-out;
 }
 
 .bg-blue .socials-list-item__link .bg {
@@ -296,20 +268,12 @@
 	width: 1.8rem;
 	height: 1.5rem;
 	transform: translateX(-1px);
-	-webkit-transform: translateX(-1px);
-	-moz-transform: translateX(-1px);
-	-ms-transform: translateX(-1px);
-	-o-transform: translateX(-1px);
 }
 
 .socials-list-item .socials-list-item__link svg.wp {
 	width: 1.8rem;
 	height: 1.8rem;
 	transform: translateX(1px);
-	-webkit-transform: translateX(1px);
-	-moz-transform: translateX(1px);
-	-ms-transform: translateX(1px);
-	-o-transform: translateX(1px);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -425,7 +389,7 @@
 			transform: translateY(-50%) rotate(0deg);
 			width: 2.4rem;
 			height: 2.4rem;
-			background-image: url(/public/storage/svg/accordion-arrow.svg);
+			background-image: url(~/assets/img/svg/accordion-arrow.svg);
 			background-size: 2.4rem 2.4rem;
 			background-repeat: no-repeat;
 			background-position: center;

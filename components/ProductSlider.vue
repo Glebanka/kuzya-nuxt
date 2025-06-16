@@ -2,17 +2,9 @@
 import { Navigation, Pagination, Scrollbar } from "swiper/modules";
 import Swiper from "swiper";
 
-const data = ref({});
-
-const { data: cachedData} = useNuxtData(`product-slider-data`);
-if(cachedData.value){
-    data.value = cachedData.value;
-} else {
-    const { data: apiData } = await useAPI('/product-slider', {
-      key: `product-slider-data`,
-    })
-    data.value = apiData.value;
-}
+const { data } = await useGetData('/product-slider', { 
+    key: `product-slider-data`
+});
 
 const slides = ref([]);
 slides.value = data.value.data;
@@ -61,7 +53,7 @@ function getImagePath(image) {
       <div class="first-screen__slider _swiper">
         <div class="first-screen__wrapper swiper-wrapper">
           <div v-for="slide in slides" :key="'productSlider' + slide.id" class="swiper-slide first-screen-slide bg-red">
-            <a :href="slide.link" class="first-screen-slide__body">
+            <router-link :to="slide.link" class="first-screen-slide__body">
               <div class="first-screen-slide__block">
                 <div class="first-screen-slide__name">
                   {{ slide.name }}
@@ -77,7 +69,7 @@ function getImagePath(image) {
                   <img :src="getImagePath(slide.image)" alt="">
                 </picture>
               </div>
-            </a>
+            </router-link>
           </div>
         </div>
         <div class="first-screen__arrows slider-arrows">

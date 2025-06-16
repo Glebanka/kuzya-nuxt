@@ -1,56 +1,28 @@
-<script>
-export default {
-    data() {
-        return {
-            selectedShop: '',
-        }
-    },
-    inject: [
-        'configs',
-        'openAuthPopUp',
-    ],
-}
-</script>
-
 <script setup>
-const footerMenu = ref([]);
-
 const { data } = await useAPI(`/main-menu`)
-footerMenu.value = data.value.data;
+const footerMenu = ref(data.value?.data || []);
 
-const cartStore = useCartStore();
-const cartQuantity = computed(() => cartStore.items.length)
-const { isDesktop } = useVars();
+const cartQuantity = computed(() => useCartStore().items.length)
 const currentYear = new Date().getFullYear();
 
 const { userData } = storeToRefs(useAuthStore())
 const userAvatar = computed(() => userData.value?.image || '')
 
-onMounted(() => {
-    footerNativeJs();
-})
+const configs = inject('configs')
+const openAuthPopUp = inject('openAuthPopUp')
 
-function footerNativeJs() {
-    const submenuItems = selectElements('.footer-submenu__js');
-    if (submenuItems.length && !isDesktop) {
-        submenuItems.forEach(($item, indx) => {
-            $item.addEventListener('click', (e) => {
-                /*
-                footer-nav__block
-                footer-nav__body
-                */
-                $item.parentElement.classList.toggle('_active');
-                if ($item.parentElement.classList.contains('_active')) {
-                    $item.parentElement.querySelector('.footer-nav__body').style.height = $item.parentElement.querySelector('.footer-nav__body').scrollHeight + 1 + 'px';
-                    siblingsAction($item.parentElement, (item, indx) => {
-                        item.classList.remove('_active');
-                        item.querySelector('.footer-nav__body').style.height = 0;
-                    })
-                } else {
-                    $item.parentElement.querySelector('.footer-nav__body').style.height = 0;
-                }
-            });
-        });
+function mobileSubmenuClickHandler(e) {
+    if(!useVars().isDesktop.value){
+        e.target.parentElement.classList.toggle('_active');
+        if (e.target.parentElement.classList.contains('_active')) {
+            e.target.parentElement.querySelector('.footer-nav__body').style.height = e.target.parentElement.querySelector('.footer-nav__body').scrollHeight + 1 + 'px';
+            siblingsAction(e.target.parentElement, (item, indx) => {
+                item.classList.remove('_active');
+                item.querySelector('.footer-nav__body').style.height = 0;
+            })
+        } else {
+            e.target.parentElement.querySelector('.footer-nav__body').style.height = 0;
+        }
     }
 }
 </script>
@@ -87,7 +59,7 @@ function footerNativeJs() {
                 </div>
                 <div class="footer-nav">
                     <div v-for="(menuBlock, indx) in footerMenu" :key="'footerMenu' + indx" class="footer-nav__block">
-                        <div class="footer-nav__label footer-submenu__js">{{ menuBlock.name }}</div>
+                        <div class="footer-nav__label" @click="mobileSubmenuClickHandler">{{ menuBlock.name }}</div>
                         <div class="footer-nav__body">
                             <ul class="list-style-none footer-nav__list">
                                 <li v-for="item in menuBlock.tabs" class="footer-nav-item">
@@ -205,7 +177,7 @@ function footerNativeJs() {
                     </router-link>
                 </div>
                 <div class="panel-nav-item hidden">
-                    <router-link to="#" class="panel-nav-item__body">
+                    <!-- <router-link class="panel-nav-item__body">
                         <svg class="favorite" width="28" height="28" viewBox="0 0 28 28" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -215,7 +187,7 @@ function footerNativeJs() {
                                 d="M14.0008 5.28381C16.7413 2.82331 20.9763 2.90498 23.6165 5.54981C26.2555 8.19581 26.3465 12.4098 23.8918 15.1585L13.9985 25.0658L4.10751 15.1585C1.65285 12.4098 1.74502 8.18881 4.38285 5.54981C7.02535 2.90848 11.2522 2.81981 14.0008 5.28381ZM21.9645 7.19831C20.2145 5.44598 17.3912 5.37481 15.5595 7.01981L14.002 8.41748L12.4433 7.02098C10.6058 5.37364 7.78835 5.44598 6.03368 7.20064C4.29535 8.93898 4.20785 11.7215 5.80968 13.5601L13.9997 21.763L22.1897 13.5613C23.7927 11.7215 23.7052 8.94248 21.9645 7.19831Z"
                                 fill="#1d1d1d" />
                         </svg>
-                    </router-link>
+                    </router-link> -->
                 </div>
                 <div class="panel-nav-item" :class="{ '_active': $route.path === '/basket' }">
                     <div class="panel-nav-item__body open-popup-basket__js">
@@ -237,8 +209,9 @@ function footerNativeJs() {
                     </div>
                 </div>
                 <div class="panel-nav-item" @click="openAuthPopUp">
-                    <img v-if="userAvatar" :src="`${useRuntimeConfig().public.imgBaseURL}/storage/uploads/users/${userAvatar}`" alt="avatar"
-                        class="panel-nav-item__avatar">
+                    <img v-if="userAvatar"
+                        :src="`${useRuntimeConfig().public.imgBaseURL}/storage/uploads/users/${userAvatar}`"
+                        alt="avatar" class="panel-nav-item__avatar">
                     <div v-else class="panel-nav-item__body">
                         <svg class="person" width="28" height="28" viewBox="0 0 28 28" fill="none"
                             xmlns="http://www.w3.org/2000/svg">

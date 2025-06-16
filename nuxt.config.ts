@@ -6,13 +6,6 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      link: [{
-        rel: 'stylesheet',
-        href: 'https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css'
-      }, {
-        rel: 'stylesheet',
-        href: 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css'
-      }],
       script: [{
         src: 'https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=767f9059-7d48-4017-bf97-e4424f659bb7&amp;coordorder=longlat&amp;&suggest_apikey=c826b850-05b5-4f3e-983e-c1620586e47a',
         type: "text/javascript",
@@ -29,8 +22,6 @@ export default defineNuxtConfig({
   },
 
   css: [
-    '~/assets/css/vanilla-calendar.min.css',
-    '~/assets/css/nouislider.min.css',
     '~/assets/scss/app.scss'
   ],
 
@@ -109,7 +100,24 @@ export default defineNuxtConfig({
         path: '/catalog/',
         file: '~/pages/catalog.vue'
       })
+      
+      pages.push({
+        name: 'discountsItem',
+        path: '/discounts/:discountName/',
+        file: '~/pages/discountsItem.vue'
+      })
 
+      pages.push({
+        name: 'discounts',
+        path: '/discounts/',
+        file: '~/pages/discounts.vue'
+      })
+
+      pages.push({
+        name: 'myOrder',
+        path: '/my-order/:orderId',
+        file: '~/pages/(auth)/my-order.vue'
+      })
     }
   },
 

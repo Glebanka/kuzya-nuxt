@@ -60,10 +60,6 @@ button {
 	background-color: var(--white);
 	border: 1px solid transparent;
 	transition: border 0.3s ease-out;
-	-webkit-transition: border 0.3s ease-out;
-	-moz-transition: border 0.3s ease-out;
-	-ms-transition: border 0.3s ease-out;
-	-o-transition: border 0.3s ease-out;
 }
 .form-input::-ms-reveal{
 	display: none;
@@ -83,19 +79,11 @@ button {
 	border: 1px solid transparent;
 	padding: 0 2rem;
 	border-radius: 10rem;
-	-webkit-border-radius: 10rem;
-	-moz-border-radius: 10rem;
-	-ms-border-radius: 10rem;
-	-o-border-radius: 10rem;
 }
 
 .form-textarea {
 	min-height: 10.8rem;
 	border-radius: 2rem;
-	-webkit-border-radius: 2rem;
-	-moz-border-radius: 2rem;
-	-ms-border-radius: 2rem;
-	-o-border-radius: 2rem;
 	padding: 1.6rem 2rem;
 }
 
@@ -118,7 +106,7 @@ button {
 	top: 50%;
 	transform: translateY(-50%);
 	right: 1.2rem;
-	background-image: url(/public/storage/svg/check-green.svg);
+	background-image: url(~/assets/img/svg/check-green.svg);
 	background-size: 3.2rem 3.2rem;
 	background-repeat: no-repeat;
 	background-position: center;
@@ -233,7 +221,7 @@ button {
 	transform: translateY(-50%) rotate(0deg);
 	width: 2.4rem;
 	height: 2.4rem;
-	background-image: url(/public/storage/svg/select-arrow.svg);
+	background-image: url(~/assets/img/svg/select-arrow.svg);
 	background-size: 2.4rem 2.4rem;
 	background-repeat: no-repeat;
 	background-position: center;
@@ -263,10 +251,6 @@ button {
 	z-index: 2;
 	margin-top: .6rem;
 	border-radius: 2rem;
-	-webkit-border-radius: 2rem;
-	-moz-border-radius: 2rem;
-	-ms-border-radius: 2rem;
-	-o-border-radius: 2rem;
 	overflow: hidden;
 	max-height: 40rem;
 	box-shadow: 0 0.4rem 2rem 0 rgba(0, 0, 0, 0.1);
@@ -291,25 +275,13 @@ button {
 	visibility: hidden;
 	opacity: 0;
 	transition: all 0.3s ease-out;
-	-webkit-transition: all 0.3s ease-out;
-	-moz-transition: all 0.3s ease-out;
-	-ms-transition: all 0.3s ease-out;
-	-o-transition: all 0.3s ease-out;
 	transform: translateY(1rem);
-	-webkit-transform: translateY(1rem);
-	-moz-transform: translateY(1rem);
-	-ms-transform: translateY(1rem);
-	-o-transform: translateY(1rem);
 }
 
 .select-box:not(.sb-anim-height)._active .select-box__body {
 	opacity: 1;
 	visibility: visible;
 	transform: translateY(0);
-	-webkit-transform: translateY(0);
-	-moz-transform: translateY(0);
-	-ms-transform: translateY(0);
-	-o-transform: translateY(0);
 }
 
 .select-box.sb-anim-height .select-box__body {
@@ -323,10 +295,6 @@ button {
 	line-height: 100%;
 	cursor: pointer;
 	transition: background-color 0.3s ease-out;
-	-webkit-transition: background-color 0.3s ease-out;
-	-moz-transition: background-color 0.3s ease-out;
-	-ms-transition: background-color 0.3s ease-out;
-	-o-transition: background-color 0.3s ease-out;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -354,10 +322,6 @@ button {
 	justify-content: center;
 	background-color: rosybrown;
 	transform: translateY(-50%);
-	-webkit-transform: translateY(-50%);
-	-moz-transform: translateY(-50%);
-	-ms-transform: translateY(-50%);
-	-o-transform: translateY(-50%);
 }
 
 .form-file-item__remove::before,
@@ -373,18 +337,10 @@ button {
 
 .form-file-item__remove::before {
 	transform: rotate(-45deg);
-	-webkit-transform: rotate(-45deg);
-	-moz-transform: rotate(-45deg);
-	-ms-transform: rotate(-45deg);
-	-o-transform: rotate(-45deg);
 }
 
 .form-file-item__remove::after {
 	transform: rotate(45deg);
-	-webkit-transform: rotate(45deg);
-	-moz-transform: rotate(45deg);
-	-ms-transform: rotate(45deg);
-	-o-transform: rotate(45deg);
 }
 
 .form-file__label {
@@ -501,7 +457,7 @@ button {
 
 .form-checkboxes .form-check-label::after {
 	background-color: var(--blue);
-	background-image: url('/public/assets/check-form.svg');
+	background-image: url('~/assets/img/svg/check-form.svg');
 	background-repeat: no-repeat;
 	background-size: 1.2rem .9rem;
 	background-position: center 45%;
@@ -699,7 +655,7 @@ form._send .form-btn__dots .dot.dot-3 {
 		top: 50%;
 		right: 1.6rem;
 		transform: translateY(-50%);
-		background-image: url(/public/storage/svg/calendar.svg);
+		background-image: url(~/assets/img/svg/calendar.svg);
 		background-size: 2.4rem 2.4rem;
 		background-repeat: no-repeat;
 		background-position: center;

@@ -84,7 +84,7 @@ export default {
 			<div class="ask-question__block">
 				<div class="ask-question__img">
 					<picture>
-						<img :src="`${useRuntimeConfig().public.imgBaseURL}/storage/question-form.png`" alt="">
+						<img src="~/assets/img/question-form.png" alt="">
 					</picture>
 				</div>
 			</div>
@@ -149,8 +149,8 @@ export default {
 										обработку персональных
 										данных, в соответствии с <router-link to="/politics/" target="_blank">Политикой
 											конфиденциальности</router-link>,
-										и соглашаюсь с <router-link to="#"
-											target="_blank">Правилами</router-link>.</label>
+										и соглашаюсь с <router-link to="/oferta"
+											target="_blank">Офертой</router-link>.</label>
 									<div class="helper-block"
 										v-if="v$.form.privacy_policy.sameAs.$invalid && v$.form.privacy_policy.$error">
 										Обязательно
@@ -196,8 +196,8 @@ export default {
 										обработку персональных
 										данных, в соответствии с <router-link to="/politics/" target="_blank">Политикой
 											конфиденциальности</router-link>,
-										и соглашаюсь с <router-link to="#"
-											target="_blank">Правилами</router-link>.</label>
+										и соглашаюсь с <router-link to="/oferta"
+											target="_blank">Офертой</router-link>.</label>
 								</div>
 							</div>
 						</div>

@@ -25,9 +25,9 @@ export default {
 }
 </script>
 <script setup>
-const { data } = await usePageData({ 
-  urlPage: '/home', 
-  cacheKey: 'home-page-data'
+const { data } = await useGetData('/pages', { 
+    params: { url_page: '/home' },
+    key: 'home-page-data'
 });
 useSeoMeta(useMetaTags(data.value));
 </script>
@@ -35,9 +35,10 @@ useSeoMeta(useMetaTags(data.value));
     <main class="main main-page">
         <ProductSlider></ProductSlider>
         <carousel-product :carousel-id="1"></carousel-product>
+        <discounts-slider></discounts-slider>
         <CarouselProduct :carousel-id="2"></CarouselProduct>
         <!-- сверстанная но не подключенная секция праздничной распродажи -->
-        <section class="main-sales hidden">
+        <section class="main-sales" v-if="false">
             <div class="main-sales__container container">
                 <div class="main-sales-head__row anim-item" v-anim-scroll>
                     <h2 class="main-sales__title m-0">Праздничная распродажа</h2>
@@ -180,7 +181,7 @@ useSeoMeta(useMetaTags(data.value));
         </section>
         <CarouselProduct :carousel-id="3"></CarouselProduct>
         <!-- сверстанная но не подключенная секция бонусной карты -->
-        <section class="bonus-card hidden">
+        <section class="bonus-card" v-if="false">
             <div class="bonus-card__container container">
                 <div class="bonus-card__block block-1">
                     <div class="bonus-card__box anim-item" v-anim-scroll>
@@ -662,7 +663,7 @@ useSeoMeta(useMetaTags(data.value));
         <carousel-product :carousel-id="5"></carousel-product>
         <MonthCatalog></MonthCatalog>
         <CarouselProductHistory></CarouselProductHistory>
-        <ProductsBrands class="hidden"></ProductsBrands>
+        <ProductsBrands v-if="false"></ProductsBrands>
         <AskQuestionForm></AskQuestionForm>
         <InfoActionsForm></InfoActionsForm>
     </main>

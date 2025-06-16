@@ -15,7 +15,6 @@ export default {
                 password: '',
             },
             passOpened: false,
-            passwordEye: `url(${useRuntimeConfig().public.imgBaseURL}/assets/password-eye.svg)`,
         }
     },
     emits: ['changeFormType'],
@@ -153,7 +152,7 @@ export default {
 	right: 2rem;
 	top: 50%;
 	transform: translate(0, -50%);
-	background-image: v-bind('passwordEye');
+	background-image: url(~/assets/img/svg/password-eye.svg);
 	background-position: 0 2rem;
 	background-size: 3.8rem 6rem;
 }

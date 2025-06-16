@@ -4,10 +4,11 @@ const aboutPage = ref({});
 const isAnimActive = ref(false);
 
 
-const { data } = await usePageData({ 
-  urlPage: '/404', 
-  cacheKey: 'error-page-data'
+const { data } = await useGetData('/pages', { 
+    params: { url_page: '/404' },
+    key: 'error-page-data'
 });
+
 breadcrumbs.value = [{ [data.value.data.breadcrumbs]: '' }];
 aboutPage.value = data.value.data;
 useSeoMeta(useMetaTags(data.value));
@@ -34,7 +35,7 @@ onMounted(()=>{
                     </div>
                     <div class="not-found__img">
                         <picture>
-                            <!-- <img src="/storage/404.png" alt=""> -->
+                            <img src="~/assets/img/404.png" alt="">
                         </picture>
                     </div>
                 </div>

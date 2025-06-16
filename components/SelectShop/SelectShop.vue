@@ -84,7 +84,7 @@ function initMap() {
                 // Необходимо указать данный тип макета.
                 iconLayout: 'default#image',
                 // Своё изображение иконки метки.
-                iconImageHref: (metkaSelected[1] === coords[0] && metkaSelected[0] === coords[1]) ? `${useRuntimeConfig().public.imgBaseURL}/storage/svg/metka-selected.svg` : `${useRuntimeConfig().public.imgBaseURL}/storage/svg/metka.svg`,
+                iconImageHref: (metkaSelected[1] === coords[0] && metkaSelected[0] === coords[1]) ? "/img/svg/metka-selected.svg" : "/img/svg/metka.svg",
                 // iconImageHref: '/metka.svg',
                 // Размеры метки.
                 iconImageSize: [40, 44],
@@ -132,9 +132,9 @@ function initMap() {
                     if (cardCityPopup && cardCityPopup.querySelector('.select-shop__js')) {
                         cardCityPopup.querySelector('.select-shop__js').addEventListener('click', () => {
                             placemarks.forEach(placemark => {
-                                placemark.options.set('iconImageHref', '/storage/svg/metka.svg');
+                                placemark.options.set('iconImageHref', '/img/svg/metka.svg');
                             })
-                            metka.options.set('iconImageHref', '/storage/svg/metka-selected.svg');
+                            metka.options.set('iconImageHref', '/img/svg/metka-selected.svg');
                             myMap.setZoom(13);
                             myMap.setCenter(metka.geometry._coordinates);
 
@@ -155,7 +155,7 @@ function initMap() {
 
                     placemarks.forEach(placemark => {
                         if ((placemark.geometry._coordinates[0] === parseCoords[0]) && (placemark.geometry._coordinates[1] === parseCoords[1])) {
-                            placemark.options.set('iconImageHref', '/storage/svg/metka-selected.svg');
+                            placemark.options.set('iconImageHref', '/img/svg/metka-selected.svg');
                             myMap.setCenter(placemark.geometry._coordinates);
                             myMap.setZoom(13);
 

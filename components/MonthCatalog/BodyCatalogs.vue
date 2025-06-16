@@ -14,15 +14,15 @@ export default {
                     <div class="tab-item-block__body">
                         <div class="month-catalog__slider _swiper">
                             <div class="month-catalog__slider-body">
-                                <div class="month-catalog__wrapper swiper-wrapper lightgallery">
+                                <div class="month-catalog__wrapper swiper-wrapper">
                                     <template v-for="(img, indx) in catalog.imgs">
                                         <div class="swiper-slide month-catalog-slide"
                                             data-file="/storage/katalog-1.jpg">
-                                            <a :href="'/storage/' + img">
+                                            <a :href="`${useRuntimeConfig().public.imgBaseURL}/storage/${img}`" target="_blank">
                                                 <picture>
-                                                    <source :srcset="'/storage/' + catalog.imgs_mob[indx]"
+                                                    <source :srcset="`${useRuntimeConfig().public.imgBaseURL}/storage/${catalog.imgs_mob[indx]}`"
                                                         media="(orientation: portrait)">
-                                                    <img :src="'/storage/' + img" alt="">
+                                                    <img :src="`${useRuntimeConfig().public.imgBaseURL}/storage/${img}`">
                                                 </picture>
                                             </a>
                                         </div>

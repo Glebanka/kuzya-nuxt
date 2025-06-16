@@ -49,31 +49,6 @@ function initNativeJs() {
 
         });
     }
-
-    function fullScreenGallery() {
-        const $galleries = selectElements('.lightgallery');
-        if ($galleries.length) {
-            $galleries.forEach(($item, indx) => {
-                lightGallery($item, {
-                    selector: 'a',
-                    plugins: [lgZoom, lgThumbnail],
-                    licenseKey: 'your_license_key',
-                    speed: 500,
-                    thumbnail: false,
-                    download: false,
-                    alignThumbnails: 'middle',
-                    actualSizeIcons: false,
-                    mobileSettings: {
-                        showCloseIcon: true,
-                        download: false,
-                    },
-
-                    // ... other settings
-                });
-            });
-        }
-    }
-    fullScreenGallery();
 }
 </script>
 <!-- гарантий что этот компонент работает нету -->
@@ -82,7 +57,7 @@ function initNativeJs() {
         <div class="month-catalog__container container">
             <month-catalog-text-content></month-catalog-text-content>
             <div class="month-catalog__tabs tabs">
-                <tabs :tabs="tabs"></tabs>
+                <month-catalog-tabs :tabs="tabs"></month-catalog-tabs>
                 <body-catalogs :catalogs="catalogs"></body-catalogs>
             </div>
         </div>

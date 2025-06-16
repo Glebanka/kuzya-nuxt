@@ -5,31 +5,24 @@ export default {
 		shops: Array,
 	},
     inject: ['configs'],
-	data() {
-		return {
-            token: null,
-		}
-	},
 	methods: {
-        changeUserAddress(shop) {
-            this.token = localStorage.getItem('token');
-            const isTokenExpired = () => {
-                if (!this.token) return true;
-
-                const payload = JSON.parse(atob(this.token.split('.')[1]));
-                const exp = payload.exp;
-
-                return Date.now() >= exp * 1000;
-            }
-            const notAuth = isTokenExpired();
-            if(!notAuth) {
-                axios.post(`/api/user-update-address/`, {
-                    'address': shop.address
-                }, {
-                    headers: {
-                        'Authorization': `Bearer ${this.token}`,
-                    }
-                })
+        async changeUserAddress(shop) {
+            const authStore = useAuthStore();
+            const { token, isAuthenticated } = storeToRefs(authStore);
+            if (isAuthenticated.value) {
+                try {
+                    await useNuxtApp().$apiFetch('/user-update-address/', {
+                        method: 'POST',
+                        body: {
+                            'address': shop.address
+                        },
+                        headers: {
+                            'Authorization': `Bearer ${token.value}`,
+                        },
+                    });
+                } catch (error) {
+                    console.error('Ошибка запроса:', error);
+                }
             }
         }
 	},
@@ -93,8 +86,8 @@ export default {
 					<div class="select-shop-region-item__block">
 						<div class="select-shop-region-item__img">
 							<picture>
-								<!-- <source srcset="/storage/shop-1-mob.jpg" media="(orientation: portrait)"> -->
-								<!-- <img :src="`${useRuntimeConfig().public.imgBaseURL}/storage/` + shop.img" alt=""> -->
+								<source :srcset="`${useRuntimeConfig().public.imgBaseURL}/storage/shop-1-mob.jpg`" media="(orientation: portrait)">
+								<img :src="`${useRuntimeConfig().public.imgBaseURL}/storage/${shop.img}`" alt="">
 							</picture>
 						</div>
 					</div>

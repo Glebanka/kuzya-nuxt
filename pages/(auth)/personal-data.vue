@@ -33,8 +33,9 @@ export default {
             },
             isSaved: true,
             isDataLoaded: false,
-            isActiveChildrenUnderEighteenSelect: false,
+            selectbox: null,
             childrenNumbers: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+            fileReaderSrc: null,
         }
     },
     validations() {
@@ -68,12 +69,8 @@ export default {
         handleSavePassClick() {
             this.$refs.changePass.close();
         },
-        toggleSelectTime() {
-            this.isActiveChildrenUnderEighteenSelect = !this.isActiveChildrenUnderEighteenSelect;
-        },
         selectChildrenUnderEighteen(childrenUnderEighteen) {
             this.form.childrenUnderEighteen = childrenUnderEighteen;
-            this.isActiveChildrenUnderEighteenSelect = false;
         },
         weddingDay() {
             const context = this;
@@ -130,7 +127,7 @@ export default {
         dateBirth() {
             const context = this;
             const $calendar = selectElement('.vanilla-calendar.birth-vanilla-calendar');
-            
+
             let today = new Date();
 
             if ($calendar) {
@@ -171,7 +168,7 @@ export default {
                     },
                     DOMTemplates: CalendarDOMTemplate,
                 });
-                
+
                 calendar.init();
 
                 if (calendarInfoDate) {
@@ -193,7 +190,7 @@ export default {
         },
         fileInput() {
             const fileInput = this.$refs.fileInput;
-            const image = this.$refs.image;
+            const context = this;
 
             function onFileChange() {
                 const file = fileInput.files[0];
@@ -202,22 +199,14 @@ export default {
                     const reader = new FileReader();
 
                     reader.onload = function (event) {
-                        image.src = event.target.result;
-                        imageShow(image);
+                        context.fileReaderSrc = event.target.result;
                     };
 
                     reader.readAsDataURL(file);
                 } else {
                     alert('Пожалуйста, загрузите изображение.');
                     fileInput.value = '';  // Сбросить выбор файла
-                    image.style.display = 'none'
                 }
-            }
-
-            function imageShow(image) {
-                image.style.display = 'block'
-                document.querySelector('.avatar-text').style.display = "none"
-                document.querySelector('.avatar-icon').style.display = "none"
             }
 
             fileInput.addEventListener('change', onFileChange);
@@ -237,24 +226,19 @@ export default {
                 this.isDataLoaded = true;
             });
         },
-        subscribeOnUserData() {
-            useAuthStore().$onAction(({ name, after }) => {
-                if (name == 'getUserData') {
-                    after(() => {
-                        this.setUserData()
-                    })
-                }
-            })
-        },
-        saveDataUser() {
+        async saveDataUser() {
+            if (!useAuthStore().isAuthenticated) {
+                this.$router.push('/');
+                return;
+            }
             this.$refs.loadingScreen.show();
             this.v$.$touch();
 
             if (this.v$.form.$invalid || this.v$.changePassForm.$invalid) {
                 return false;
             }
-            let formData = new FormData();
 
+            let formData = new FormData();
             formData.append('name', this.form.name);
             formData.append('surname', this.form.surname);
             formData.append('phone', this.form.phone);
@@ -268,56 +252,50 @@ export default {
                 formData.append('old_password', this.changePassForm.oldPass);
                 formData.append('new_password', this.changePassForm.newPass);
             }
-
             let file = this.$refs.fileInput.files[0];
             if (file) {
                 formData.append('file', file);
             }
 
-            const token = localStorage.getItem('token');
-            axios.post(`/api/user-update`, formData, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                }
-            })
-                .then(res => {
+            try {
+                const response = await useNuxtApp().$apiFetch('/user-update', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Authorization': `Bearer ${useAuthStore().token}`,
+                    }
+                });
+                if (response.success) {
                     this.$refs.loadingScreen.success('Успешное обновление')
                     this.isSaved = true;
-                })
-                .catch(err => {
-                    if (err.response.data.message == 'Unauthenticated.') {
-                        this.$refs.loadingScreen.error('Перезагрузите страницу и повторите попытку')
-                    } else {
-                        this.$refs.loadingScreen.error('Ошибка обновления' + err.response.data.message)
-                    }
-                })
+                }
+            } catch (error) {
+                console.error('Ошибка запроса:', error);
+                this.$refs.loadingScreen.error('Ошибка обновления' + error.message)
+            }
+
+        },
+        handleEscapeBtn(e) {
+            if (e.key === 'Escape') {
+                this.selectbox.close();
+            }
         },
         init() {
-            // если данные пользователя еще не загружены, подписываемся на их загрузку
-            if (Object.keys(this.userData).length === 0) {
-                this.subscribeOnUserData()
-            } else {
-                this.setUserData()
-            }
-            
-            let ESC = 27;
-            document.addEventListener('keydown', (e) => {
-                if (e.code === ESC) {
-                    this.isActiveChildrenUnderEighteenSelect = false;
-                }
-            });
-            
+            useGetUserData(this.setUserData);
+
             this.$nextTick(() => {
                 this.dateBirth()
                 this.weddingDay()
                 this.initMeta();
                 this.fileInput();
+                this.selectbox = new SelectBox('.select-box__js');
+                document.addEventListener('keydown', this.handleEscapeBtn);
             });
         },
     },
     beforeRouteLeave(to, from, next) {
         if (!this.isSaved) {
-            confirmPopUp('Вы уверены, что хотите покинуть страницу? Данные не сохранены.').then((ques) => {
+            useConfirmPopup()('Вы уверены, что хотите покинуть страницу? Данные не сохранены.').then((ques) => {
                 if (ques) {
                     next();
                 } else {
@@ -331,8 +309,14 @@ export default {
     mounted() {
         this.init();
     },
+    unmounted() {
+        document.removeEventListener('keydown', this.handleEscapeBtn);
+    },
     computed: {
-        ...mapState(useAuthStore, ['userData'])
+        ...mapState(useAuthStore, ['userData']),
+        srcImg() {
+            return this.fileReaderSrc ? this.fileReaderSrc : this.form.image ? `${useRuntimeConfig().public.imgBaseURL}/storage/uploads/users/${this.form.image}` : '';
+        }
     },
     watch: {
         form: {
@@ -419,9 +403,7 @@ export default {
                         </div>
                         <label class="avatar-container" ref_for="fileInput">
                             <input type="file" class="hidden" ref="fileInput" name="fileInput">
-                            <img v-if="this.form.image" class="avatar-icon-img"
-                                :src="`${useRuntimeConfig().public.imgBaseURL}/storage/uploads/users/${this.form.image}`"
-                                alt="avatar" ref="image">
+                            <img v-if="srcImg" class="avatar-icon-img" :src="srcImg" alt="avatar" ref="image">
                             <template v-else>
                                 <svg class="avatar-icon" width="164" height="164" viewBox="0 0 164 164" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -496,9 +478,7 @@ export default {
                     <div class="input-wrapper">
                         <p class="input-title">Количество детей до 18 лет</p>
                         <p class="input-text">Акции и подарки для детей до 18 лет</p>
-                        <div class="select-box__small form-item select-box no-hidden-li"
-                            :class="{ '_active': isActiveChildrenUnderEighteenSelect }" data-time-from="10"
-                            data-time-to="22" data-time-step="30">
+                        <div class="select-box__small form-item select-box select-box__js no-hidden-li">
                             <input type="text" class="hidden select-box-input-hidden"
                                 v-model="form.childrenUnderEighteen">
                             <div class="select-box__head" @click="toggleSelectTime">

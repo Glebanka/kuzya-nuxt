@@ -16,16 +16,9 @@ export default {
                 .join('/')
         })
 
-        const data = ref({});
-        const { data: cachedData } = useNuxtData(`catalog-${categoryPath.value}-data`);
-        if (cachedData.value) {
-            data.value = cachedData.value;
-        } else {
-            const { data: apiData } = await useAPI(`/catalog/${categoryPath.value}`, {
-                key: `catalog-${categoryPath.value}-data`,
-            })
-            data.value = apiData.value;
-        }
+        const { data } = await useGetData(`/catalog/${categoryPath.value}`, {
+            key: `catalog-${categoryPath.value}-data`,
+        });
 
 
         const breadcrumbs = ref(data.value?.breadcrumbs || []);
@@ -107,11 +100,13 @@ export default {
                 <BtnsSelect class="catalog-categories__btn-select" :items="btns" />
             </div>
         </section>
-        <Filter v-if="cleanedCategory.length > 1" :productsCount="productsCount" @changeFilterPopup="changeFilterPopup" />
+        <Filter v-if="cleanedCategory.length > 1" :productsCount="productsCount"
+            @changeFilterPopup="changeFilterPopup" />
         <list-products @getCount="getProductsCount" :category-id="category.id"></list-products>
         <InfoActionsForm />
     </main>
-    <FilterPopup :filterPopupUpdate="filterPopupUpdate" v-if="category && cleanedCategory.length > 1" :category-id="category.id" />
+    <FilterPopup :filterPopupUpdate="filterPopupUpdate" v-if="category && cleanedCategory.length > 1"
+        :category-id="category.id" />
 </template>
 
 <style scoped></style>

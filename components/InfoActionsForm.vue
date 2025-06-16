@@ -126,7 +126,8 @@ export default {
 										обработку персональных
 										данных, в соответствии с <router-link to="/politics/" target="_blank">Политикой
 											конфиденциальности</router-link>,
-										и соглашаюсь с <router-link to="#" target="_blank">Правилами</router-link>.</label>
+										и соглашаюсь с <router-link to="/oferta"
+											target="_blank">Офертой</router-link>.</label>
 									<div class="helper-block"
 										v-if="v$.form.privacy_policy.sameAs.$invalid && v$.form.privacy_policy.$error">
 										Обязательно
@@ -156,7 +157,8 @@ export default {
 										обработку персональных
 										данных, в соответствии с <router-link to="/politics/" target="_blank">Политикой
 											конфиденциальности</router-link>,
-										и соглашаюсь с <router-link to="#" target="_blank">Правилами</router-link>.</label>
+										и соглашаюсь с <router-link to="/oferta"
+											target="_blank">Офертой</router-link>.</label>
 									<div class="helper-block">
 										Обязательно
 									</div>

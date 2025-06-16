@@ -24,10 +24,6 @@
     max-width: 28.8rem;
     width: 100%;
     transition: box-shadow 0.3s ease-out;
-    -webkit-transition: box-shadow 0.3s ease-out;
-    -moz-transition: box-shadow 0.3s ease-out;
-    -ms-transition: box-shadow 0.3s ease-out;
-    -o-transition: box-shadow 0.3s ease-out;
 }
 
 .slider-products-item:not(:last-child) {
@@ -37,10 +33,6 @@
 .card-product {
     position: relative;
     border-radius: 2rem;
-    -webkit-border-radius: 2rem;
-    -moz-border-radius: 2rem;
-    -ms-border-radius: 2rem;
-    -o-border-radius: 2rem;
     height: unset;
 }
 
@@ -66,25 +58,13 @@
     right: 0;
     bottom: 0;
     border-radius: 2rem;
-    -webkit-border-radius: 2rem;
-    -moz-border-radius: 2rem;
-    -ms-border-radius: 2rem;
-    -o-border-radius: 2rem;
     transition: box-shadow 0.3s ease-out, bottom 0.3s ease-out 0.15s;
-    -webkit-transition: box-shadow 0.3s ease-out, bottom 0.3s ease-out 0.15s;
-    -moz-transition: box-shadow 0.3s ease-out, bottom 0.3s ease-out 0.15s;
-    -ms-transition: box-shadow 0.3s ease-out, bottom 0.3s ease-out 0.15s;
-    -o-transition: box-shadow 0.3s ease-out, bottom 0.3s ease-out 0.15s;
     pointer-events: none;
 }
 
 .card-product._basket::after {
     bottom: -5.6rem;
     transition: box-shadow 0.3s ease-out, bottom 0.3s ease-out 0s;
-    -webkit-transition: box-shadow 0.3s ease-out, bottom 0.3s ease-out 0s;
-    -moz-transition: box-shadow 0.3s ease-out, bottom 0.3s ease-out 0s;
-    -ms-transition: box-shadow 0.3s ease-out, bottom 0.3s ease-out 0s;
-    -o-transition: box-shadow 0.3s ease-out, bottom 0.3s ease-out 0s;
 }
 
 .g-2 .card-product._basket::after {
@@ -144,10 +124,6 @@
     padding: .4rem .8rem;
     color: var(--white);
     border-radius: 10rem;
-    -webkit-border-radius: 10rem;
-    -moz-border-radius: 10rem;
-    -ms-border-radius: 10rem;
-    -o-border-radius: 10rem;
     display: flex;
     align-items: center;
     gap: .4rem;
@@ -160,10 +136,6 @@
 
 .card-product__label span {
     transform: translateY(1px);
-    -webkit-transform: translateY(1px);
-    -moz-transform: translateY(1px);
-    -ms-transform: translateY(1px);
-    -o-transform: translateY(1px);
 }
 
 .card-product__icons {
@@ -202,10 +174,6 @@
 .card-product__icon svg path,
 .card-product__icon svg circle {
     transition: all 0.3s ease-out;
-    -webkit-transition: all 0.3s ease-out;
-    -moz-transition: all 0.3s ease-out;
-    -ms-transition: all 0.3s ease-out;
-    -o-transition: all 0.3s ease-out;
 }
 
 ._favorite .card-product__icon .favorite path {
@@ -326,10 +294,6 @@
     margin-top: .8rem;
     opacity: 0;
     transition: all 0.3s ease-out;
-    -webkit-transition: all 0.3s ease-out;
-    -moz-transition: all 0.3s ease-out;
-    -ms-transition: all 0.3s ease-out;
-    -o-transition: all 0.3s ease-out;
 }
 
 .g-2 .card-product__quantity {
@@ -390,10 +354,6 @@
 
     .slider-products__wrapper+div {
         transition: margin 0.3s ease-out;
-        -webkit-transition: margin 0.3s ease-out;
-        -moz-transition: margin 0.3s ease-out;
-        -ms-transition: margin 0.3s ease-out;
-        -o-transition: margin 0.3s ease-out;
     }
 
     .slider-products__wrapper:has(._basket)+div {
@@ -457,8 +417,7 @@
     }
 
     .card-product__img img {
-        height: auto;
-        max-height: unset;
+        max-height: 20.6rem;
     }
 
     .g-2 .card-product__img img {

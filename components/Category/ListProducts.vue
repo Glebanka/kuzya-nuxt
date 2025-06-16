@@ -25,20 +25,10 @@ export default {
         if (f.price_min) query['filters[0][price_min]'] = f.price_min
         if (f.in_stock) query['filters[0][in_stock]'] = f.in_stock
 
-        const data = ref({});
-        const { data: cachedData } = useNuxtData(`category-${props.categoryId}-data`);
-        if (cachedData.value) {
-            data.value = cachedData.value;
-        } else {
-            const { data: apiData, error } = await useAPI(`/products/`, {
-                key: `category-${props.categoryId}-data`,
-                query,
-            })
-            if (error.value) {
-                console.error('Error fetching category data:', error.value);
-            }
-            data.value = apiData.value;
-        }
+        const { data } = await useGetData(`/products/`, {
+            key: `category-${props.categoryId}-data`,
+            query,
+        });
 
         const products = ref([]);
         products.value = data.value.products;

@@ -12,7 +12,7 @@ export default {
     methods: {
         getBreadCrumbs() {
             if(this.breadcrumbs) {
-                this.length = this.breadcrumbs.length === undefined ? 1: this.breadcrumbs.length;
+                this.length = this.breadcrumbs.length === undefined ? 1 : this.breadcrumbs.length;
             }
         }
     },

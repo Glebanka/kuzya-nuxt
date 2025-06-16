@@ -23,6 +23,12 @@ body {
 	color: var(--black);
 }
 
+@media screen and (orientation: portrait) {
+	#__nuxt {
+		overflow: hidden;
+	}
+}
+
 body,
 h1,
 h2,
@@ -80,7 +86,8 @@ li {
 	margin: 0 0 1.6rem;
 	position: relative;
 }
-ul li{
+
+ul li {
 	margin-left: 2.4rem;
 }
 
@@ -90,13 +97,13 @@ ul li::before {
 	// top: 0;
 	// left: -2rem;
 	content: "";
-  position: absolute;
-  top: 0.9rem;
-  left: -2.4rem;
-  width: 0.8rem;
-  height: 0.8rem;
-  background-color: var(--blue);
-  border-radius: 0.2rem;
+	position: absolute;
+	top: 0.9rem;
+	left: -2.4rem;
+	width: 0.8rem;
+	height: 0.8rem;
+	background-color: var(--blue);
+	border-radius: 0.2rem;
 }
 
 ul.list-style-none li::before {
@@ -227,10 +234,6 @@ h5 {
 	z-index: 2;
 	padding: 16rem 0 6rem;
 	border-radius: 0 0 3.2rem 3.2rem;
-	-webkit-border-radius: 0 0 3.2rem 3.2rem;
-	-moz-border-radius: 0 0 3.2rem 3.2rem;
-	-ms-border-radius: 0 0 3.2rem 3.2rem;
-	-o-border-radius: 0 0 3.2rem 3.2rem;
 	min-height: 100vh;
 	overflow: clip;
 }
@@ -247,19 +250,17 @@ h5 {
 	padding: 8rem 10rem;
 	background-color: var(--grey);
 	border-radius: 3.2rem;
-	-webkit-border-radius: 3.2rem;
-	-moz-border-radius: 3.2rem;
-	-ms-border-radius: 3.2rem;
-	-o-border-radius: 3.2rem;
 }
 
 .text-info {
 	display: flex;
 	gap: .8rem;
 }
-.text-main-color{
+
+.text-main-color {
 	color: var(--blue);
 }
+
 .text-info svg {
 	width: 1.7rem;
 	height: 1.7rem;
@@ -289,10 +290,6 @@ h5 {
 @media screen and (orientation: portrait) {
 	.main {
 		border-radius: 2rem;
-		-webkit-border-radius: 2rem;
-		-moz-border-radius: 2rem;
-		-ms-border-radius: 2rem;
-		-o-border-radius: 2rem;
 		padding-top: 8rem;
 	}
 
@@ -330,10 +327,6 @@ h5 {
 	.grey-container {
 		padding: 4rem 1.6rem;
 		border-radius: 2rem;
-		-webkit-border-radius: 2rem;
-		-moz-border-radius: 2rem;
-		-ms-border-radius: 2rem;
-		-o-border-radius: 2rem;
 	}
 
 	p {
@@ -400,10 +393,6 @@ h5 {
 	position: sticky;
 	top: 26rem;
 	transition: transform 0.1s linear;
-	-webkit-transition: transform 0.1s linear;
-	-moz-transition: transform 0.1s linear;
-	-ms-transition: transform 0.1s linear;
-	-o-transition: transform 0.1s linear;
 }
 
 
@@ -470,15 +459,19 @@ h5 {
 		color: #fff;
 	}
 }
-.text-decoration{
+
+.text-decoration {
 	text-decoration: underline;
 }
-.cursor-pointer{
+
+.cursor-pointer {
 	cursor: pointer;
 }
-.inline{
+
+.inline {
 	display: inline;
 }
-.w-fit{
+
+.w-fit {
 	width: fit-content;
 }

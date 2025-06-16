@@ -4,9 +4,9 @@ const aboutPage = ref({});
 const isAnimActive = ref(false);
 
 
-const { data } = await usePageData({ 
-  urlPage: '/postavshikam', 
-  cacheKey: 'suppliers-info-page-data'
+const { data } = await useGetData('/pages', { 
+    params: { url_page: '/postavshikam' },
+    key: 'suppliers-info-page-data'
 });
 breadcrumbs.value = [{ [data.value.data.breadcrumbs]: '' }];
 aboutPage.value = data.value.data;

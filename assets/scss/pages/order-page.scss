@@ -22,26 +22,22 @@
     }
 
     &__block.block-1 &__block-body {
-        // position: sticky;
         top: 17.2rem;
-        padding-bottom: 32.7rem;
+        padding-bottom: 12rem;
     }
 
-    .empty-space-for-sticky{
-        width: 100%;
-        height: 160rem;
-    }
     &__block.block-2 {
         background-color: var(--grey);
         margin-top: -10.3rem;
         padding-top: 16rem;
         overflow: clip;
         width: 49.4rem;
+        height: calc(100% + 10.3rem);
     }
 
     &__block.block-2 &__block-body {
         position: sticky;
-        bottom: 20%;
+        top: 25%;
         padding: 0 3rem 5rem;
         width: 49.4rem;
     }
@@ -69,6 +65,7 @@
             border-radius: 3.2rem;
             width: 100%;
             padding-top: 0;
+            height: unset;
         }
 
         &__block.block-2 &__block-body {
@@ -76,9 +73,6 @@
             top: unset;
             padding: 4rem 1.6rem;
             width: unset;
-        }
-        .empty-space-for-sticky{
-            display: none;
         }
     }
 }
@@ -120,6 +114,7 @@
         height: 6.4rem;
         align-items: center;
         padding: 0 2.4rem 0 5.8rem;
+        border: 1px solid transparent;
         background-color: rgba(247, 247, 247, 0.2);
         border-radius: 2rem;
         overflow: hidden;
@@ -128,15 +123,18 @@
 
     &__radiobtns ._checked .form-check-label {
         background-color: var(--grey);
+        border: 1px solid #57575766;
         transition: all 0.3s ease-out;
     }
 
     @media (hover: hover) and (pointer: fine) {
         &__radiobtns .form-check-label:hover {
             background-color: var(--grey);
+            border: 1px solid #57575766;
         }
         &__radiobtns .form-check-label_disabled:hover {
             background-color: rgba(247, 247, 247, 0.2);
+            border: 1px solid transparent;
         }
     }
 
