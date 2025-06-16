@@ -370,7 +370,7 @@
 		height: 4.8rem;
 		background-color: var(--grey);
 		border-radius: 50%;
-		background-image: url(/public/storage/svg/preview-video.svg);
+		background-image: url(~/assets/img/svg/preview-video.svg);
 		background-repeat: no-repeat;
 		background-size: 2.4rem 2.4rem;
 		background-position: 60% center;
@@ -429,7 +429,7 @@
 	&__stars {
 		width: 12.4rem;
 		height: 2rem;
-		mask-image: url(/public/storage/svg/mask-stars.svg);
+		mask-image: url(~/assets/img/svg/mask-stars.svg);
 		mask-size: 12.4rem 2rem;
 		mask-position: 100% center;
 		position: relative;
