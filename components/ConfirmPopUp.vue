@@ -27,17 +27,29 @@ export default {
 };
 </script>
 <template>
-    <div v-if="isVisible" class="confirm-popup popup-overlay" @click="cancel">
-        <div class="popup-container" @click.stop>
-            <p class="popup-title">{{ message }}</p>
-            <div class="popup-btns">
-                <button class="popup-btn popup-btn_active" @click="confirm">Да</button>
-                <button class="popup-btn" @click="cancel">Нет</button>
+    <Transition>
+        <div v-if="isVisible" class="confirm-popup popup-overlay" @click="cancel">
+            <div class="popup-container" @click.stop>
+                <p class="popup-title">{{ message }}</p>
+                <div class="popup-btns">
+                    <button class="popup-btn popup-btn_active" @click="confirm">Да</button>
+                    <button class="popup-btn" @click="cancel">Нет</button>
+                </div>
             </div>
         </div>
-    </div>
+    </Transition>
 </template>
 <style scoped>
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+
 .popup-overlay {
     position: fixed;
     top: 0;

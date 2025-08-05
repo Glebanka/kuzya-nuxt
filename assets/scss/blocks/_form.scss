@@ -170,6 +170,18 @@ button {
 	transition: all 0.3s ease-out;
 }
 
+.form-radiobtns.custom .radio-container:has(input[type='radio']:checked) {
+	.form-check-label::after {
+		transform: scale(0.5);
+		opacity: 1;
+	}
+
+	.form-check-label::before {
+		border: 1px solid var(--blue);
+		background-color: var(--blue);
+	}
+}
+
 .form-checkboxes.custom ._checked label::after {
 	transform: scale(0.5);
 }
@@ -189,6 +201,27 @@ button {
 .select-box {
 	position: relative;
 	z-index: 5;
+
+	&.select-box--form{
+		.select-box__head {
+			height: 4.8rem;
+		}
+	}
+
+	&.select-box--blue {
+		.select-box__head {
+			background-color: var(--blue);
+			height: 4.8rem;
+		}
+
+		.select-box__head::after {
+			background-image: url(~/assets/img/svg/select-arrow-white.svg);
+		}
+
+		.select-box__label {
+			color: var(--white);
+		}
+	}
 }
 
 .select-box__head {
@@ -633,7 +666,42 @@ form._send .form-btn__dots .dot.dot-3 {
 		text-align: center;
 	}
 }
+.form-radiobtns.custom label::before,
+.form-radiobtns.custom label::after {
+	top: 0.4rem;
+	left: 0;
 
+	width: 2.4rem;
+	height: 2.4rem;
+}
+
+.form-radiobtns.custom label::after {
+	width: 4.8rem;
+	height: 4.8rem;
+	top: -1.25rem;
+	left: -1.25rem;
+}
+
+.form-radiobtns.custom label {
+	font-size: 2rem;
+	height: 2.4rem;
+	padding-left: 3.4rem;
+}
+
+.form-radiobtns.custom label::after {
+	background-color: var(--white);
+}
+.form-radiobtns.custom .radio-container--small-text label {
+	font-size: 1.6rem;
+	line-height: 1.5;
+	height: max-content;
+}
+.radio-container {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	height: fit-content;
+}
 /* -------------------------- form END --------------------------- */
 
 .calendar {

@@ -234,6 +234,15 @@ export default {
                             this.isActivePopups = false;
                         }
                     }
+                    const $descriptionPopup = selectElement('.popup-description');
+                    if ($descriptionPopup && $descriptionPopup.classList.contains('_active')) {
+                        if ($descriptionPopup.querySelector('.popup-description__container').contains(e.target) === false) {
+                            this.isActivePopups = true;
+                            $descriptionPopup.classList.remove('_active');
+                        } else {
+                            this.isActivePopups = false;
+                        }
+                    }
 
                     if (this.isActivePopups) {
                         $body.value.classList.remove('_overflow');
@@ -344,11 +353,11 @@ const { data } = await useAPI('/pages', { params: { url_page: '/home' } })
 configs.value = data.value?.metaTag
 provide('configs', configs);
 
-const searchProducts = ref([]);
-provide('setSearchProducts', setSearchProducts);
-provide('searchProducts', searchProducts);
-function setSearchProducts(products) {
-    searchProducts.value = products;
+const searchData = ref({});
+provide('setSearchData', setSearchData);
+provide('searchData', searchData);
+function setSearchData(data) {
+    searchData.value = data;
 }
 
 onMounted(() => {

@@ -11,21 +11,21 @@ const { carouselId } = defineProps({
 })
 
 const { data } = await useGetData('/carousel-product', { 
-    method: 'POST',
-    body: { id_category: carouselId },
-    key: `carousel-product-data-id-${carouselId}`
+  method: 'POST',
+  body: { id_category: carouselId },
+  key: `carousel-product-data-id-${carouselId}`
 });
 
 
-if (data.value.data) {
+if (data?.value && Object.keys(data.value.data).length !== 0) {
   if (data.value.data.product) {
-    products.value = data.value.data.product;
+    products.value = data.value?.data.product || [];
   }
   if (data.value.data.name_carousel) {
-    titleCategory.value = data.value.data.name_carousel;
+    titleCategory.value = data.value?.data.name_carousel || '';
   }
   if (data.value.data.url_category) {
-    urlCategory.value = data.value.data.url_category;
+    urlCategory.value = data.value?.data.url_category || '';
   }
 }
 

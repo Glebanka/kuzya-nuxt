@@ -34,8 +34,8 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      // apiBaseURL: 'http://kuzya.loc/api',
-      apiBaseURL: 'https://xn--80aaaldvhd1agchd1a2o.xn--p1ai/api',
+      apiBaseURL: 'http://kuzya.loc/api',
+      // apiBaseURL: 'https://xn--80aaaldvhd1agchd1a2o.xn--p1ai/api',
       // imgBaseURL: 'http://kuzya.loc',
       imgBaseURL: 'https://xn--80aaaldvhd1agchd1a2o.xn--p1ai/',
     }
@@ -102,9 +102,9 @@ export default defineNuxtConfig({
       })
       
       pages.push({
-        name: 'discountsItem',
+        name: 'discount',
         path: '/discounts/:discountName/',
-        file: '~/pages/discountsItem.vue'
+        file: '~/pages/discount.vue'
       })
 
       pages.push({
@@ -118,7 +118,16 @@ export default defineNuxtConfig({
         path: '/my-order/:orderId',
         file: '~/pages/(auth)/my-order.vue'
       })
+
+      pages.push({
+        name: 'vacancies',
+        path: '/vakansii/',
+        file: '~/pages/vacancies.vue'
+      })
     }
   },
 
+  devtools: {
+    enabled: true,
+  },
 })

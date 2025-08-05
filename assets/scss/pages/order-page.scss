@@ -28,19 +28,17 @@
 
     &__block.block-2 {
         background-color: var(--grey);
-        margin-top: -10.3rem;
-        padding-top: 16rem;
+        // значения для имитации что блок на всю ширину
+        margin-top: -16rem;
         overflow: clip;
-        width: 49.4rem;
-        height: calc(100% + 10.3rem);
     }
 
     &__block.block-2 &__block-body {
-        position: sticky;
-        top: 25%;
-        padding: 0 3rem 5rem;
-        width: 49.4rem;
+        position: relative;
+        top: 0;
+        padding: 18rem 3rem 5rem;
     }
+
     @media screen and (orientation: portrait) {
         &__container {
             margin-right: 1.6rem;
@@ -64,13 +62,11 @@
             margin: 0 0 2.4rem;
             border-radius: 3.2rem;
             width: 100%;
-            padding-top: 0;
             height: unset;
         }
 
         &__block.block-2 &__block-body {
-            position: unset;
-            top: unset;
+            position: initial;
             padding: 4rem 1.6rem;
             width: unset;
         }
@@ -94,10 +90,19 @@
     &__label {}
 
     &__radiobtns {
+        position: relative;
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-gap: 1.6rem;
         margin-bottom: 4rem;
+    }
+
+    &__radiobtns-info {
+        bottom: -2rem;
+        position: absolute;
+
+        font-size: 1.2rem;
+        line-height: 1;
     }
 
     &__radiobtns.payment-methods {
@@ -132,6 +137,7 @@
             background-color: var(--grey);
             border: 1px solid #57575766;
         }
+
         &__radiobtns .form-check-label_disabled:hover {
             background-color: rgba(247, 247, 247, 0.2);
             border: 1px solid transparent;
@@ -216,6 +222,11 @@
         &__radiobtns {
             grid-template-columns: 1fr;
             grid-gap: 0;
+        }
+
+        &__radiobtns-info {
+            position: static;
+            order: 2;
         }
 
         &__last-row {
@@ -325,9 +336,9 @@
     }
 
     &__checkboxes.checkbox-house {
-        height: 4.8rem;
         display: flex;
         align-items: center;
+        margin-bottom: 2.4rem;
     }
 
     &__btn {

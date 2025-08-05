@@ -8,7 +8,7 @@ export default {
         }
     },
     inject: [
-        'setSearchProducts',
+        'setSearchData',
         'configs',
         'openPopUpMenu',
         'openAuthPopUp',
@@ -55,9 +55,12 @@ export default {
                         this.updateURL(this.inputSearch);
                     }
                     if (response.success) {
-                        this.setSearchProducts(response.data);
+                        this.setSearchData({
+                            products: response.data,
+                            categories: response.categories
+                        });
                     } else {
-                        this.setSearchProducts([]);
+                        this.setSearchData({});
                     }
                 }).catch(error => {
                     console.log('Ошибка запроса:', error)
@@ -239,19 +242,23 @@ function selectCity() {
                         </div>
                     </div>
                     <div class="main-header__col col-2">
-                        <div @click="openPopUpMenu('default')" class="main-header__burger-menu burger-menu default-anim"
-                            v-anim-hover>
-                            <div class="line line-1"></div>
-                            <div class="line line-2"></div>
-                            <div class="line line-3"></div>
+                        <div class="main-header__btns-wrapper">
+                            <div @click="openPopUpMenu('default')"
+                                class="main-header__burger-menu burger-menu default-anim" v-anim-hover>
+                                <div class="line line-1"></div>
+                                <div class="line line-2"></div>
+                                <div class="line line-3"></div>
+                            </div>
+                            <router-link to="/catalog" class="main-header__btn btn-2 default-anim" v-anim-hover>
+                                Каталог
+                            </router-link>
                         </div>
                         <div class="main-header-search">
                             <ClientOnly>
                                 <input type="text" @change="setSearch" v-model="inputSearch"
                                     :placeholder="isDesktop ? 'Поиск народных товаров' : 'Поиск'">
                             </ClientOnly>
-                            <div class="main-header-search__icon main-search__js default-anim"
-                                v-anim-hover>
+                            <div class="main-header-search__icon main-search__js default-anim" v-anim-hover>
                                 <svg width="28" height="28" viewBox="0 0 28 28" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path
@@ -379,4 +386,22 @@ function selectCity() {
 
 </template>
 
-<style scoped></style>
+<style scoped>
+.main-header__btn {
+    font-size: 2rem;
+    line-height: 1;
+    padding: 1.6rem;
+
+    background-color: var(--white);
+
+    @media only screen and (orientation: portrait) {
+        display: none;
+    }
+}
+
+.main-header__btns-wrapper {
+    display: flex;
+    gap: 1.6rem;
+    align-items: center;
+}
+</style>

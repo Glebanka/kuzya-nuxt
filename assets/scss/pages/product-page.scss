@@ -174,19 +174,19 @@
 		gap: 1.6rem;
 	}
 
-	&__all-characteristics {
+	&__all-characteristics, &__description {
 		margin-bottom: 4rem;
-	}
 
-	&__all-characteristics span {
-		border-bottom: 1px dashed var(--black);
-		cursor: pointer;
-		transition: border 0.3s ease-out;
-	}
+		span {
+			border-bottom: 1px dashed var(--black);
+			cursor: pointer;
+			transition: border 0.3s ease-out;
 
-	@media (hover: hover) and (pointer: fine) {
-		&__all-characteristics span:hover {
-			border-bottom: 1px dashed transparent;
+			@media (hover: hover) and (pointer: fine) {
+				&:hover {
+					border-bottom: 1px dashed transparent;
+				}
+			}
 		}
 	}
 
@@ -273,6 +273,9 @@
 		}
 
 		&__all-characteristics {
+			margin-bottom: 6rem;
+		}
+		&__description {
 			margin-bottom: 6rem;
 		}
 	}

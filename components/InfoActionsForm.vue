@@ -5,7 +5,7 @@ import { mapState } from 'pinia';
 export default {
 	setup() {
 		return {
-			v$: useVuelidate(),
+			v$: useVuelidate({ $scope: false }),
 			isClient: import.meta.client,
 		}
 	},

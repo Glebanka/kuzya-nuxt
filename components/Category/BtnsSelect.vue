@@ -55,7 +55,8 @@ export default {
             <div class="btn-select__content">
                 <div v-for="(item, indx) in items" class="btn-select__item"
                      :class="[indx === activeItem ? '_active' : '']" @click="selectItem(indx)">
-                        <router-link :to="item.link + '/'" class="btn-border default-anim" v-anim-hover>
+                        <router-link :to="item.link + '/'" class="btn-border default-anim" v-anim-hover
+                        :class="{ 'active': item.active }">
                             {{ item.name }}
                         </router-link>
                 </div>
@@ -66,5 +67,15 @@ export default {
 </template>
 
 <style scoped>
+.btn-border {
+    &.active {
+        color: var(--white);
+        pointer-events: none;
 
+        &:after {
+            opacity: 1;
+            clip-path: circle(160% at var(--x) var(--y));
+        }
+    }
+}
 </style>

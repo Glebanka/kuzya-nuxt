@@ -10,7 +10,7 @@ export default {
         }
     },
     props: {
-        searchProducts: Array,
+        searchData: Object,
     },
     methods: {
         loadMore() {
@@ -20,7 +20,7 @@ export default {
             this.hasMore = this.products.length > end;
         },
         init(){
-            this.products = this.searchProducts;
+            this.products = this.searchData?.products ?? [];
             if(this.products?.length > 0) {
                 this.displayProducts = this.products.slice(0, this.productsPerPage);
                 this.hasMore = this.products.length > this.productsPerPage;
@@ -33,7 +33,7 @@ export default {
         this.init();
     },
     watch: {
-        searchProducts(val) {
+        searchData(val) {
             this.products = val;
             this.init();
         }

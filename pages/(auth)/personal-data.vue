@@ -498,6 +498,7 @@ export default {
                             </div>
                         </div>
                     </div>
+                    
                     <div class="checkbox-house form-checkboxes">
                         <div class="form-item" :class="{ '_checked': form.mailSubscribe }">
                             <input type="checkbox" id="mailSubscribe" v-model="form.mailSubscribe"

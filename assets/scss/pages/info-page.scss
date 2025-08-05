@@ -13,6 +13,10 @@
 	&__block-body {
 		position: sticky;
 		top: 20rem;
+
+		h2 {
+			margin-top: 0;
+		}
 	}
 
 	&__block:last-child {

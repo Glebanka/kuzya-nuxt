@@ -96,7 +96,7 @@ html:has(dialog[open]) {
 
     &__content.scroll {
         overflow-y: scroll;
-
+        scrollbar-width: thin;
     }
 
     &__content::-webkit-scrollbar {

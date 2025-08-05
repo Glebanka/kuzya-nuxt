@@ -17,6 +17,7 @@ export const useCartStore = defineStore('cart', () => {
 
   const addItem = (product: CartItem) => {
     items.value.push({ ...product, quantity: 1, isChecked: true })
+    localStorage.setItem('cartLastUpdateTime', Date.now().toString())
   }
 
   const updateItemPrice = (product: CartItem, price: number) => {
@@ -29,6 +30,7 @@ export const useCartStore = defineStore('cart', () => {
 
   const removeItem = (product: CartItem) => {
     items.value = items.value.filter(item => item.id !== product.id)
+    localStorage.setItem('cartLastUpdateTime', Date.now().toString())
   }
 
   const decrementQuantity = (product: CartItem) => {
@@ -38,6 +40,7 @@ export const useCartStore = defineStore('cart', () => {
   const removeItems = (remItems: CartItem[]) => {
     const removeSet = new Set(remItems.map(item => item.id))
     items.value = items.value.filter(item => !removeSet.has(item.id))
+    localStorage.setItem('cartLastUpdateTime', Date.now().toString())
   }
 
   const checkItem = (item: CartItem) => {
@@ -129,6 +132,7 @@ export const useCartStore = defineStore('cart', () => {
   }
 
   const updatePrices = async (): Promise<void> => {
+    console.log('Updating prices for cart items...');
     const twoHoursInMs = 2 * 60 * 60 * 1000
     const currentTime = Date.now()
     // Если метка времени отсутствует, используем время "2 часа назад + 10 секунд"
@@ -148,6 +152,7 @@ export const useCartStore = defineStore('cart', () => {
         },
       })
       const response = apiData.value as { products: CartItem[] };
+      console.log('response: ', response);
       data.value = response;
 
       const updatedItems = data.value?.products || []

@@ -5,11 +5,6 @@ export default {
             breadcrumbs: [],
             aboutPage: {},
             addresses: [],
-            token: null,
-            type: Boolean,
-            default: false,
-            isVisible: false,
-            addressRemove: null,
         }
     },
     methods: {
@@ -23,51 +18,38 @@ export default {
                 headline: 'Мои адреса доставки',
             }
         },
-        async getAddresses() {
-            try {
-                const response = await useNuxtApp().$apiFetch(`/user-addresses`, {
-                    headers: {
-                        'Authorization': `Bearer ${useAuthStore().token}`,
-                    }
-                });
-
-                if (response.status == true) {
-                    this.addresses = response.addresses;
-                }
-            } catch (error) {
-                console.error('Ошибка запроса:', error);
+        getAddresses() {
+            console.log('getAddresses');
+            
+            const { isAuthenticated, userData } = useAuthStore();
+            if(isAuthenticated){
+                this.addresses = userData.delivery_addresses;
             }
         },
-        removeAddress(address) {
-            this.isVisible = true;
-            this.addressRemove = address;
+        confirmRemove(address){
+            useConfirmPopup()('Вы уверены, что хотите удалить этот элемент?').then((ques) => {ques && this.deleteAddress(address)});
         },
-        async confirmDelete() {
+        async deleteAddress(address) {
             try {
-                const response = await useNuxtApp().$apiFetch(`/api/user-addresses/${this.addressRemove.id}`, {
+                const response = await useNuxtApp().$apiFetch(`/user-addresses/${address.id}`, {
                     headers: {
                         'Authorization': `Bearer ${useAuthStore().token}`,
                     },
                     method: 'DELETE',
                 });
-
                 if (response.status == true) {
-                    this.addresses = this.addresses.filter(addr => addr.id !== this.addressRemove.id);
-                    this.isVisible = false;
-                    this.addressRemove = null;
+                    // Обновляем данные в authStore
+                    useAuthStore().getUserData();
+                    this.addresses = this.addresses.filter(addr => addr.id !== address.id);
                 }
             } catch (error) {
                 console.error('Ошибка запроса:', error);
             }
         },
-        close() {
-            this.isVisible = false;
-            this.addressRemove = null;
-        },
     },
     mounted() {
         this.initMeta();
-        useTokenReady(this.getAddresses)
+        useGetUserData(this.getAddresses);
     },
 }
 </script>
@@ -104,7 +86,7 @@ export default {
                                     stroke="currentColor" stroke-width="2" stroke-linecap="square"
                                     stroke-linejoin="round" />
                             </svg>
-                            <p @click="removeAddress(address)" class="delete-btn-text">Удалить адрес</p>
+                            <p @click="confirmRemove(address)" class="delete-btn-text">Удалить адрес</p>
                         </div>
                     </div>
                 </div>
@@ -115,109 +97,7 @@ export default {
             </div>
         </section>
         <info-actions-form class="mt-200 mt-120m"></info-actions-form>
-        <div class="delete-address-popup" v-if="isVisible">
-            <div class="delete-address-popup-overlay" @click="close"></div>
-            <div class="delete-address-popup-content">
-                <button class="delete-address-popup-close" @click="close">&times;</button>
-                <h2>Подтверждение удаления</h2>
-                <p>Вы уверены, что хотите удалить этот элемент?</p>
-                <div class="delete-address-popup-actions">
-                    <button class="delete-button" @click="confirmDelete">Удалить</button>
-                    <button class="cancel-button" @click="close">Отмена</button>
-                </div>
-            </div>
-        </div>
     </main>
 </template>
 <style scoped>
-.delete-address-popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-
-.delete-address-popup-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
-}
-
-.delete-address-popup-content {
-    background: white;
-    padding: 20px;
-    border-radius: 5px;
-    z-index: 1001;
-    position: relative;
-    width: 400px;
-    /* Задайте ширину по желанию */
-}
-
-.delete-address-popup-close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: transparent;
-    border: none;
-    font-size: 30px;
-    cursor: pointer;
-    color: #999;
-}
-
-.delete-address-popup-close:hover {
-    color: red;
-    /* Цвет при наведении */
-}
-
-.delete-address-popup-actions {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-.delete-button {
-    background-color: #d9534f;
-    /* Красный цвет для кнопки "Удалить" */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.delete-button:hover {
-    background-color: #c9302c;
-    /* Более темный красный при наведении */
-}
-
-.cancel-button {
-    background-color: #f0ad4e;
-    /* Оранжевый цвет для кнопки "Отмена" */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.cancel-button:hover {
-    background-color: #ec971f;
-    /* Более темный оранжевый при наведении */
-}
-
-.delete-address-popup-content h2 {
-    margin: 2rem 0 4rem;
-}
-
-.delete-address-popup-content p {
-    margin: 0 0 6rem;
-}
 </style>
