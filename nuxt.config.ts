@@ -34,8 +34,8 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiBaseURL: 'http://kuzya.loc/api',
-      // apiBaseURL: 'https://xn--80aaaldvhd1agchd1a2o.xn--p1ai/api',
+      // apiBaseURL: 'http://kuzya.loc/api',
+      apiBaseURL: 'https://xn--80aaaldvhd1agchd1a2o.xn--p1ai/api',
       // imgBaseURL: 'http://kuzya.loc',
       imgBaseURL: 'https://xn--80aaaldvhd1agchd1a2o.xn--p1ai/',
     }
