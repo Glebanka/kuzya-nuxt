@@ -8,7 +8,8 @@ export default {
 			price: props.product.price,
 			url_page: props.product.url_page,
 			json_imgs: props.product.json_imgs && props.product.json_imgs.length ? props.product.json_imgs[0] : null,
-			unit: props.product.unit || null
+			unit: props.product.unit || null,
+			status: true,
 		});
 
 		const isClient = import.meta.client;
@@ -118,10 +119,10 @@ export default {
 			<router-link :to="'/products/' + parseProduct.url_page + '/'"></router-link>
 			<div class="card-product__block">
 				<div class="card-product__img">
-					<template v-if="isClient">
+					<ClientOnly>
 						<template v-if="parseProduct.json_imgs">
 							<picture>
-								<img @error="errorHandler" :src="parseProduct.json_imgs">
+								<NuxtImg loading="lazy" :src="parseProduct.json_imgs" alt="image"/>
 							</picture>
 						</template>
 						<template v-else>
@@ -129,7 +130,7 @@ export default {
 								<img src="~/assets/img/empty-img.png" alt="empty-img">
 							</picture>
 						</template>
-					</template>
+					</ClientOnly>
 				</div>
 			</div>
 			<div class="card-product__block">

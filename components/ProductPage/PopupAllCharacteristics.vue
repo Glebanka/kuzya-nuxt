@@ -16,6 +16,8 @@ function addEventListeners() {
         });
     }
 }
+
+const configs = inject('configs')
 </script>
 <template>
     <div class="popup-all-characteristics popup">
@@ -41,8 +43,23 @@ function addEventListeners() {
                             </ul>
                         </div>
                     </div>
+                    <div class="current-product-ques">
+                        <div class="current-product-ques__container">
+                            <div class="current-product-ques__title">Появились вопросы о товаре?</div>
+                            <div class="current-product-ques__contacts">
+                                <div class="current-product-ques__contact">
+                                    <div class="current-product-ques__label">Телефон горячей линии:</div>
+                                    <div class="current-product-ques__value">
+                                        <a :href="'tel:' + configs['TEL_HOT_HREF']" class="text-anim">
+                                            <span>{{ configs['TEL_HOT'] }}</span>
+                                            <span>{{ configs['TEL_HOT'] }}</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
             </div>
             <div class="popup-all-characteristics__close popup__close close-popup__js default-anim" v-anim-hover>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

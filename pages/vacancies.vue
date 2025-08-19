@@ -1,6 +1,7 @@
 <script setup>
 import useVuelidate from "@vuelidate/core";
 import { minLength, sameAs, required } from "@vuelidate/validators";
+import { useIMask } from "vue-imask";
 
 const { data } = await useGetData('/pages', {
     params: { url_page: '/vakansii' },
@@ -17,7 +18,7 @@ const form = reactive({
     fullname: '',
     phone: '',
     shop_address: '',
-    vacancy: {},
+    vacancy: '',
     privacy_policy: false,
 })
 const rules = computed(() => ({
@@ -43,35 +44,32 @@ const rules = computed(() => ({
 
 
 const v$ = useVuelidate(rules, form)
-const { phoneInput } = usePhoneMask()
+
+const { el: phoneInput, masked: maskedPhoneValue } = useIMask({
+    mask: '+{7}(000)000-00-00',
+});
+watch(maskedPhoneValue, (newVal) => {
+    form.phone = newVal
+})
+
+const { data: vacanciesData } = await useAPI('/vacancies');
+const { data: shopsData } = await useAPI('/shops/min');
 
 /**
  * Массив данных вакансий.
- * @type {Ref<Array<{
+ * @type {import('vue').Ref<Array<{
  *   id: number,                     // Уникальный ID вакансии
  *   id_market: number,             // ID рынка/магазина
  *   name: string,                  // Название вакансии
  *   email: string,                 // Контактный email
- *   phone: string,                 // Контактный телефон
- *   exp: string,                   // Требуемый опыт (например, "5 лет")
- *   salary: string|number,        // Зарплата
- *   payments: string,             // Частота выплат (например, "Три раза в месяц")
- *   schedule: string,             // График работы
  *   sort: number,                 // Сортировка
  *   status: number,               // Статус (например, 1 — активна)
- *   from_you: Array<{
- *     name: string,               // Текст отзыва
- *   }>,
- *   our_pluses: Array<{
- *     name: string,               // Текст плюса
- *   }>,
- *   your_tasks: Array<{
- *     name: string,               // Название задачи
- *   }>
+ *   info_preview: string,         // Краткое описание вакансии в формате HTML
+ *   info_full: string,            // Полное описание вакансии в формате HTML 
  * }>>}
  */
-const vacancies = ref(useAPI('/vacancies').data?.value?.vacancies || []);
-const shops = ref(useAPI('/shops/min').data?.value?.shops || [])
+const vacancies = ref(vacanciesData.value?.vacancies || []);
+const shops = ref(shopsData.value?.shops || []);
 
 
 // Фильтруем магазины: оставляем только те, которые связаны с вакансиями (id_market совпадает с id магазина)
@@ -119,18 +117,17 @@ async function formSubmitHandler() {
     // валидируем форму и если данные прошли валидацию, вызываем запрос
     v$.value.$touch();
     if (!v$.value.$invalid) {
-        // раскоментировать запрос
-        // try {
-        //     const response = await useNuxtApp().$apiFetch('/vacancies-form/', {
-        //         method: 'POST',
-        //         body: form,
-        //     });
-        //     if (response.success) {
-        //         useRouter().push('/thanks-vacancy/')
-        //     }
-        // } catch (error) {
-        //     console.error('Ошибка запроса:', error);
-        // }
+        try {
+            const response = await useNuxtApp().$apiFetch('/vacancies-form/', {
+                method: 'POST',
+                body: form,
+            });
+            if (response.success) {
+                useRouter().push('/thanks-vacancy/')
+            }
+        } catch (error) {
+            console.error('Ошибка запроса:', error);
+        }
     }
 }
 
@@ -179,9 +176,9 @@ async function formSubmitHandler() {
                                 </div>
                                 <div class="select-box__body">
                                     <div class="select-box__content">
+                                        <!-- на клик выставляем новый адрес, сбрасывам выбранную вакансию -->
                                         <ul class="list-style-none select-box__list">
-                                            <!-- на клик выставляем новый адрес, сбрасывам выбранную вакансию -->
-                                            <li @click="form.shop_address = shop, form.vacancy = {}"
+                                            <li @click="form.shop_address = shop, form.vacancy = ''"
                                                 v-for="shop in filteredShops" :key="shop" class="select-box-item__js">
                                                 <span v-html="shop"></span>
                                             </li>
@@ -193,42 +190,18 @@ async function formSubmitHandler() {
                                 <template v-for="(vacancy, index) in filteredVacancies" :key="index">
                                     <Accordion :title="vacancy.name">
                                         <template v-slot:preview>
-                                            <div class="vacancy-preview">
-                                                <p>Опыт работы: {{ vacancy.exp }}</p>
-                                                <p>Уровень зарплаты: {{ vacancy.salary }}</p>
-                                                <p>Выплаты - {{ vacancy.payments }}</p>
-                                                <p>{{ vacancy.schedule }}</p>
-                                            </div>
+                                            <div class="vacancy-preview" v-html="vacancy.info_preview"></div>
                                         </template>
                                         <template v-slot:content>
                                             <div class="vacancy-content-wrapper">
                                                 <div class="vacancy-content">
-                                                    <template v-if="vacancy.our_pluses.length > 0">
-                                                        <p><b>Плюсы работы в нашей компании:</b></p>
-                                                        <ul>
-                                                            <li v-for="plus in vacancy.our_pluses">{{ plus.name }}
-                                                            </li>
-                                                        </ul>
+                                                    <div v-html="vacancy.info_full"></div>
+                                                    <template v-if="vacancy.email">
+                                                        <p><b>Контакты:</b></p>
+                                                        <p v-if="vacancy.email">почта: <b>{{ vacancy.email }}</b></p>
                                                     </template>
-                                                    <template v-if="vacancy.your_tasks.length > 0">
-                                                        <p><b>Ваши задачи:</b></p>
-                                                        <ul>
-                                                            <li v-for="task in vacancy.your_tasks">{{ task.name }}
-                                                            </li>
-                                                        </ul>
-                                                    </template>
-                                                    <template v-if="vacancy.from_you.length > 0">
-                                                        <p><b>От Вас:</b></p>
-                                                        <ul>
-                                                            <li v-for="from_you_item in vacancy.from_you">
-                                                                {{ from_you_item.name }}</li>
-                                                        </ul>
-                                                    </template>
-                                                    <p><b>Контакты:</b></p>
-                                                    <p>тел: <b>{{ vacancy.phone }}</b></p>
-                                                    <p>почта: <b>{{ vacancy.email }}</b></p>
                                                 </div>
-                                                <button @click="clickScrollTo('vacancy-form'), form.vacancy = vacancy"
+                                                <button @click="clickScrollTo('vacancy-form'), form.vacancy = vacancy.name"
                                                     class="btn btn-small default-anim bg-yellow" v-anim-hover>
                                                     Откликнуться
                                                 </button>
@@ -280,7 +253,7 @@ async function formSubmitHandler() {
                         <label for="vacancy-phone-input" class="form-label">Телефон *</label>
                         <div class="form-item__body">
                             <input ref="phoneInput" id="vacancy-phone-input" type="text" name="phone" class="form-input"
-                                v-model.trim="form.phone" inputmode="tel" data-min="16" data-max="16" maxlength="16"
+                                inputmode="tel" data-min="16" data-max="16" maxlength="16"
                                 placeholder="+7_">
                             <div class="helper-block" v-if="v$.phone.minLength.$invalid">
                                 Минимальное количетсво символов 2
@@ -306,7 +279,7 @@ async function formSubmitHandler() {
                                         <template v-for="item in filteredShops">
                                             <!-- на клик выставляем новый адрес, сбрасывам выбранную вакансию -->
                                             <li class="select-box-item__js"
-                                                @click="form.shop_address = item, form.vacancy = {}"><span>{{
+                                                @click="form.shop_address = item, form.vacancy = ''"><span>{{
                                                     item }}</span></li>
                                         </template>
                                     </ul>
@@ -320,8 +293,8 @@ async function formSubmitHandler() {
                             <input type="text" class="hidden select-box-input-hidden" v-model="form.filteredVacancies">
                             <div class="select-box__head">
                                 <div class="select-box__label"
-                                    :class="{ 'select-box__label-black-text': Object.keys(form.vacancy).length !== 0 }">
-                                    {{ form.vacancy.name || 'Желаемая вакансия' }}
+                                    :class="{ 'select-box__label-black-text': form.vacancy }">
+                                    {{ form.vacancy || 'Желаемая вакансия' }}
                                 </div>
                             </div>
                             <div class="select-box__body">
@@ -333,8 +306,11 @@ async function formSubmitHandler() {
                                             </div>
                                         </template>
                                         <template v-else v-for="item in filteredVacancies">
-                                            <li class="select-box-item__js" @click="form.vacancy = item"><span>{{
-                                                item.name }}</span></li>
+                                            <li class="select-box-item__js" @click="form.vacancy = item.name">
+                                                <span>
+                                                    {{ item.name }}
+                                                </span>
+                                            </li>
                                         </template>
                                     </ul>
                                 </div>

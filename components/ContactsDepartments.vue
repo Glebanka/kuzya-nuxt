@@ -90,7 +90,7 @@ export default {
                 </div>
             </div>
             <div class="contacts-departments__btns">
-                <a :href="`${useRuntimeConfig().public.imgBaseURL}/storage/${configs['CONTACT_PDF']}`" target="_blank" class="contacts-departments__btn btn-border default-anim">
+                <a :href="`${useRuntimeConfig().public.imgBaseURL}/storage/${configs['CONTACT_PDF']}`" target="_blank" class="contacts-departments__btn btn-border default-anim" v-anim-hover>
                     <svg class="pdf" width="30" height="30" viewBox="0 0 30 30" fill="none"
                          xmlns="http://www.w3.org/2000/svg">
                         <path

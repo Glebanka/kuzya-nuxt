@@ -82,8 +82,9 @@
 
 	&__row.row-2 {
 		display: flex;
-		gap: 4rem;
-		margin-bottom: 2.4rem;
+		flex-flow: column;
+		gap: 2.4rem;
+		margin-bottom: 1.6rem;
 	}
 
 	&__row.row-3 {
@@ -99,13 +100,10 @@
 		margin-right: 2.4rem;
 	}
 
-	&__instock {
-		margin-top: .7rem;
-	}
-
 	&__characteristics {}
 
 	&__characteristic {
+		margin: 0;
 		margin-bottom: .8rem;
 		color: var(--text-grey);
 		font-size: 1.6rem;
@@ -190,6 +188,16 @@
 		}
 	}
 
+	&__instock{
+		font-weight: 500;
+		&--red{
+			color: var(--red);
+		}
+		&--green{
+			color: var(--green);
+		}
+	}
+
 	@media screen and (orientation: portrait) {
 		margin-bottom: 12rem;
 
@@ -238,7 +246,7 @@
 		}
 
 		&__row.row-2 {
-			display: block;
+			margin-bottom: 2.4rem;
 		}
 
 		&__last-row {
@@ -461,7 +469,7 @@
 
 	&__row {
 		align-items: end;
-		margin-bottom: 1rem;
+		margin-bottom: 0;
 	}
 
 	&__value.new {
@@ -783,6 +791,7 @@
 	grid-template-columns: 1fr 1fr;
 	padding: 1.6rem .8rem;
 	border-radius: .4rem;
+	margin: 0;
 
 	&:nth-child(odd) {
 		background-color: var(--grey);

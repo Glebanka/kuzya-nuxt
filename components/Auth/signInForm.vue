@@ -14,7 +14,6 @@ export default {
                 email: '',
                 password: '',
             },
-            passOpened: false,
         }
     },
     emits: ['changeFormType'],
@@ -71,15 +70,6 @@ export default {
             }
         },
     },
-    watch: {
-        passOpened(newState) {
-            if (newState == true) {
-                this.$refs.passInput.type = 'text'
-            } else {
-                this.$refs.passInput.type = 'password'
-            }
-        }
-    },
 }
 </script>
 <template>
@@ -110,11 +100,9 @@ export default {
                         <label for="" class="form-label">Пароль</label>
                         <div class="form-item__body"
                             :class="{ 'has-error': ((v$.form.password.required.$invalid || v$.form.password.minLength.$invalid || v$.form.password.maxLength.$invalid) && form.password.length !== 0) }">
-                            <div class="password-input">
-                                <input ref="passInput" type="password" v-model.trim="form.password" class="form-input">
-                                <div class="password-eye" @click="passOpened = !passOpened"
-                                    :class="{ 'opened': passOpened }"></div>
-                            </div>
+                            <PassInputTemplate>
+                                <input type="password" v-model.trim="form.password" class="form-input">
+                            </PassInputTemplate>
                             <div class="helper-block" v-if="v$.form.password.minLength.$invalid">
                                 Минимальное количество символов 2
                             </div>
@@ -144,20 +132,4 @@ export default {
     <LoadingScreen ref="loadingScreen"></LoadingScreen>
 </template>
 <style scoped>
-.password-eye{
-	cursor: pointer;
-	position: absolute;
-	width: 3.8rem;
-	height: 2rem;
-	right: 2rem;
-	top: 50%;
-	transform: translate(0, -50%);
-	background-image: url(~/assets/img/svg/password-eye.svg);
-	background-position: 0 2rem;
-	background-size: 3.8rem 6rem;
-}
-.password-eye.opened{
-	background-position: 0 0;
-	height: 3rem;
-}
 </style>

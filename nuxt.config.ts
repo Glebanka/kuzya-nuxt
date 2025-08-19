@@ -1,3 +1,6 @@
+import { extendPages } from "./utils/customPages"
+import { fetchSitemap } from "./utils/sitemap"
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
@@ -34,97 +37,22 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      // apiBaseURL: 'http://kuzya.loc/api',
-      apiBaseURL: 'https://xn--80aaaldvhd1agchd1a2o.xn--p1ai/api',
-      // imgBaseURL: 'http://kuzya.loc',
-      imgBaseURL: 'https://xn--80aaaldvhd1agchd1a2o.xn--p1ai/',
+      apiBaseURL: process.env.NUXT_PUBLIC_API_BASE_URL || '',
+      imgBaseURL: process.env.NUXT_PUBLIC_IMG_BASE_URL || '',
     }
   },
 
-  modules: [
-    '@pinia/nuxt',
-  ],
+  modules: ['@pinia/nuxt', '@nuxtjs/sitemap', '@nuxtjs/robots', '@nuxt/image'],
 
   hooks: {
     'pages:extend'(pages) {
-      pages.push({
-        name: 'about',
-        path: '/o-kompanii',
-        file: '~/pages/(static)/about.vue'
-      })
-
-      pages.push({
-        name: 'giftCard',
-        path: '/podarochnye-karty',
-        file: '~/pages/(static)/giftCard.vue'
-      })
-
-      pages.push({
-        name: 'customerCard',
-        path: '/karta-lybov-pokupatelya',
-        file: '~/pages/(static)/customerCard.vue'
-      })
-
-      pages.push({
-        name: 'suppliersInfo',
-        path: '/postavshikam',
-        file: '~/pages/(static)/suppliersInfo.vue'
-      })
-
-      pages.push({
-        name: 'paymentSecurity',
-        path: '/payment-security',
-        file: '~/pages/(static)/paymentSecurity.vue'
-      })
-
-      pages.push({
-        name: 'publicOffer',
-        path: '/oferta',
-        file: '~/pages/(static)/publicOffer.vue'
-      })
-
-      pages.push({
-        name: 'product',
-        path: '/products/:product',
-        file: '~/pages/product.vue'
-      })
-
-      pages.push({
-        name: 'category',
-        path: '/catalog/:category(.*)*',
-        file: '~/pages/category.vue'
-      })
-
-      pages.push({
-        name: 'catalog',
-        path: '/catalog/',
-        file: '~/pages/catalog.vue'
-      })
-      
-      pages.push({
-        name: 'discount',
-        path: '/discounts/:discountName/',
-        file: '~/pages/discount.vue'
-      })
-
-      pages.push({
-        name: 'discounts',
-        path: '/discounts/',
-        file: '~/pages/discounts.vue'
-      })
-
-      pages.push({
-        name: 'myOrder',
-        path: '/my-order/:orderId',
-        file: '~/pages/(auth)/my-order.vue'
-      })
-
-      pages.push({
-        name: 'vacancies',
-        path: '/vakansii/',
-        file: '~/pages/vacancies.vue'
-      })
+      extendPages(pages);
     }
+  },
+
+  // делаем сайтмап только если мы в проде
+  sitemap: {
+    urls: process.env.NODE_ENV == 'development' ? fetchSitemap : async () => []
   },
 
   devtools: {

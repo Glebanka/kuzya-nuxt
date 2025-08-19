@@ -68,6 +68,24 @@ button {
 	position: relative;
 }
 
+.password-eye {
+	cursor: pointer;
+	position: absolute;
+	width: 4.8rem;
+	height: 2rem;
+	right: 2rem;
+	top: 50%;
+	transform: translate(0, -50%);
+	background-image: url('~/assets/img/svg/password-eye.svg');
+	background-position: 0 -2rem;
+	background-size: 4.8rem;
+	background-repeat: no-repeat;
+}
+
+.password-eye.opened {
+	background-position: 0 0;
+}
+
 .form-input::placeholder,
 .form-textarea::placeholder {
 	font-family: var(--ff-montserrat);

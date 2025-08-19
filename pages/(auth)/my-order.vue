@@ -30,6 +30,7 @@ export default {
             definePageMeta({
                 middleware: 'auth'
             })
+            useRobotsRule({ noindex: true, nofollow: true })
             useSeoMeta({ title: 'Мой заказ' })
             this.breadcrumbs = [{ ['Мой заказ']: '' }]
         },

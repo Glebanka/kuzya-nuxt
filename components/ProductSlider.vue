@@ -66,7 +66,7 @@ function getImagePath(image) {
               </div>
               <div class="first-screen-slide__bg">
                 <picture>
-                  <img :src="getImagePath(slide.image)" alt="">
+                  <NuxtImg :src="getImagePath(slide.image)" alt="" />
                 </picture>
               </div>
             </router-link>
