@@ -52,6 +52,9 @@ export default {
 		isChecked() {
 			return this.findInCart(this.item.id).isChecked
 		},
+		isAvailable() {
+			return this.findInCart(this.item.id).status;
+		},
 	},
 	watch: {
 		parsedImg() {
@@ -64,7 +67,7 @@ export default {
 </script>
 
 <template>
-	<div class="basket-products-item form-item" :class="isChecked ? '_checked' : ''">
+	<div class="basket-products-item form-item" :class="{_checked: isChecked, _unavailable: !isAvailable}">
 		<label @click="toggleChecked(item)" :for="item.id" class="form-check-label"></label>
 		<div class="basket-products-item__body">
 			<div class="basket-products-item__block block-1">

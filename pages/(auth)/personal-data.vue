@@ -2,13 +2,17 @@
 import useVuelidate from '@vuelidate/core';
 import { email, minLength, required } from '@vuelidate/validators';
 import { mapState } from 'pinia';
+import { useIMask } from 'vue-imask';
 
 export default {
     setup() {
-        const { phoneInput } = usePhoneMask()
+        const { el: phoneInput, masked: maskedPhoneValue } = useIMask({
+            mask: '+{7}(000)000-00-00',
+        });
         return {
+            v$: useVuelidate(),
             phoneInput,
-            v$: useVuelidate()
+            maskedPhoneValue
         }
     },
     data() {
@@ -182,6 +186,7 @@ export default {
             definePageMeta({
                 middleware: 'auth'
             })
+            useRobotsRule({ noindex: true, nofollow: true })
             useSeoMeta({ title: 'Личные данные' })
             this.breadcrumbs = [{ ['Личные данные']: '' }]
             this.aboutPage = {
@@ -215,7 +220,7 @@ export default {
             this.form.name = this.userData.name || '';
             this.form.surname = this.userData.surname || '';
             this.form.email = this.userData.email || '';
-            this.form.phone = this.userData.phone || '';
+            this.maskedPhoneValue = this.userData.phone || '';
             this.form.gender = this.userData.gender === 1 ? 'man' : 'woman';
             this.form.dateBirth = this.userData.date_of_birth;
             this.form.weddingDay = this.userData.date_of_wedding;
@@ -326,7 +331,10 @@ export default {
                 }
             },
             deep: true
-        }
+        },
+        maskedPhoneValue(newVal) {
+            this.form.phone = newVal
+        },
     }
 }
 </script>
@@ -372,9 +380,8 @@ export default {
                                 :class="{ 'has-success': (!v$.form.phone.$error && !v$.form.phone.required.$invalid && !v$.form.phone.minLength.$invalid), 'has-error': (v$.form.phone.$error) || (v$.form.phone.minLength.$invalid) }">
                                 <label for="" class="form-label">Телефон *</label>
                                 <div class="form-item__body">
-                                    <input ref="phoneInput" type="text" class="form-input" v-model.trim="form.phone"
-                                        inputmode="tel" placeholder="+7_" data-tel-input data-min="16" data-max="16"
-                                        maxlength="16">
+                                    <input ref="phoneInput" type="text" class="form-input" inputmode="tel"
+                                        placeholder="+7_" data-tel-input data-min="16" data-max="16" maxlength="16">
                                     <div class="helper-block" v-if="v$.form.phone.minLength.$invalid">
                                         Минимальное количество символов 16
                                     </div>
@@ -498,7 +505,7 @@ export default {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="checkbox-house form-checkboxes">
                         <div class="form-item" :class="{ '_checked': form.mailSubscribe }">
                             <input type="checkbox" id="mailSubscribe" v-model="form.mailSubscribe"
@@ -522,16 +529,20 @@ export default {
                     <div class="inputs-container__item form-item input">
                         <div class="form-item__body">
                             <label for="" class="form-label">Старый пароль</label>
-                            <input class="form-input" type="password" v-model="changePassForm.oldPass">
+                            <PassInputTemplate>
+                                <input class="form-input" type="password" v-model="changePassForm.oldPass">
+                            </PassInputTemplate>
                         </div>
                     </div>
                     <div class="inputs-container__item form-item input">
                         <div class="form-item__body">
                             <label for="" class="form-label">Новый пароль</label>
-                            <input class="form-input" type="password" v-model="changePassForm.newPass">
-                            <div class="helper-block" v-if="v$.changePassForm.newPass.minLength.$invalid">
-                                Минимальное количество символов 6
-                            </div>
+                            <PassInputTemplate>
+                                <div class="helper-block" v-if="v$.changePassForm.newPass.minLength.$invalid">
+                                    Минимальное количество символов 6
+                                </div>
+                                <input class="form-input" type="password" v-model="changePassForm.newPass">
+                            </PassInputTemplate>
                         </div>
                     </div>
                     <div class="btn-border default-anim btn-border-240" v-anim-hover @click="handleSavePassClick">

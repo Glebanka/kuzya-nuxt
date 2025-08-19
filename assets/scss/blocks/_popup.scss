@@ -378,6 +378,16 @@ html:has(dialog[open]) {
 .popup-basket-product {
     position: relative;
 
+    &._unavailable {
+        .popup-basket-product__block.card-product__block{
+            opacity: 0.5;
+            filter: grayscale(1.5);
+        }
+        .popup-basket-product__last-row.card-product__last-row {
+            display: none;
+        }
+    }
+
     &::after {
         content: "";
         display: block;

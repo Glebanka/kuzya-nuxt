@@ -1,6 +1,7 @@
 <script setup>
 import useVuelidate from '@vuelidate/core';
 import { required, requiredIf, minLength, email, sameAs } from '@vuelidate/validators';
+import { useIMask } from 'vue-imask';
 
 const form = reactive({
     name: '',
@@ -8,7 +9,7 @@ const form = reactive({
     phone: '',
     email: '',
     delivery: {
-        isDelivery: true,
+        isDelivery: false,
         address: '',
         detailAddress: {
             flat: '',
@@ -18,7 +19,7 @@ const form = reactive({
         }
     },
     noDelivery: {
-        isNoDelivery: false,
+        isNoDelivery: true,
         address: 'г. Исилькуль, ул. Коммунистическая, 30',
     },
     comment: '',
@@ -83,17 +84,23 @@ const aboutPage = ref(data.value?.data || []);
 useSeoMeta(useMetaTags(data.value));
 
 
-const { removeItemsFromCart, updatePrices } = useCartStore();
-const { checkedItems: products, checkedTotalPrice } = storeToRefs(useCartStore());
+const { removeItemsFromCart, updateCartProducts } = useCartStore();
+const { validItems: products, validTotal } = storeToRefs(useCartStore());
 
 const totalPrice = computed(() => {
     // если выбрана доставка то прибавляем 5000 к стоимости
     const deliverySurcharge = form.delivery.isDelivery ? 5000 : 0
-    return checkedTotalPrice.value + deliverySurcharge
+    return validTotal.value + deliverySurcharge
 })
 
 const { isDesktop } = useVars()
-const { phoneInput } = usePhoneMask();
+
+const { el: phoneInput, masked: maskedPhoneValue } = useIMask({
+    mask: '+{7}(000)000-00-00',
+});
+watch(maskedPhoneValue, (newVal) => {
+    form.phone = newVal
+})
 
 
 const isFormSend = ref(false)
@@ -190,7 +197,7 @@ async function formSubmit(e) {
 }
 
 function init() {
-    updatePrices();
+    updateCartProducts();
     let shopAddress = JSON.parse(localStorage.getItem('selectedShop'));
     if (shopAddress) {
         form.noDelivery.address = shopAddress.address;
@@ -214,7 +221,7 @@ function getUserData() {
         form.name = userData.name;
         form.surname = userData.surname;
         form.email = userData.email;
-        form.phone = userData.phone;
+        maskedPhoneValue.value = userData.phone;
         userAddresses.value = userData.delivery_addresses;
         setDeliveryAddress(userData.delivery_addresses[0])
     }
@@ -763,9 +770,8 @@ function setDeliveryAddress(addressObj) {
                                     <label for="" class="make-order-form__label form-label">Телефон *</label>
                                     <div class="form-item__body">
                                         <input ref="phoneInput" type="text"
-                                            class="make-order-form__input form-input phone" v-model.trim="form.phone"
-                                            inputmode="tel" placeholder="+7_" data-tel-input data-min="16" data-max="16"
-                                            maxlength="16">
+                                            class="make-order-form__input form-input phone" inputmode="tel"
+                                            placeholder="+7_" data-tel-input data-min="16" data-max="16" maxlength="16">
                                         <div class="helper-block" v-if="v$.phone.minLength.$invalid">
                                             Минимальное количетсво символов 16
                                         </div>
@@ -799,18 +805,18 @@ function setDeliveryAddress(addressObj) {
                                 <div class="make-order-form-block__title">Способ получения</div>
 
                                 <div class="make-order-form__radiobtns form-radiobtns">
-                                    <div class="form-item" :class="{ '_checked': form.delivery.isDelivery }">
-                                        <input id="radio-3" name="btns2[]" type="radio"
-                                            :checked="form.delivery.isDelivery" v-model="form.delivery.isDelivery"
-                                            @click="selectDelivery" class="form-radiobtn">
-                                        <label for="radio-3" class="form-check-label">Экспресс-доставка от 1 дня</label>
-                                    </div>
                                     <div class="form-item" :class="{ '_checked': form.noDelivery.isNoDelivery }">
                                         <input id="radio-4" name="btns2[]" type="radio"
                                             :checked="form.noDelivery.isNoDelivery"
                                             v-model="form.noDelivery.isNoDelivery" @click="selectNoDelivery"
                                             class="form-radiobtn">
                                         <label for="radio-4" class="form-check-label">Самовывоз из магазина</label>
+                                    </div>
+                                    <div class="form-item" :class="{ '_checked': form.delivery.isDelivery }">
+                                        <input id="radio-3" name="btns2[]" type="radio"
+                                            :checked="form.delivery.isDelivery" v-model="form.delivery.isDelivery"
+                                            @click="selectDelivery" class="form-radiobtn">
+                                        <label for="radio-3" class="form-check-label">Экспресс-доставка от 1 дня</label>
                                     </div>
                                     <div class="make-order-form__radiobtns-info">
                                         *Стоимость 5 000 ₽ по Омску и Омской Области
@@ -946,6 +952,25 @@ function setDeliveryAddress(addressObj) {
                                             :checked="(form.pay[0].toLowerCase() === form.selectedPay.toLowerCase())"
                                             class="form-check-label">
                                             <span>Картой онлайн</span>
+
+                                            <svg width="40" height="24" viewBox="0 0 40 24" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M3.69893 6.54654C4.05628 6.5444 5.11832 6.44875 5.56818 7.96702C5.87121 8.98975 6.35392 10.665 7.01631 12.9928H7.28607C7.99643 10.5387 8.4844 8.86342 8.75 7.96702C9.20455 6.43293 10.3409 6.54657 10.7955 6.54657L14.3024 6.54657V17.4556H10.728V11.0267H10.4883L8.49582 17.4556H5.80657L3.81404 11.022H3.57436V17.4556H0V6.54657L3.69893 6.54654ZM19.4351 6.54657V12.9802H19.7202L22.144 7.68988C22.6144 6.63709 23.6172 6.54657 23.6172 6.54657H27.0761V17.4556H23.4271V11.022H23.142L20.7658 16.3123C20.2953 17.3604 19.245 17.4556 19.245 17.4556H15.7861V6.54657H19.4351ZM39.6887 11.7306C39.1797 13.173 37.5812 14.206 35.8115 14.206H31.9848V17.4556H28.5149V11.7306H39.6887Z"
+                                                    fill="#0F754E" />
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M35.979 6.54651H28.333C28.515 8.97524 30.6065 11.0544 32.7717 11.0544H39.9299C40.343 9.03583 38.921 6.54651 35.979 6.54651Z"
+                                                    fill="url(#paint0_linear_544_44355)" />
+                                                <defs>
+                                                    <linearGradient id="paint0_linear_544_44355" x1="40.0001"
+                                                        y1="9.38216" x2="28.333" y2="9.38216"
+                                                        gradientUnits="userSpaceOnUse">
+                                                        <stop stop-color="#1F5CD7" />
+                                                        <stop offset="1" stop-color="#02AEFF" />
+                                                    </linearGradient>
+                                                </defs>
+                                            </svg>
+
                                             <svg width="42" height="42" viewBox="0 0 42 42" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M26.6792 10.8135H15.3223V31.2222H26.6792V10.8135Z"
@@ -1024,23 +1049,6 @@ function setDeliveryAddress(addressObj) {
                                                         <stop offset="0.5731" stop-color="#BE1833" />
                                                         <stop offset="0.8585" stop-color="#DC0436" />
                                                         <stop offset="1" stop-color="#E60039" />
-                                                    </linearGradient>
-                                                </defs>
-                                            </svg>
-                                            <svg width="42" height="42" viewBox="0 0 42 42" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                                    d="M3.88387 15.2598C4.2591 15.2575 5.37424 15.1571 5.84659 16.7513C6.16477 17.8251 6.67162 19.5842 7.36712 22.0284H7.65038C8.39625 19.4515 8.90862 17.6925 9.1875 16.7513C9.66477 15.1405 10.858 15.2598 11.3352 15.2598L15.0175 15.2598V26.7143H11.2644V19.964H11.0128L8.9206 26.7143H6.0969L4.00474 19.959H3.75307V26.7143H0V15.2598L3.88387 15.2598ZM20.4068 15.2598V22.0152H20.7062L23.2512 16.4603C23.7452 15.3548 24.7981 15.2598 24.7981 15.2598H28.4299V26.7143H24.5985V19.959H24.2991L21.804 25.5139C21.31 26.6143 20.2072 26.7143 20.2072 26.7143H16.5754V15.2598H20.4068ZM41.6731 20.7031C41.1387 22.2176 39.4603 23.3022 37.6021 23.3022H33.5841V26.7143H29.9406V20.7031H41.6731Z"
-                                                    fill="#0F754E" />
-                                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                                    d="M37.7773 15.2598H29.749C29.9401 17.8099 32.1362 19.993 34.4097 19.993H41.9258C42.3595 17.8736 40.8664 15.2598 37.7773 15.2598Z"
-                                                    fill="url(#paint0_linear_513_57535)" />
-                                                <defs>
-                                                    <linearGradient id="paint0_linear_513_57535" x1="41.9995"
-                                                        y1="18.2372" x2="29.749" y2="18.2372"
-                                                        gradientUnits="userSpaceOnUse">
-                                                        <stop stop-color="#1F5CD7" />
-                                                        <stop offset="1" stop-color="#02AEFF" />
                                                     </linearGradient>
                                                 </defs>
                                             </svg>
@@ -1123,7 +1131,8 @@ function setDeliveryAddress(addressObj) {
                                         </label>
                                     </div>
 
-                                    <template v-if="totalPrice >= 3500">
+                                    <!-- Выключен так как не работает на стороне банка -->
+                                    <template v-if="false">
                                         <!-- В кредит -->
                                         <div class="form-item"
                                             :class="{ '_checked': (form.pay[6].toLowerCase() === form.selectedPay.toLowerCase()) }">
@@ -1286,7 +1295,7 @@ function setDeliveryAddress(addressObj) {
                                                                         v-if="product.price.old">{{
                                                                             numberWithSpaces(product.price.old) }}
                                                                         ₽<template v-if="item.unit">/{{ product.unit
-                                                                        }}</template></div>
+                                                                            }}</template></div>
                                                                     <div class="your-order-item-price__count">{{
                                                                         product.quantity }} шт.</div>
                                                                 </div>
@@ -1319,7 +1328,7 @@ function setDeliveryAddress(addressObj) {
                                     <div class="your-order-info-total">
                                         <div class="your-order-info-total__label">Итого:</div>
                                         <div class="your-order-info-total__value">{{ numberWithSpaces(totalPrice)
-                                        }} ₽</div>
+                                            }} ₽</div>
                                     </div>
                                 </div>
                             </div>
@@ -1509,6 +1518,7 @@ function setDeliveryAddress(addressObj) {
     }
 
     &__radiobtns-info {
+        right: 4.5rem;
         bottom: -2rem;
         position: absolute;
 
@@ -1633,15 +1643,10 @@ function setDeliveryAddress(addressObj) {
         &__radiobtns {
             grid-template-columns: 1fr;
             gap: .8rem;
-
-            .form-item:nth-child(2) {
-                order: 3;
-            }
         }
 
         &__radiobtns-info {
             position: static;
-            order: 2;
         }
 
         &__last-row {

@@ -26,6 +26,9 @@ export default {
                 return null
             }
         },
+        isAvailable() {
+			return this.findInCart(this.item.id).status;
+		},
     },
     methods: {
         ...mapActions(useCartStore, [
@@ -68,7 +71,7 @@ export default {
 }
 </script>
 <template>
-    <div class="popup-basket-product">
+    <div class="popup-basket-product" :class="{_unavailable: !isAvailable}">
         <div class="popup-basket-product__body card-product__body">
             <router-link :to="'/products/' + item.url_page + '/'"></router-link>
             <div class="popup-basket-product__block card-product__block">

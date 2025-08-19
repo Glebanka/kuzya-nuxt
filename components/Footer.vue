@@ -12,7 +12,7 @@ const configs = inject('configs')
 const openAuthPopUp = inject('openAuthPopUp')
 
 function mobileSubmenuClickHandler(e) {
-    if(!useVars().isDesktop.value){
+    if (!useVars().isDesktop.value) {
         e.target.parentElement.classList.toggle('_active');
         if (e.target.parentElement.classList.contains('_active')) {
             e.target.parentElement.querySelector('.footer-nav__body').style.height = e.target.parentElement.querySelector('.footer-nav__body').scrollHeight + 1 + 'px';
@@ -62,11 +62,19 @@ function mobileSubmenuClickHandler(e) {
                         <div class="footer-nav__label" @click="mobileSubmenuClickHandler">{{ menuBlock.name }}</div>
                         <div class="footer-nav__body">
                             <ul class="list-style-none footer-nav__list">
-                                <li v-for="item in menuBlock.tabs" class="footer-nav-item">
-                                    <router-link :to="'/' + item.url_page + '/'" class="text-anim">
-                                        <span>{{ item.name_menu }}</span>
-                                        <span>{{ item.name_menu }}</span>
-                                    </router-link>
+                                <template v-for="item in menuBlock.tabs">
+                                    <li class="footer-nav-item">
+                                        <router-link :to="'/' + item.url_page + '/'" class="text-anim">
+                                            <span>{{ item.name_menu }}</span>
+                                            <span>{{ item.name_menu }}</span>
+                                        </router-link>
+                                    </li>
+                                </template>
+                                <li v-if="menuBlock.name == 'Для бизнеса'" class="footer-nav-item">
+                                    <a :href="`${useRuntimeConfig().public.imgBaseURL}/storage/${configs['CONTACT_PDF']}`" target="_blank" class="text-anim">
+                                        <span>Реквизиты PDF</span>
+                                        <span>Реквизиты PDF</span>
+                                    </a>
                                 </li>
                             </ul>
                         </div>

@@ -167,6 +167,11 @@
 				fill: var(--blue);
 			}
 		}
+
+		&.disabled{
+			opacity: 0.6;
+			pointer-events: none;
+		}
 	}
 
 	&__label {

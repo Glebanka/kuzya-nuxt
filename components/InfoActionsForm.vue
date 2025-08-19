@@ -1,101 +1,83 @@
-<script>
+<script setup>
 import useVuelidate from '@vuelidate/core';
 import { required, email, sameAs } from '@vuelidate/validators';
-import { mapState } from 'pinia';
-export default {
-	setup() {
-		return {
-			v$: useVuelidate({ $scope: false }),
-			isClient: import.meta.client,
-		}
-	},
-	data() {
-		return {
-			form: {
-				email: '',
-				privacy_policy: false,
-			},
-			responseMessage: '',
-			isSubscribed: false,
-		}
-	},
-	validations() {
-		return {
-			form: {
-				email: {
-					required,
-					email,
-				},
-				privacy_policy: {
-					required,
-					sameAs: sameAs(true),
-				}
-			}
-		}
-	},
-	methods: {
-		async formSubmit(e) {
-			e.preventDefault();
-			this.v$.$touch();
-			if (!this.v$.$invalid) {
-				try {
-					const response = await useNuxtApp().$apiFetch('/discount-from', {
-						method: 'POST',
-						body: {
-							email: this.form.email
-						},
-					});
-					this.form.email = '';
-					if (response.success) {
-						this.responseMessage = 'Подписка оформлена. Спасибо!';
-					} else {
-						this.responseMessage = response.message;
-					}
-					// убираем форму через 5 секунд
-					setTimeout(() => {
-						this.responseMessage = '';
-						this.isSubscribed = true;
-					}, 5000)
 
-				} catch (error) {
-					console.error('Ошибка запроса:', error);
-				}
+const form = reactive({
+	email: '',
+	privacy_policy: false,
+})
+const rules = computed(() => ({
+	email: {
+		required,
+		email,
+	},
+	privacy_policy: {
+		required,
+		sameAs: sameAs(true),
+	},
+}))
+
+
+const v$ = useVuelidate(rules, form, { $scope: false })
+
+const isSubscribed = ref(false)
+const responseMessage = ref('')
+
+const authStore = useAuthStore()
+const { token } = storeToRefs(authStore)
+
+watch(token, () => checkUser())
+onMounted(() => {
+	checkUser()
+})
+// добавить сохранение состояния
+async function checkUser() {
+	if (authStore.isAuthenticated) {
+		let id = getUserIdFromToken(token.value)
+		try {
+			const response = await useNuxtApp().$apiFetch('/checkAuthSubscribed', {
+				method: 'POST',
+				body: {
+					id: id
+				},
+			});
+			if (response.success) {
+				isSubscribed.value = true
 			}
-		},
-		// добавить сохранение состояния
-		async checkUser() {
-			if (this.isAuthenticated) {
-				let id = getUserIdFromToken(this.token)
-				try {
-					const response = await useNuxtApp().$apiFetch('/checkAuthSubscribed', {
-						method: 'POST',
-						body: {
-							id: id
-						},
-					});
-					if (response.success) {
-						this.isSubscribed = true
-					}
-				} catch (error) {
-					console.error('Ошибка запроса:', error);
-				}
+		} catch (error) {
+			console.error('Ошибка запроса:', error);
+		}
+	}
+}
+async function formSubmit(e) {
+	e.preventDefault();
+	v$.value.$touch();
+	if (!v$.value.$invalid) {
+		try {
+			const response = await useNuxtApp().$apiFetch('/discount-from', {
+				method: 'POST',
+				body: {
+					email: form.email
+				},
+			});
+			form.email = '';
+			if (response.success) {
+				responseMessage.value = 'Подписка оформлена. Спасибо!';
+			} else {
+				responseMessage.value = response.message;
 			}
+			// убираем форму через 5 секунд
+			setTimeout(() => {
+				responseMessage.value = '';
+				isSubscribed.value = true;
+			}, 5000)
+
+		} catch (error) {
+			console.error('Ошибка запроса:', error);
 		}
-	},
-	computed: {
-		...mapState(useAuthStore, ['token', 'isAuthenticated']),
-	},
-	watch: {
-		token() {
-			this.checkUser()
-		}
-	},
-	mounted() {
-		this.checkUser()
-	},
+	}
 }
 </script>
-
 <template>
 	<section v-if="!isSubscribed" class="get-info-actions">
 		<div class="get-info-actions__container container bg-grey">
@@ -103,68 +85,36 @@ export default {
 				<template v-if="responseMessage === ''">
 					<h2 class="get-info-actions__title m-0">Узнавайте первыми об акциях!</h2>
 					<div class="get-info-actions__form-container">
-						<template v-if="isClient">
-							<form class="get-info-actions-form form" @submit.prevent="formSubmit">
-								<div class="get-info-actions-form__item form-item input _required"
-									:class="{ 'has-success': (!v$.form.email.$error && !v$.form.email.required.$invalid && !v$.form.email.email.$invalid), 'has-error': (v$.form.email.$error) || (v$.form.email.email.$invalid && !v$.form.email.required.$invalid) }">
-									<div class="get-info-actions-form__body form-item__body">
-										<input type="text" name="email" autocomplete="email"
-											class="get-info-actions-form__input form-input email" v-model="form.email"
-											placeholder="Введите E-mail">
-									</div>
-								</div>
-								<button type="submit" class="get-info-actions-form__btn form-btn btn default-anim bg-yellow"
-									v-anim-hover>Подписка</button>
-							</form>
-							<div class="checkbox-house form-checkboxes">
-								<div class="form-item" :class="{ '_checked': form.privacy_policy }">
-									<input type="checkbox" id="get-info_privacy_policy" v-model="form.privacy_policy"
-										class="form-checkbox">
-									<label for="get-info_privacy_policy"
-										class="form-check-label make-order-form__politics form-politics">Я даю
-										согласие на
-										обработку персональных
-										данных, в соответствии с <router-link to="/politics/" target="_blank">Политикой
-											конфиденциальности</router-link>,
-										и соглашаюсь с <router-link to="/oferta"
-											target="_blank">Офертой</router-link>.</label>
-									<div class="helper-block"
-										v-if="v$.form.privacy_policy.sameAs.$invalid && v$.form.privacy_policy.$error">
-										Обязательно
-									</div>
+						<form class="get-info-actions-form form" @submit.prevent="formSubmit">
+							<div class="get-info-actions-form__item form-item input _required"
+								:class="{ 'has-success': (!v$.email.$error && !v$.email.required.$invalid && !v$.email.email.$invalid), 'has-error': (v$.email.$error) || (v$.email.email.$invalid && !v$.email.required.$invalid) }">
+								<div class="get-info-actions-form__body form-item__body">
+									<input type="text" name="email" autocomplete="email"
+										class="get-info-actions-form__input form-input email" v-model="form.email"
+										placeholder="Введите E-mail">
 								</div>
 							</div>
-						</template>
-						<template v-else>
-							<form class="get-info-actions-form form">
-								<div class="get-info-actions-form__item form-item input _required">
-									<div class="get-info-actions-form__body form-item__body">
-										<input type="text" name="email" autocomplete="email"
-											class="get-info-actions-form__input form-input email"
-											placeholder="Введите E-mail">
-									</div>
-								</div>
-								<button type="submit" class="get-info-actions-form__btn form-btn btn default-anim bg-yellow"
-									v-anim-hover>Подписка</button>
-							</form>
-							<div class="checkbox-house form-checkboxes">
-								<div class="form-item">
-									<input type="checkbox" id="get-info_privacy_policy"
-										class="form-checkbox">
-									<label for="get-info_privacy_policy"
-										class="form-check-label make-order-form__politics form-politics">Я даю
-										согласие на
-										обработку персональных
-										данных, в соответствии с <router-link to="/politics/" target="_blank">Политикой
-											конфиденциальности</router-link>,
-										и соглашаюсь с <router-link to="/oferta"
-											target="_blank">Офертой</router-link>.</label>
-									<div class="helper-block">
-										Обязательно
-									</div>
+							<button type="submit" class="get-info-actions-form__btn form-btn btn default-anim bg-yellow"
+								v-anim-hover>Подписка</button>
+						</form>
+						<div class="checkbox-house form-checkboxes">
+							<div class="form-item" :class="{ '_checked': form.privacy_policy }">
+								<input type="checkbox" id="get-info_privacy_policy" v-model="form.privacy_policy"
+									class="form-checkbox">
+								<label for="get-info_privacy_policy"
+									class="form-check-label make-order-form__politics form-politics">Я даю
+									согласие на
+									обработку персональных
+									данных, в соответствии с <router-link to="/politics/" target="_blank">Политикой
+										конфиденциальности</router-link>,
+									и соглашаюсь с <router-link to="/oferta"
+										target="_blank">Офертой</router-link>.</label>
+								<div class="helper-block"
+									v-if="v$.privacy_policy.sameAs.$invalid && v$.privacy_policy.$error">
+									Обязательно
 								</div>
 							</div>
-						</template>
+						</div>
 					</div>
 				</template>
 				<h2 v-else class="get-info-actions__title m-0 custom-get-info">

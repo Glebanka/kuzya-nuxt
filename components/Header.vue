@@ -111,7 +111,7 @@ const { isDesktop } = useVars();
 const topNav = ref([]);
 
 const cartStore = useCartStore();
-const cartQuantity = computed(() => cartStore.items.length)
+const cartQuantity = computed(() => cartStore.productsAvailable.length)
 
 const { data } = await useAPI(`/header-menu`)
 topNav.value = data.value.data

@@ -1,10 +1,9 @@
 <script>
 import Swiper from 'swiper';
-import { Navigation, Pagination, Scrollbar } from 'swiper/modules';
+import { Navigation, Pagination } from 'swiper/modules';
 import { mapActions, mapState } from 'pinia';
 
 export default {
-    props: {},
     data() {
         return {
             inCart: false,
@@ -59,7 +58,7 @@ export default {
     },
     methods: {
         payWithInstallment() {
-            this.uncheckItems()
+            this.uncheckAllItems()
 
             const existingItem = this.findInCart(this.product.id);
             if (!existingItem) {
@@ -129,7 +128,15 @@ export default {
                 this.imgCheck()
             });
 
-            this.parseProduct = { id: this.product.id, title: this.product.title, price: this.product.price, url_page: this.product.url_page, json_imgs: this.product.json_imgs && this.product.json_imgs.length ? this.product.json_imgs[0] : '', unit: this.product.unit ? this.product.unit : null };
+            this.parseProduct = {
+                id: this.product.id,
+                title: this.product.title,
+                price: this.product.price,
+                url_page: this.product.url_page,
+                json_imgs: this.product.json_imgs && this.product.json_imgs.length ? this.product.json_imgs[0] : '',
+                unit: this.product.unit ? this.product.unit : null,
+                status: true,
+            };
             let productInCart = this.findInCart(this.parseProduct.id)
             if (productInCart) {
                 this.inCart = true;
@@ -151,6 +158,7 @@ export default {
                 json_imgs: this.product.json_imgs && this.product.json_imgs.length ? this.product.json_imgs : null,
                 url_page: this.product.url_page,
                 unit: this.product.unit,
+                status: true,
             }
 
             let latestProducts = JSON.parse(localStorage.getItem('recents')) || [];
@@ -283,9 +291,9 @@ export default {
             'addToCart',
             'removeFromCart',
             'decreaseQuantity',
-            'updatePrices',
-            'uncheckItems',
-            'checkItem',
+            'updateCartProducts',
+            'checkAllItems',
+            'uncheckAllItems',
         ]),
         imgCheck() {
             let imgs = selectElements('.current-product-slide img');
@@ -333,9 +341,12 @@ export default {
                 return null
             }
         },
+        isStocksLessThanCartQuantity() {
+            return this.product.stock <= this.itemQuantity;
+        }
     },
     mounted() {
-        this.updatePrices();
+        this.updateCartProducts();
         this.init()
     },
 }
@@ -489,14 +500,19 @@ export default {
                             <div class="current-product-price__row card-product-price__row">
                                 <div class="current-product-price__value card-product-price__value new">{{
                                     getParsePrice(product.price)
-                                    }} ₽/{{ product.unit }}</div>
+                                }} ₽/{{ product.unit }}</div>
                                 <div class="current-product-price__value card-product-price__value old hidden">609 ₽/шт
                                 </div>
                             </div>
                             <div class="current-product-price__info card-product-price__info hidden">Цена по карте
                                 лояльности</div>
                         </div>
-                        <div class="current-product__instock hidden">В наличии 25 товаров</div>
+                        <template v-if="product.stock != undefined">
+                            <div v-if="product.stock > 0"
+                                class="current-product__instock current-product__instock--green">В наличии</div>
+                            <div v-else class="current-product__instock current-product__instock--red">Не в наличии
+                            </div>
+                        </template>
                     </div>
                     <div class="current-product__row row-3">
                         <div class="current-product__characteristics">
@@ -514,7 +530,7 @@ export default {
                         </div>
                     </div>
                     <div class="current-product__last-row card-product__last-row">
-                        <div class="current-product__btns card-product__btns">
+                        <div v-if="product.stock > 0" class="current-product__btns card-product__btns">
                             <div class="current-product__quantity card-product__quantity quantity quantity__js">
                                 <div class="quantity__btn minus" @click="minusOneProduct">
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
@@ -525,7 +541,9 @@ export default {
                                 <div class="quantity__label">
                                     <span>{{ itemQuantity }}</span> шт.
                                 </div>
-                                <div class="quantity__btn plus" @click="plusOneProduct">
+                                <div class="quantity__btn plus"
+                                @click="plusOneProduct"
+                                :class="{ disabled: isStocksLessThanCartQuantity }">
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path d="M9.1 18.56V2H10.9V18.56H9.1ZM1.5 11.16V9.44H18.5V11.16H1.5Z"
@@ -588,29 +606,13 @@ export default {
                     </template>
 
                     <ProductPageInfoHidden></ProductPageInfoHidden>
-                    
+
                     <div class="current-product__all-characteristics"
                         :class="{ 'hidden': characteristics.length === 0 }">
                         <span class="open-all-characteristics__js">Характеристики</span>
                     </div>
                     <div class="current-product__description" :class="{ 'hidden': !description }">
                         <span class="open-popup-description__js">Описание</span>
-                    </div>
-                    <div class="current-product-ques">
-                        <div class="current-product-ques__container">
-                            <div class="current-product-ques__title">Появились вопросы о товаре?</div>
-                            <div class="current-product-ques__contacts">
-                                <div class="current-product-ques__contact">
-                                    <div class="current-product-ques__label">Телефон горячей линии:</div>
-                                    <div class="current-product-ques__value">
-                                        <a :href="'tel:' + configs['TEL_HOT_HREF']" class="text-anim">
-                                            <span>{{ configs['TEL_HOT'] }}</span>
-                                            <span>{{ configs['TEL_HOT'] }}</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="fixed-product">
@@ -629,7 +631,7 @@ export default {
                                 <div class="fixed-product-price__info card-product-price__info hidden">Цена по карте
                                     лояльности:</div>
                             </div>
-                            <div class="fixed-product__btn card-product__btn btn btn-basket default-anim bg-yellow"
+                            <div v-if="product.stock > 0" class="fixed-product__btn card-product__btn btn btn-basket default-anim bg-yellow"
                                 v-anim-hover @click="handleCartBtn">
                                 <div class="default">В корзину</div>
                                 <div class="ques ques-add">Добавить?</div>
@@ -692,7 +694,9 @@ export default {
 
     <PopupAllCharacteristics :characteristics="characteristics"></PopupAllCharacteristics>
 
-    <PopupDescription> {{ description }} </PopupDescription>
+    <PopupDescription>
+        <div v-html="description"></div>
+    </PopupDescription>
 
     <PopupInstallment></PopupInstallment>
 </template>

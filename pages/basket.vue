@@ -20,16 +20,20 @@ export default {
     methods: {
         ...mapActions(useCartStore, [
             'removeItemsFromCart',
-            'updatePrices',
-            'checkItems',
-            'uncheckItems'
+            'updateCartProducts',
+            'checkAllItems',
+            'uncheckItem',
+            'checkItem',
         ]),
-        toggleCheckAllItems() {
-            if (!this.allChecked) {
-                this.checkItems()
-            } else {
-                this.uncheckItems()
-            }
+        checkItems(items) {
+            items.forEach(item => {
+                this.checkItem(item);
+            });
+        },
+        uncheckItems(items) {
+            items.forEach(item => {
+                this.uncheckItem(item);
+            });
         },
         popUpCheckAll() {
             this.checkItems()
@@ -50,44 +54,69 @@ export default {
                 }
             }
             basketPage();
-            this.checkItems();
+            this.checkAllItems();
         },
         formSubmit() {
-            if (this.checkedItems.length) {
+            if (this.validItems.length) {
                 this.$router.push('/order/');
             } else {
-                if (document.querySelector('.error-basket-popup')) {
-                    document.querySelector('.error-basket-popup').classList.add('_active');
-                    useVars().$body.value.classList.add('_overflow');
-                }
+                this.openErrorPopup()
             }
         },
-        removeSelectedProducts() {
-            if (this.checkedItems.length) {
-                const confirmPopUp = useConfirmPopup()
-                confirmPopUp("Удалить товары из корзины?").then((ques) => {
-                    if (ques) {
-                        this.removeItemsFromCart(this.checkedItems);
-                    }
-                });
+        removeProducts(products) {
+            useConfirmPopup()("Удалить товары из корзины?").then((ques) => {
+                if (ques) {
+                    this.removeItemsFromCart(products);
+                }
+            });
+        },
+        openErrorPopup() {
+            if (document.querySelector('.error-basket-popup')) {
+                document.querySelector('.error-basket-popup').classList.add('_active');
+                useVars().$body.value.classList.add('_overflow');
+            }
+        },
+        onVisibilityChange() {
+            if (document.hidden) {
+                // пользователь ушёл со страницы
+                this.pageLeftTime = Date.now();
             } else {
-                if (document.querySelector('.error-basket-popup')) {
-                    document.querySelector('.error-basket-popup').classList.add('_active');
-                    useVars().$body.value.classList.add('_overflow');
+                // пользователь пришел обратно на страницу
+                const now = Date.now();
+                const diff = now - this.pageLeftTime;
+                if (diff >= 60 * 1000) {
+                    // прошло больше или ровно 1 минута
+                    this.updateCartProducts();
                 }
+                this.pageLeftTime = null; // сброс
             }
-        },
+        }
     },
     computed: {
-        ...mapState(useCartStore, ['totalPrice', 'checkedTotalPrice', 'checkedItems', 'allChecked']),
+        ...mapState(useCartStore, ['validTotal', 'validItems', 'productsAvailable', 'productsUnavailable']),
         products() {
             const store = useCartStore();
             return store.items;
         },
+        allAvailableChecked() {
+            return this.productsAvailable.length > 0 && this.productsAvailable.every(item => item.isChecked);
+        },
+        allUnavailableChecked() {
+            return this.productsUnavailable.length > 0 && this.productsUnavailable.every(item => item.isChecked);
+        },
+        unvalidItems() {
+            return this.products.filter(item => item.isChecked && !item.status);
+        },
     },
     mounted() {
+        setTimeout(() => {
+            document.addEventListener('visibilitychange', this.onVisibilityChange);
+        }, 1000);
         this.init();
-        this.updatePrices();
+        this.updateCartProducts();
+    },
+    unmounted() {
+        document.removeEventListener('visibilitychange', this.onVisibilityChange);
     },
 }
 </script>
@@ -122,8 +151,8 @@ export default {
                 <div class="block-basket__container container">
                     <h1 class="block-basket__title anim-item anim-item-active">{{
                         aboutPage.headline }}</h1>
-                    <div class="block-basket__count-product">{{ products.length }}
-                        {{ sklonenie(products.length, ['товар', 'товара', 'товаров']) }}
+                    <div class="block-basket__count-product">{{ productsAvailable.length }}
+                        {{ sklonenie(productsAvailable.length, ['товар', 'товара', 'товаров']) }}
                     </div>
                     <div class="block-basket__content">
                         <div class="block-basket-form">
@@ -133,21 +162,22 @@ export default {
                                         <div class="block-basket-products__head">
                                             <div
                                                 class="block-basket-products__check-all form-checkboxes form-checkboxes__js">
-                                                <div class="form-item" :class="{ '_checked': allChecked }">
-                                                    <label @click="toggleCheckAllItems" for="basket-check-all"
-                                                        class="form-check-label">
+                                                <div class="form-item" :class="{ '_checked': allAvailableChecked }">
+                                                    <label
+                                                        @click="allAvailableChecked ? uncheckItems(productsAvailable) : checkItems(productsAvailable)"
+                                                        for="basket-check-all" class="form-check-label">
                                                         Выбрать все
                                                     </label>
                                                 </div>
                                             </div>
                                             <div class="block-basket-products__remove-select remove-selected-products__js"
-                                                @click="removeSelectedProducts">
+                                                @click="validItems.length ? removeProducts(productsAvailable) : openErrorPopup()">
                                                 Удалить выбранные
                                             </div>
                                         </div>
                                         <div class="block-basket-products__list form-checkboxes form-checkboxes__js">
-                                            <product-basket v-for="(product, index) in products" :item="product"
-                                                :index="index"></product-basket>
+                                            <product-basket v-for="(product, index) in productsAvailable"
+                                                :item="product" :index="index"></product-basket>
                                         </div>
                                     </div>
                                 </div>
@@ -169,7 +199,7 @@ export default {
                                             </div>
                                             <div v-if="products.length"
                                                 class="basket-form-info__count-product block-basket__count-product">
-                                                {{ checkedItems.length + ' ' + sklonenie(checkedItems.length,
+                                                {{ productsAvailable.length + ' ' + sklonenie(productsAvailable.length,
                                                     ['товар', 'товара', 'товаров']) }}
                                             </div>
 
@@ -207,8 +237,8 @@ export default {
                                             <div class="basket-form-info-price">
                                                 <div class="basket-form-info-price__label">Итого:</div>
                                                 <div class="basket-form-info-price__value">
-                                                    <span v-if="checkedTotalPrice">{{
-                                                        numberWithSpaces(checkedTotalPrice) }}</span>
+                                                    <span v-if="validTotal">{{
+                                                        numberWithSpaces(validTotal) }}</span>
                                                     <span v-else>0</span>
                                                     ₽
                                                 </div>
@@ -233,6 +263,40 @@ export default {
                             </div>
                         </div>
                     </div>
+                    <template v-if="productsUnavailable.length > 0">
+                        <h2 class="block-basket__title">Товары
+                            будут позже</h2>
+                        <div class="block-basket__content">
+                            <div class="block-basket-form">
+                                <div class="block-basket-form__block">
+                                    <div class="block-basket-form__block-body">
+                                        <div class="block-basket-products">
+                                            <div class="block-basket-products__head">
+                                                <div class="block-basket-products__check-all form-checkboxes">
+                                                    <div class="form-item"
+                                                        :class="{ '_checked': allUnavailableChecked }">
+                                                        <label
+                                                            @click="allUnavailableChecked ? uncheckItems(productsUnavailable) : checkItems(productsUnavailable)"
+                                                            for="basket-check-all" class="form-check-label">
+                                                            Выбрать все
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="block-basket-products__remove-select"
+                                                    @click="unvalidItems.length ? removeProducts(productsUnavailable) : openErrorPopup()">
+                                                    Удалить выбранные
+                                                </div>
+                                            </div>
+                                            <div class="block-basket-products__list form-checkboxes">
+                                                <product-basket v-for="(product, index) in productsUnavailable"
+                                                    :item="product" :index="index"></product-basket>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
                 </div>
             </section>
         </template>

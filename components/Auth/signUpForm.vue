@@ -1,12 +1,16 @@
 <script>
 import useVuelidate from '@vuelidate/core';
 import { required, email, minLength, maxLength, sameAs } from '@vuelidate/validators';
+import { useIMask } from 'vue-imask';
 export default {
     setup() {
-        const { phoneInput } = usePhoneMask();
+        const { el: phoneInput, masked: maskedPhoneValue } = useIMask({
+            mask: '+{7}(000)000-00-00',
+        });
         return {
             v$: useVuelidate(),
             phoneInput,
+            maskedPhoneValue,
         }
     },
     data() {
@@ -100,6 +104,11 @@ export default {
     },
     mounted() {
     },
+    watch: {
+		maskedPhoneValue(newVal){
+			this.form.phone = newVal
+		}
+	},
 }
 </script>
 <template>
